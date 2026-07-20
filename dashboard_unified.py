@@ -390,7 +390,6 @@ else:
                           line=dict(color='#ef4444', width=2, dash='dash'),
                           name=f'Trend (R²={r2:.3f})',
                           hovertemplate='Episode %{x}<br>Trend: %{y:.2f}°C<extra></extra>',
-                          name=f'Trend (R²={r2:.3f})',
                           hovertemplate='Episode %{x}<br>Trend: %{y:.2f}°C<extra></extra>'
                       ))
                   fig.update_layout(
