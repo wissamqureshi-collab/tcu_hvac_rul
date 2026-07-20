@@ -213,8 +213,7 @@ col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
     urgent_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'URGENT')
-    st.markdown(f'<div class="metric-card danger"><div class="label">🔴 URGENT</div><div 
-class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>',
+    st.markdown(f'<div class="metric-card danger"><div class="label">🔴 URGENT</div><div class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>',
                 unsafe_allow_html=True)
 
 with col2:
