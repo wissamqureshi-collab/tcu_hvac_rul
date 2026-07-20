@@ -146,8 +146,7 @@ with st.sidebar:
     rolling_window = st.slider("Rolling median window (episodes)", 3, 10, 5, step=1, label_visibility='visible')
     failure_dt = st.slider("ΔT at filter failure (°C)", 5.0, 20.0, 10.0, step=0.5, label_visibility='visible')
     st.markdown("---")
-    help_text = "💡 Analysis assumes 90 days of InfluxDB data. RUL projects when rolling median hits failure 
-threshold."
+    help_text = "💡 Analysis assumes 90 days of InfluxDB data. RUL projects when rolling median hits failure threshold."
     st.markdown(f'<div style="font-size:0.72rem;color:#9ca3af;line-height:1.6;">{help_text}</div>',
 unsafe_allow_html=True)
 
