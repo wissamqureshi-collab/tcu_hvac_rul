@@ -126,8 +126,7 @@ sites_recalc = {}
 for site_id, site_result in sites.items():
   sites_recalc[site_id] = recalculate_rul(site_result, failure_dt)
 
-st.markdown(f"## 🌡️  Rogers HVAC Filter RUL Status — {len([s for s in sites_recalc.values() if s.get('success')])} Sites
-Analyzed")
+st.markdown(f"## 🌡️  Rogers HVAC Filter RUL Status — {len([s for s in sites_recalc.values() if s.get('success')])} Sites Analyzed")
 threshold_info = f"**Custom Failure Threshold: {failure_dt}°C**"
 if failure_dt != data.get('default_failure_dt', 10.0):
   original_threshold = data.get('default_failure_dt', 10.0)
