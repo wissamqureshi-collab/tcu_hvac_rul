@@ -13,270 +13,383 @@ import plotly.graph_objects as go
 from datetime import datetime
 from pathlib import Path
 
-st.set_page_config(page_title="Rogers HVAC RUL Dashboard", page_icon="🌡️ ", layout="wide",
-initial_sidebar_state="expanded")
+st.set_page_config(
+  page_title="Rogers HVAC RUL Dashboard",
+  page_icon="🌡️ ",
+  layout="wide",
+  initial_sidebar_state="expanded"
+)
 
 st.markdown("""
-<style>                                
-    .stApp { background-color: #f5f6fa; color: #1a202c; }
-    [data-testid="stSidebar"] { background-color: #1a1f2e; }
-    [data-testid="stSidebar"] * { color: #e8ecf4 !important; }
-    [data-testid="stSidebar"] .stSelectbox label { color: #a0aec0 !important; font-size: 0.78rem; letter-spacing: 
-0.08em; text-transform: uppercase; }
-    .stMarkdown, .stMarkdown * { color: #1a202c !important; }
-    .stExpander, .stExpander * { color: #1a202c !important; }
-    .metric-card { background: white; border-radius: 10px; padding: 18px 22px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); 
-border-left: 4px solid #4f7cff; min-height: 90px; box-sizing: border-box; }
-    .metric-card.warn { border-left-color: #f59e0b; }
-    .metric-card.danger { border-left-color: #ef4444; }
-    .metric-card .label { font-size: 0.72rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.07em; 
-margin-bottom: 4px; }
-    .metric-card .value { font-size: 1.6rem; font-weight: 700; color: #1a202c; }
-    .metric-card .sub { font-size: 0.78rem; color: #9ca3af; margin-top: 2px; }
-    .section-header { font-size: 0.72rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 
-0.1em; margin: 24px 0 10px 0; padding-bottom: 6px; border-bottom: 1px solid #e5e7eb; }
-    h1 { color: #1a202c !important; font-weight: 800 !important; letter-spacing: -0.02em !important; }
-    h2 { color: #1a202c !important; margin-bottom: 1.5rem !important; margin-top: 0 !important; }
-    h3 { color: #374151 !important; font-weight: 600 !important; }
-    #MainMenu, footer, header { visibility: hidden; }
-    .block-container { padding-top: 4rem; max-width: 100% !important; }
-    [data-testid="column"] { padding: 0 8px !important; }
-    .js-plotly-plot { margin-top: 1rem; }
+<style>
+  .stApp { background-color: #ffffff; }
+  body { color: #1a202c; }
+
+  [data-testid="stSidebar"] { background-color: #1a1f2e; }
+  [data-testid="stSidebar"] * { color: #e8ecf4 !important; }
+  [data-testid="stSidebar"] .stSelectbox label { color: #a0aec0 !important; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .stMarkdown { color: #1a202c !important; }
+  .stMarkdown * { color: #1a202c !important; }
+
+  .stExpander { background-color: #f9fafb !important; border: 1px solid #e5e7eb !important; }
+  .stExpander [data-testid="stExpanderDetails"] { background-color: #ffffff !important; }
+  .stExpander * { color: #1a202c !important; }
+
+  .stDataFrame { background-color: #ffffff !important; }
+  [data-testid="stDataFrame"] { border: 1px solid #e5e7eb !important; }
+
+  .metric-card { background: white; border-radius: 10px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid #4f7cff; }
+  .metric-card.warn { border-left-color: #f59e0b; }
+  .metric-card.danger { border-left-color: #ef4444; }
+  .metric-card .label { font-size: 0.7rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; font-weight: 600; }
+  .metric-card .value { font-size: 2rem; font-weight: 700; color: #1a202c; }
+  .metric-card .sub { font-size: 0.75rem; color: #9ca3af; margin-top: 4px; }
+
+  .section-header { font-size: 0.75rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.12em; margin: 28px 0 14px 0; padding-bottom: 8px; border-bottom: 2px solid #e5e7eb; }
+
+  h1 { color: #1a202c !important; font-weight: 800 !important; letter-spacing: -0.02em !important; margin-top: 0 !important; }
+  h2 { color: #1a202c !important; margin-bottom: 20px !important; margin-top: 24px !important; font-weight: 700 !important; }
+  h3 { color: #374151 !important; font-weight: 600 !important; }
+
+  #MainMenu { visibility: hidden; }
+  footer { visibility: hidden; }
+  header { visibility: hidden; }
+  .block-container { padding-top: 3rem; max-width: 100% !important; }
+  [data-testid="column"] { padding: 0 12px !important; }
+
+  code { background-color: #f3f4f6 !important; color: #374151 !important; padding: 2px 6px !important; border-radius: 4px !important; }
 </style>
 """, unsafe_allow_html=True)
 
 @st.cache_data(ttl=300)
 def load_sites_data(json_file='sites_data.json'):
-    if not Path(json_file).exists():
-        st.error(f"Data file not found: {json_file}")
-        st.info("Run python3 query_sites.py on the Bell laptop to generate this file.")
-        st.stop()
-    with open(json_file) as f:
-        data = json.load(f)
-    return data
+  if not Path(json_file).exists():
+      st.error(f"Data file not found: {json_file}")
+      st.info("Run python3 query_sites.py on the Bell laptop to generate this file.")
+      st.stop()
+  with open(json_file) as f:
+      data = json.load(f)
+  return data
 
 def recalculate_rul(site_result, new_failure_dt):
-    site_copy = site_result.copy()
-    if not site_result.get('success'):
-        return site_copy
-    rolling_median = site_result.get('rolling_median', [])
-    slope = site_result.get('slope', 0)
-    r2 = site_result.get('r2', 0)
-    baseline_dt = site_result.get('baseline_dt', 0)
-    episode_interval_days = site_result.get('episode_interval_days', 1)
-    if not rolling_median or len(rolling_median) < 2:
-        site_copy['rul_days'] = None
-        site_copy['urgency'] = 'UNKNOWN'
-        return site_copy
-    current_dt = rolling_median[-1]
-    site_copy['current_dt'] = current_dt
-    site_copy['failure_dt'] = new_failure_dt
-    if current_dt >= new_failure_dt:
-        site_copy['rul_days'] = 0
-        site_copy['urgency'] = 'URGENT'
-        site_copy['pct_life'] = 100
-        return site_copy
-    if r2 < 0.25 or slope <= 0:
-        site_copy['rul_days'] = 999
-        site_copy['urgency'] = 'OK'
-        site_copy['pct_life'] = 0
-        return site_copy
-    episodes_to_failure = (new_failure_dt - current_dt) / slope if slope > 0 else 999
-    rul_days = episodes_to_failure * episode_interval_days
-    site_copy['rul_days'] = max(0, rul_days)
-    if baseline_dt > 0:
-        pct_life = (current_dt - baseline_dt) / (new_failure_dt - baseline_dt) * 100
-        site_copy['pct_life'] = max(0, min(100, pct_life))
-    if rul_days < 14:
-        site_copy['urgency'] = 'URGENT'
-    elif rul_days < 30:
-        site_copy['urgency'] = 'WARNING'
-    else:
-        site_copy['urgency'] = 'OK'
-    return site_copy                   
+  site_copy = site_result.copy()
+  if not site_result.get('success'):
+      return site_copy
+  rolling_median = site_result.get('rolling_median', [])
+  slope = site_result.get('slope', 0)
+  r2 = site_result.get('r2', 0)
+  baseline_dt = site_result.get('baseline_dt', 0)
+  episode_interval_days = site_result.get('episode_interval_days', 1)
+  if not rolling_median or len(rolling_median) < 2:
+      site_copy['rul_days'] = None
+      site_copy['urgency'] = 'UNKNOWN'
+      return site_copy
+  current_dt = rolling_median[-1]
+  site_copy['current_dt'] = current_dt
+  site_copy['failure_dt'] = new_failure_dt
+  if current_dt >= new_failure_dt:
+      site_copy['rul_days'] = 0
+      site_copy['urgency'] = 'URGENT'
+      site_copy['pct_life'] = 100
+      return site_copy
+  if r2 < 0.25 or slope <= 0:
+      site_copy['rul_days'] = 999
+      site_copy['urgency'] = 'OK'
+      site_copy['pct_life'] = 0
+      return site_copy
+  episodes_to_failure = (new_failure_dt - current_dt) / slope if slope > 0 else 999
+  rul_days = episodes_to_failure * episode_interval_days
+  site_copy['rul_days'] = max(0, rul_days)
+  if baseline_dt > 0:
+      pct_life = (current_dt - baseline_dt) / (new_failure_dt - baseline_dt) * 100
+      site_copy['pct_life'] = max(0, min(100, pct_life))
+  if rul_days < 14:
+      site_copy['urgency'] = 'URGENT'
+  elif rul_days < 30:
+      site_copy['urgency'] = 'WARNING'
+  else:
+      site_copy['urgency'] = 'OK'
+  return site_copy
 
 with st.sidebar:
-    st.markdown("### 🌡️  Rogers HVAC RUL Dashboard")
-    st.markdown("---")
-    st.markdown('<div class="section-header">Filters</div>', unsafe_allow_html=True)
-    urgency_filter = st.multiselect("Urgency Level", ['URGENT', 'WARNING', 'OK', 'UNKNOWN'], default=['URGENT',
-'WARNING', 'OK'], label_visibility='visible')
-    search_term = st.text_input("Search site name/ID", "", label_visibility='visible')
-    sort_by = st.radio("Sort by", ['RUL (ascending)', 'Site Name (A-Z)', 'Urgency + RUL'], label_visibility='visible')
-    st.markdown('<div class="section-header">Analysis Parameters</div>', unsafe_allow_html=True)
-    fan_threshold = st.slider("Min fan speed (%)", 80, 100, 95, step=1, label_visibility='visible')
-    min_duration = st.slider("Min episode duration (min)", 10, 120, 30, step=5, label_visibility='visible')
-    rolling_window = st.slider("Rolling median window (episodes)", 3, 10, 5, step=1, label_visibility='visible')
-    failure_dt = st.slider("ΔT at filter failure (°C)", 5.0, 20.0, 10.0, step=0.5, label_visibility='visible')
-    st.markdown("---")
-    help_text = "💡 Analysis assumes 90 days of InfluxDB data. RUL projects when rolling median hits failure threshold. Green = filter healthy. Yellow = plan replacement soon. Red = replace now."
-    st.markdown(f'<div style="font-size:0.72rem;color:#9ca3af;line-height:1.6;">{help_text}</div>',
-unsafe_allow_html=True)
+  st.markdown("### 🌡️  Rogers HVAC RUL Dashboard")
+  st.markdown("---")
+  st.markdown('<div class="section-header">Filters</div>', unsafe_allow_html=True)
+  urgency_filter = st.multiselect(
+      "Urgency Level",
+      ['URGENT', 'WARNING', 'OK', 'UNKNOWN'],
+      default=['URGENT', 'WARNING', 'OK'],
+      label_visibility='visible'
+  )
+  search_term = st.text_input("Search site name/ID", "", label_visibility='visible')
+  sort_by = st.radio(
+      "Sort by",
+      ['RUL (ascending)', 'Site Name (A-Z)', 'Urgency + RUL'],
+      label_visibility='visible'
+  )
+  st.markdown('<div class="section-header">Analysis Parameters</div>', unsafe_allow_html=True)
+  fan_threshold = st.slider("Min fan speed (%)", 80, 100, 95, step=1, label_visibility='visible')
+  min_duration = st.slider("Min episode duration (min)", 10, 120, 30, step=5, label_visibility='visible')
+  rolling_window = st.slider("Rolling median window (episodes)", 3, 10, 5, step=1, label_visibility='visible')
+  failure_dt = st.slider("ΔT at filter failure (°C)", 5.0, 20.0, 10.0, step=0.5, label_visibility='visible')
+  st.markdown("---")
+  help_text = "💡 Analysis assumes 90 days of InfluxDB data. RUL projects when rolling median hits failure threshold."
+  st.markdown(f'<div style="font-size:0.72rem;color:#9ca3af;line-height:1.6;">{help_text}</div>', unsafe_allow_html=True)
 
 data = load_sites_data()
 sites = data['sites']
-sites_recalc = {}                      
+sites_recalc = {}
 for site_id, site_result in sites.items():
-    sites_recalc[site_id] = recalculate_rul(site_result, failure_dt)
+  sites_recalc[site_id] = recalculate_rul(site_result, failure_dt)
 
 successful_count = len([s for s in sites_recalc.values() if s.get('success')])
 st.markdown(f"## 🌡️  Rogers HVAC Filter RUL Status — {successful_count} Sites Analyzed")
 
 threshold_info = f"**Custom Failure Threshold: {failure_dt}°C**"
 if failure_dt != data.get('default_failure_dt', 10.0):
-    original_threshold = data.get('default_failure_dt', 10.0)
-    threshold_info += f" (Original: {original_threshold}°C)"
+  original_threshold = data.get('default_failure_dt', 10.0)
+  threshold_info += f" (Original: {original_threshold}°C)"
 st.info(threshold_info)
 
 col1, col2, col3, col4, col5 = st.columns(5)
-with col1:                             
-    urgent_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'URGENT')
-    st.markdown(f'<div class="metric-card danger"><div class="label">🔴 URGENT</div><div class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>', unsafe_allow_html=True)
+with col1:
+  urgent_count = sum(
+      1 for s in sites_recalc.values()
+      if s.get('success') and s.get('urgency') == 'URGENT'
+  )
+  st.markdown(
+      f'<div class="metric-card danger"><div class="label">🔴 URGENT</div>'
+      f'<div class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>',
+      unsafe_allow_html=True
+  )
 with col2:
-    warning_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'WARNING')
-    st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div class="value">{warning_count}</div><div class="sub">14–30 days</div></div>', unsafe_allow_html=True)
+  warning_count = sum(
+      1 for s in sites_recalc.values()
+      if s.get('success') and s.get('urgency') == 'WARNING'
+  )
+  st.markdown(
+      f'<div class="metric-card warn"><div class="label">🟡 WARNING</div>'
+      f'<div class="value">{warning_count}</div><div class="sub">14–30 days</div></div>',
+      unsafe_allow_html=True
+  )
 with col3:
-    ok_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'OK')
-    st.markdown(f'<div class="metric-card"><div class="label">🟢 OK</div><div class="value">{ok_count}</div><div class="sub">≥ 30 days</div></div>', unsafe_allow_html=True)
+  ok_count = sum(
+      1 for s in sites_recalc.values()
+      if s.get('success') and s.get('urgency') == 'OK'
+  )
+  st.markdown(
+      f'<div class="metric-card"><div class="label">🟢 OK</div>'
+      f'<div class="value">{ok_count}</div><div class="sub">≥ 30 days</div></div>',
+      unsafe_allow_html=True
+  )
 with col4:
-    failed_count = sum(1 for s in sites_recalc.values() if not s.get('success'))
-    st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div class="value">{failed_count}</div><div class="sub">Query error</div></div>', unsafe_allow_html=True)
+  failed_count = sum(1 for s in sites_recalc.values() if not s.get('success'))
+  st.markdown(
+      f'<div class="metric-card"><div class="label">⚪ FAILED</div>'
+      f'<div class="value">{failed_count}</div><div class="sub">Query error</div></div>',
+      unsafe_allow_html=True
+  )
 with col5:
-    successful = [s for s in sites_recalc.values() if s.get('success')]
-    mean_rul = np.mean([s.get('rul_days', 0) for s in successful if s.get('rul_days') is not None])
-    st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div class="value">{mean_rul:.0f}d</div><div class="sub">All sites</div></div>', unsafe_allow_html=True)
+  successful = [s for s in sites_recalc.values() if s.get('success')]
+  mean_rul = np.mean([s.get('rul_days', 0) for s in successful if s.get('rul_days') is not None])
+  st.markdown(
+      f'<div class="metric-card"><div class="label">Average RUL</div>'
+      f'<div class="value">{mean_rul:.0f}d</div><div class="sub">All sites</div></div>',
+      unsafe_allow_html=True
+  )
 
 st.markdown("---")
 st.markdown(f'<div class="section-header">Sites Status Table</div>', unsafe_allow_html=True)
 
 table_data = []
 for site_id, result in sites_recalc.items():
-    if not result.get('success'):
-        continue
-    if result.get('urgency') not in urgency_filter:
-        continue
-    search_str = f"{site_id} {result.get('site_name', '')}".lower()
-    if search_term.lower() and search_term.lower() not in search_str:
-        continue
-    rul = result.get('rul_days', None)
-    table_data.append({
-        'Site ID': site_id,
-        'Site Name': result.get('site_name', '?'),
-        'IP Address': result.get('ip', '?'),
-        'Urgency': result.get('urgency', '?'),
-        'RUL (days)': f"{rul:.0f}" if rul is not None else "?",
-        'Episodes': result.get('episodes_count', '?'),
-        'R²': f"{result.get('r2', 0):.3f}",
-        'Current ΔT (°C)': f"{result.get('current_dt', 0):.1f}",
-        'Failure ΔT (°C)': f"{result.get('failure_dt', 0):.1f}",
-        'Filter Life Used': f"{result.get('pct_life', 0):.0f}%",
-        '_rul_raw': rul if rul is not None else float('inf'),
-        '_urgency_rank': {'URGENT': 0, 'WARNING': 1, 'OK': 2, 'UNKNOWN': 3}.get(result.get('urgency'), 4),
-    })
+  if not result.get('success'):
+      continue
+  if result.get('urgency') not in urgency_filter:
+      continue
+  search_str = f"{site_id} {result.get('site_name', '')}".lower()
+  if search_term.lower() and search_term.lower() not in search_str:
+      continue
+  rul = result.get('rul_days', None)
+  table_data.append({
+      'Site ID': site_id,
+      'Site Name': result.get('site_name', '?'),
+      'IP Address': result.get('ip', '?'),
+      'Urgency': result.get('urgency', '?'),
+      'RUL (days)': f"{rul:.0f}" if rul is not None else "?",
+      'Episodes': result.get('episodes_count', '?'),
+      'R²': f"{result.get('r2', 0):.3f}",
+      'Current ΔT (°C)': f"{result.get('current_dt', 0):.1f}",
+      'Failure ΔT (°C)': f"{result.get('failure_dt', 0):.1f}",
+      'Filter Life Used': f"{result.get('pct_life', 0):.0f}%",
+      '_rul_raw': rul if rul is not None else float('inf'),
+      '_urgency_rank': {
+          'URGENT': 0, 'WARNING': 1, 'OK': 2, 'UNKNOWN': 3
+      }.get(result.get('urgency'), 4),
+  })
 
 if not table_data:
-    st.warning("No sites match filter criteria.")
+  st.warning("No sites match filter criteria.")
 else:
-    df = pd.DataFrame(table_data)
-    if sort_by == 'RUL (ascending)':
-        df = df.sort_values('_rul_raw')
-    elif sort_by == 'Site Name (A-Z)':
-        df = df.sort_values('Site Name')
-    elif sort_by == 'Urgency + RUL':
-        df = df.sort_values(['_urgency_rank', '_rul_raw'])
-    df = df.drop(columns=['_rul_raw', '_urgency_rank'])
-    st.dataframe(df, use_container_width=True, hide_index=True)
+  df = pd.DataFrame(table_data)
+  if sort_by == 'RUL (ascending)':
+      df = df.sort_values('_rul_raw')
+  elif sort_by == 'Site Name (A-Z)':
+      df = df.sort_values('Site Name')
+  elif sort_by == 'Urgency + RUL':
+      df = df.sort_values(['_urgency_rank', '_rul_raw'])
+  df = df.drop(columns=['_rul_raw', '_urgency_rank'])
+  st.dataframe(df, use_container_width=True, hide_index=True)
 
 st.markdown("---")
 st.markdown(f'<div class="section-header">Site Details & Trend Analysis</div>', unsafe_allow_html=True)
 
 detail_sites = []
 for site_id, result in sorted(sites_recalc.items()):
-    if not result.get('success'):
-        continue
-    if result.get('urgency') not in urgency_filter:
-        continue
-    search_str = f"{site_id} {result.get('site_name', '')}".lower()
-    if search_term.lower() and search_term.lower() not in search_str:
-        continue
-    detail_sites.append((site_id, result))
+  if not result.get('success'):
+      continue
+  if result.get('urgency') not in urgency_filter:
+      continue
+  search_str = f"{site_id} {result.get('site_name', '')}".lower()
+  if search_term.lower() and search_term.lower() not in search_str:
+      continue
+  detail_sites.append((site_id, result))
 
 detail_sites = detail_sites[:20]
 
 if not detail_sites:
-    st.info("No sites to display. Adjust filters to see site details.")
+  st.info("No sites to display. Adjust filters to see site details.")
 else:
-    for site_id, result in detail_sites:
-        urgency = result.get('urgency', '?')
-        rul = result.get('rul_days', '?')
-        color_map = {'URGENT': '🔴', 'WARNING': '🟡', 'OK': '🟢', 'UNKNOWN': '⚪'}
-        emoji = color_map.get(urgency, '❓')
-        if isinstance(rul, float):
-            expander_title = f"{emoji} {site_id} — {result.get('site_name', '?')} (RUL: {rul:.0f}d)"
-        else:
-            expander_title = f"{emoji} {site_id} — {result.get('site_name', '?')} (RUL: {rul})"
-        with st.expander(expander_title):
-            col1, col2 = st.columns([1, 2])
-            with col1:
-                ip_val = result.get('ip')
-                episodes_val = result.get('episodes_count')
-                r2_val = result.get('r2', '?')
-                slope_val = result.get('slope', '?')
-                pct_life_val = result.get('pct_life', '?')
-            expander_title = f"{emoji} {site_id} — {result.get('site_name', '?')} (RUL: {rul})"
-        with st.expander(expander_title):
-            col1, col2 = st.columns([1, 2])
-            with col1:
-                ip_val = result.get('ip')
-                episodes_val = result.get('episodes_count')
-                r2_val = result.get('r2', '?')
-                slope_val = result.get('slope', '?')
-                pct_life_val = result.get('pct_life', '?')
-                current_dt_val = result.get('current_dt', '?')
-                failure_dt_val = result.get('failure_dt', '?')
-                baseline_dt_val = result.get('baseline_dt', '?')
-                if isinstance(rul, float):
-                    rul_str = f'{rul:.0f}'
-                else:
-                    rul_str = str(rul)
-                st.markdown(f"**📍 Site Info**")
-                st.markdown(f"- IP: `{ip_val}`")
-                st.markdown(f"- Urgency: **{urgency}**")
-                st.markdown(f"- Episodes: {episodes_val}")
-                st.markdown(f"**📈 Trend Analysis**")
-                st.markdown(f"- R²: {r2_val:.3f}")
-                st.markdown(f"- Slope: {slope_val:.3f} °C/episode")
-                st.markdown(f"**⏱️  RUL Estimate**")
-                st.markdown(f"- Days: {rul_str}")
-                st.markdown(f"- % Life Used: {pct_life_val:.0f}%")
-                st.markdown(f"**🌡️  Temperature**")
-                st.markdown(f"- Current ΔT: {current_dt_val:.1f}°C")
-                st.markdown(f"- Failure ΔT: {failure_dt_val:.1f}°C")
-                st.markdown(f"- Baseline ΔT: {baseline_dt_val:.1f}°C")
-            with col2:
-                onset_deltas = result.get('onset_deltas', [])
-                rolling_median = result.get('rolling_median', [])
-                if len(onset_deltas) > 2:
-                    episodes = list(range(len(onset_deltas)))
-                    fig = go.Figure()
-                    fig.add_trace(go.Scatter(x=episodes, y=onset_deltas, mode='markers', marker=dict(size=6, color='lightblue', opacity=0.6), name='Onset ΔT (raw)', hovertemplate='Episode %{x}<br>Onset ΔT: %{y:.2f}°C<extra></extra>'))
-                    fig.add_trace(go.Scatter(x=episodes, y=rolling_median, mode='lines+markers', line=dict(color='#f59e0b', width=2.5), marker=dict(size=5, color='#f59e0b'), name='Rolling Median', hovertemplate='Episode %{x}<br>Rolling Median: %{y:.2f}°C<extra></extra>'))
-                    failure_dt_line = result.get('failure_dt', 10.0)
-                    fig.add_hline(y=failure_dt_line, line_dash='dot', line_color='orange', annotation_text=f"Failure: {failure_dt_line:.1f}°C", annotation_position='right')
-                    if len(episodes) >= 2:
-                        r2 = result.get('r2', 0)
-                        slope = result.get('slope', 0)
-                        coeffs = np.polyfit(episodes, rolling_median, 1)
-                        trend_line = np.polyval(coeffs, episodes)
-                        fig.add_trace(go.Scatter(x=episodes, y=trend_line, mode='lines', line=dict(color='red', width=2, dash='dash'), name=f'Trend (R²={r2:.3f})', hovertemplate='Episode %{x}<br>Trend: %{y:.2f}°C<extra></extra>'))
-                    fig.update_layout(title=f"Rolling Median Trend — {site_id}", xaxis_title='Episode #', yaxis_title='ΔT (°C)', height=350, hovermode='x unified', paper_bgcolor='#f5f6fa', plot_bgcolor='#f8f9fb')
-                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-                else:
-                    st.info("Not enough episodes for trend plot.")
+  for site_id, result in detail_sites:
+      urgency = result.get('urgency', '?')
+      rul = result.get('rul_days', '?')
+      color_map = {'URGENT': '🔴', 'WARNING': '🟡', 'OK': '🟢', 'UNKNOWN': '⚪'}
+      emoji = color_map.get(urgency, '❓')
+      if isinstance(rul, float):
+          expander_title = f"{emoji} {site_id} — {result.get('site_name', '?')} (RUL: {rul:.0f}d)"
+      else:
+          expander_title = f"{emoji} {site_id} — {result.get('site_name', '?')} (RUL: {rul})"
+      with st.expander(expander_title):
+          col1, col2 = st.columns([1, 2])
+          with col1:
+              ip_val = result.get('ip', 'N/A')
+              episodes_val = result.get('episodes_count', 'N/A')
+              r2_val = result.get('r2', 'N/A')
+              slope_val = result.get('slope', 'N/A')
+              pct_life_val = result.get('pct_life', 'N/A')
+              current_dt_val = result.get('current_dt', 'N/A')
+              failure_dt_val = result.get('failure_dt', 'N/A')
+              baseline_dt_val = result.get('baseline_dt', 'N/A')
+
+              if isinstance(rul, float):
+                  rul_str = f'{rul:.0f}'
+              else:
+                  rul_str = str(rul)
+
+              st.markdown("**📍 Site Information**")
+              st.markdown(f"**IP Address:** {ip_val}")
+              st.markdown(f"**Urgency Level:** {urgency}")
+              st.markdown(f"**Total Episodes:** {episodes_val}")
+
+              st.markdown("**📈 Trend Analysis**")
+              if isinstance(r2_val, str):
+                  st.markdown(f"**R² Score:** {r2_val}")
+              else:
+                  st.markdown(f"**R² Score:** {r2_val:.3f}")
+              if isinstance(slope_val, str):
+                  st.markdown(f"**Slope:** {slope_val} °C/episode")
+              else:
+                  st.markdown(f"**Slope:** {slope_val:.3f} °C/episode")
+
+              st.markdown("**⏱️  RUL Projection**")
+              st.markdown(f"**Days Remaining:** {rul_str}")
+              if isinstance(pct_life_val, str):
+                  st.markdown(f"**Filter Life Used:** {pct_life_val}")
+              else:
+                  st.markdown(f"**Filter Life Used:** {pct_life_val:.0f}%")
+
+              st.markdown("**🌡️  Temperature Data**")
+              if isinstance(current_dt_val, str):
+                  st.markdown(f"**Current ΔT:** {current_dt_val}°C")
+              else:
+                  st.markdown(f"**Current ΔT:** {current_dt_val:.1f}°C")
+              if isinstance(failure_dt_val, str):
+                  st.markdown(f"**Failure Threshold:** {failure_dt_val}°C")
+              else:
+                  st.markdown(f"**Failure Threshold:** {failure_dt_val:.1f}°C")
+              if isinstance(baseline_dt_val, str):
+                  st.markdown(f"**Baseline ΔT:** {baseline_dt_val}°C")
+              else:
+                  st.markdown(f"**Baseline ΔT:** {baseline_dt_val:.1f}°C")
+
+          with col2:
+              onset_deltas = result.get('onset_deltas', [])
+              rolling_median = result.get('rolling_median', [])
+              if len(onset_deltas) > 2:
+                  episodes = list(range(len(onset_deltas)))
+                  fig = go.Figure()
+                  fig.add_trace(go.Scatter(
+                      x=episodes,
+                      y=onset_deltas,
+                      mode='markers',
+                      marker=dict(size=6, color='#93c5fd', opacity=0.7),
+                      name='Onset ΔT (raw)',
+                      hovertemplate='Episode %{x}<br>Onset ΔT: %{y:.2f}°C<extra></extra>'
+                  ))
+                  fig.add_trace(go.Scatter(
+                      x=episodes,
+                      y=rolling_median,
+                      mode='lines+markers',
+                      line=dict(color='#f59e0b', width=3),
+                      marker=dict(size=5, color='#f59e0b'),
+                      name='Rolling Median',
+                      hovertemplate='Episode %{x}<br>Rolling Median: %{y:.2f}°C<extra></extra>'
+                  ))
+                  failure_dt_line = result.get('failure_dt', 10.0)
+                  fig.add_hline(
+                      y=failure_dt_line,
+                      line_dash='dot',
+                      line_color='#ef4444',
+                      annotation_text=f"Failure: {failure_dt_line:.1f}°C",
+                      annotation_position='right'
+                  )
+                  if len(episodes) >= 2:
+                      r2 = result.get('r2', 0)
+                      slope = result.get('slope', 0)
+                      coeffs = np.polyfit(episodes, rolling_median, 1)
+                      trend_line = np.polyval(coeffs, episodes)
+                      fig.add_trace(go.Scatter(
+                          x=episodes,
+                          y=trend_line,
+                          mode='lines',
+                          line=dict(color='#ef4444', width=2, dash='dash'),
+                          name=f'Trend (R²={r2:.3f})',
+                          hovertemplate='Episode %{x}<br>Trend: %{y:.2f}°C<extra></extra>'
+                      ))
+                  fig.update_layout(
+                      title=f"RUL Trend — {site_id}",
+                      xaxis_title='Episode Number',
+                      yaxis_title='ΔT (°C)',
+                      height=380,
+                      hovermode='x unified',
+                      paper_bgcolor='#ffffff',
+                      plot_bgcolor='#f9fafb',
+                      font=dict(size=11, color='#1a202c'),
+                      margin=dict(t=40, b=40, l=60, r=80)
+                  )
+                  st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+              else:
+                  st.info("Not enough episodes for trend plot.")
 
 st.markdown("---")
 query_ts = data.get('query_timestamp', 'unknown')
 query_elapsed = data.get('query_elapsed_seconds', '?')
 sites_queried = data.get('sites_queried', '?')
-footer_html = f'<div style="text-align:center;font-size:0.75rem;color:#9ca3af;">Last updated: {query_ts}<br>Query time: {query_elapsed:.1f}s for {sites_queried} sites<br>Dashboard: Mode 3 Rolling Median RUL Analysis</div>'
+footer_html = (
+  f'<div style="text-align:center;font-size:0.75rem;color:#9ca3af;'
+  f'margin-top:32px;">Last updated: {query_ts}<br>'
+  f'Query time: {query_elapsed:.1f}s for {sites_queried} sites<br>'
+  f'Mode 3 Rolling Median RUL Analysis</div>'
+)
 st.markdown(footer_html, unsafe_allow_html=True)
