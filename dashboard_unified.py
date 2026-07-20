@@ -109,8 +109,7 @@ with st.sidebar:
     rolling_window = st.slider("Rolling median window (episodes)", 3, 10, 5, step=1, label_visibility='visible')
     failure_dt = st.slider("ΔT at filter failure (°C)", 5.0, 20.0, 10.0, step=0.5, label_visibility='visible')
     st.markdown("---")
-    help_text = "💡 Analysis assumes 90 days of InfluxDB data. RUL projects when rolling median hits failure threshold.
- Green = filter healthy. Yellow = plan replacement soon. Red = replace now."
+    help_text = "💡 Analysis assumes 90 days of InfluxDB data. RUL projects when rolling median hits failure threshold. Green = filter healthy. Yellow = plan replacement soon. Red = replace now."
     st.markdown(f'<div style="font-size:0.72rem;color:#9ca3af;line-height:1.6;">{help_text}</div>',
 unsafe_allow_html=True)
 
@@ -132,25 +131,20 @@ st.info(threshold_info)
 col1, col2, col3, col4, col5 = st.columns(5)
 with col1:                             
     urgent_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'URGENT')
-    st.markdown(f'<div class="metric-card danger"><div class="label">🔴 URGENT</div><div 
-class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-card danger"><div class="label">🔴 URGENT</div><div class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>', unsafe_allow_html=True)
 with col2:
     warning_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'WARNING')
-    st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div 
-class="value">{warning_count}</div><div class="sub">14–30 days</div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div class="value">{warning_count}</div><div class="sub">14–30 days</div></div>', unsafe_allow_html=True)
 with col3:
     ok_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'OK')
-    st.markdown(f'<div class="metric-card"><div class="label">🟢 OK</div><div class="value">{ok_count}</div><div
-class="sub">≥ 30 days</div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-card"><div class="label">🟢 OK</div><div class="value">{ok_count}</div><div class="sub">≥ 30 days</div></div>', unsafe_allow_html=True)
 with col4:
     failed_count = sum(1 for s in sites_recalc.values() if not s.get('success'))
-    st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div 
-class="value">{failed_count}</div><div class="sub">Query error</div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div class="value">{failed_count}</div><div class="sub">Query error</div></div>', unsafe_allow_html=True)
 with col5:
     successful = [s for s in sites_recalc.values() if s.get('success')]
     mean_rul = np.mean([s.get('rul_days', 0) for s in successful if s.get('rul_days') is not None])
-    st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div 
-class="value">{mean_rul:.0f}d</div><div class="sub">All sites</div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div class="value">{mean_rul:.0f}d</div><div class="sub">All sites</div></div>', unsafe_allow_html=True)
 
 st.markdown("---")
 st.markdown(f'<div class="section-header">Sites Status Table</div>', unsafe_allow_html=True)
