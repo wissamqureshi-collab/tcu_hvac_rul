@@ -323,8 +323,7 @@ else:
               r2_check = result.get('r2', 0)
               slope_check = result.get('slope', 0)
               if isinstance(r2_check, (int, float)) and r2_check < 0.25:
-                  st.warning("⚠️  Data quality is insufficient to make an accurate prediction for this site (R² < 
-0.25)")
+                  st.warning("⚠️  Data quality is insufficient to make an accurate prediction for this site (R² < 0.25)")
               elif isinstance(slope_check, (int, float)) and slope_check <= 0:
                   st.warning("⚠️  Filter is not degrading or is improving - prediction is not accurate for this site")
               else:
