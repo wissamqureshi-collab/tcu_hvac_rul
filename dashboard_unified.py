@@ -218,27 +218,23 @@ with col1:
 
 with col2:
     warning_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'WARNING')
-    st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div 
-class="value">{warning_count}</div><div class="sub">14–30 days</div></div>',
+    st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div class="value">{warning_count}</div><div class="sub">14–30 days</div></div>',
                 unsafe_allow_html=True)
 
 with col3:
     ok_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'OK')
-    st.markdown(f'<div class="metric-card"><div class="label">🟢 OK</div><div class="value">{ok_count}</div><div
-class="sub">≥ 30 days</div></div>',    
+    st.markdown(f'<div class="metric-card"><div class="label">🟢 OK</div><div class="value">{ok_count}</div><div class="sub">≥ 30 days</div></div>',    
                 unsafe_allow_html=True)
 
 with col4:
     failed_count = sum(1 for s in sites_recalc.values() if not s.get('success'))
-    st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div 
-class="value">{failed_count}</div><div class="sub">Query error</div></div>',
+    st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div class="value">{failed_count}</div><div class="sub">Query error</div></div>',
                 unsafe_allow_html=True)
 
 with col5:
     successful = [s for s in sites_recalc.values() if s.get('success')]
     mean_rul = np.mean([s.get('rul_days', 0) for s in successful if s.get('rul_days') is not None])
-    st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div 
-class="value">{mean_rul:.0f}d</div><div class="sub">All sites</div></div>',
+    st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div class="value">{mean_rul:.0f}d</div><div class="sub">All sites</div></div>',
                 unsafe_allow_html=True)
 
 st.markdown("---")
