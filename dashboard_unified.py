@@ -272,8 +272,7 @@ else:
                   episodes = list(range(len(onset_deltas)))
                   fig = go.Figure()
                   fig.add_trace(go.Scatter(x=episodes, y=onset_deltas, mode='markers', marker=dict(size=6, color='lightblue', opacity=0.6), name='Onset ΔT (raw)', hovertemplate='Episode %{x}<br>Onset ΔT: %{y:.2f}°C<extra></extra>'))
-                  fig.add_trace(go.Scatter(x=episodes, y=rolling_median, mode='lines+markers', line=dict(color='#f59e0b', width=2.5), marker=dict(size=5, color='#f59e0b'), name='Rolling Median', hovertemplate='Episode %{x}<br>Rolling
-Median: %{y:.2f}°C<extra></extra>'))
+                  fig.add_trace(go.Scatter(x=episodes, y=rolling_median, mode='lines+markers', line=dict(color='#f59e0b', width=2.5), marker=dict(size=5, color='#f59e0b'), name='Rolling Median', hovertemplate='Episode %{x}<br>Rolling Median: %{y:.2f}°C<extra></extra>'))
                   failure_dt_line = result.get('failure_dt', 10.0)
                   fig.add_hline(y=failure_dt_line, line_dash='dot', line_color='orange', annotation_text=f"Failure: {failure_dt_line:.1f}°C", annotation_position='right')
                   if len(episodes) >= 2:
