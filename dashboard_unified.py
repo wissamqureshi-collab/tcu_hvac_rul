@@ -477,8 +477,7 @@ def query_all_sites_parallel(sites, password, max_workers=10):
                     logging.info(f"[{i}/{len(sites)}] ✓ {result['site_id']}: {urgency} ({rul_str})")
                 else:
                     failed += 1
-                    logging.warning(f"[{i}/{len(sites)}] ✗ {result['site_id']}: {result.get('error', 'Unknown 
-error')}")
+                    logging.warning(f"[{i}/{len(sites)}] ✗ {result['site_id']}: {result.get('error', 'Unknown error')}")
 
             except Exception as e:
                 failed += 1
