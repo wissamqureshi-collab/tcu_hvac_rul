@@ -262,8 +262,7 @@ with col4:
 
 with col5:
   failed_count = sum(1 for s in sites_recalc.values() if not s.get('success'))
-  st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div 
-class="value">{failed_count}</div><div class="sub">Query error</div></div>',
+  st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div class="value">{failed_count}</div><div class="sub">Query error</div></div>',
               unsafe_allow_html=True)
 
 st.markdown("---")
