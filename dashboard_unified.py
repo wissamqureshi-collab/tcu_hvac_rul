@@ -221,8 +221,7 @@ with col1:
 
 with col2:
     warning_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'WARNING')
-    st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div 
-class="value">{warning_count}</div><div class="sub">14–30 days</div></div>',
+    st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div class="value">{warning_count}</div><div class="sub">14–30 days</div></div>',
                 unsafe_allow_html=True)
 
 with col3:
