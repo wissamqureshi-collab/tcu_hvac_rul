@@ -180,8 +180,7 @@ with st.sidebar:
     failure_dt = st.slider("Delta T at filter failure (C)", 5.0, 20.0, 10.0, step=0.5, label_visibility='visible')
 
     st.markdown("---")
-    st.markdown('<div style="font-size:0.72rem;color:#9ca3af;line-height:1.6;">Analysis assumes 90 days of InfluxDB data. RUL projects when linear trend hits failure threshold. Green = filter healthy. Yellow = plan replacement soon. Red = 
-replace now.</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:0.72rem;color:#9ca3af;line-height:1.6;">Analysis assumes 90 days of InfluxDB data. RUL projects when linear trend hits failure threshold. Green = filter healthy. Yellow = plan replacement soon. Red = replace now.</div>', unsafe_allow_html=True)
 
 
 data = load_sites_data()
