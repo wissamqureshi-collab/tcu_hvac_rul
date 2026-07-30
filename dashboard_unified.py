@@ -423,7 +423,6 @@ else:
                           name='Max ΔT (raw)',
                           hovertemplate='Adjusted Hours: %{x:.1f}<br>Max ΔT: %{y:.2f}°C<extra></extra>'
                       ))
-
                           name='Max ΔT (raw)',
                           hovertemplate='Adjusted Hours: %{x:.1f}<br>Max ΔT: %{y:.2f}°C<extra></extra>'
                       ))
