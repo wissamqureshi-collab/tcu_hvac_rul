@@ -250,32 +250,27 @@ col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
   urgent_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'URGENT')
-  st.markdown(f'<div class="metric-card danger"><div class="label">🔴 URGENT</div><div 
-class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>',
+  st.markdown(f'<div class="metric-card danger"><div class="label">🔴 URGENT</div><div class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>',
               unsafe_allow_html=True)
 
 with col2:
   warning_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'WARNING')
-  st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div 
-class="value">{warning_count}</div><div class="sub">14–30 days</div></div>',
+  st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div class="value">{warning_count}</div><div class="sub">14–30 days</div></div>',
               unsafe_allow_html=True)
 
 with col3:
   ok_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'OK')
-  st.markdown(f'<div class="metric-card"><div class="label">🟢 OK</div><div class="value">{ok_count}</div><div
-class="sub">≥ 30 days</div></div>',
+  st.markdown(f'<div class="metric-card"><div class="label">🟢 OK</div><div class="value">{ok_count}</div><div class="sub">≥ 30 days</div></div>',
               unsafe_allow_html=True)
 
 with col4:
   no_data_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'NO_DATA')
-  st.markdown(f'<div class="metric-card"><div class="label">❓ NO DATA</div><div 
-class="value">{no_data_count}</div><div class="sub">Cannot extrapolate</div></div>',
+  st.markdown(f'<div class="metric-card"><div class="label">❓ NO DATA</div><div class="value">{no_data_count}</div><div class="sub">Cannot extrapolate</div></div>',
               unsafe_allow_html=True)
 
 with col5:
   failed_count = sum(1 for s in sites_recalc.values() if not s.get('success'))
-  st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div 
-class="value">{failed_count}</div><div class="sub">Query error</div></div>',
+  st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div class="value">{failed_count}</div><div class="sub">Query error</div></div>',
               unsafe_allow_html=True)
 
 st.markdown("---")
