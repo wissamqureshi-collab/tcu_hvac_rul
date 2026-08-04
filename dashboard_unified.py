@@ -451,8 +451,7 @@ for site_id, site_result in sites.items():
   sites_recalc[site_id] = recalculate_rul(site_result, failure_dt)
 
 success_count = len([s for s in sites_recalc.values() if s.get('success')])
-st.markdown(f"<h2 style='color: #1a202c; margin-bottom: 1.5rem;'>🌡️   Rogers HVAC Filter RUL Status — {success_count}
-Sites Analyzed</h2>", unsafe_allow_html=True)
+st.markdown(f"<h2 style='color: #1a202c; margin-bottom: 1.5rem;'>🌡️   Rogers HVAC Filter RUL Status — {success_count} Sites Analyzed</h2>", unsafe_allow_html=True)
 
 # Model Architecture Explanation
 with st.expander("📚 **Model Architecture & Methodology**", expanded=False):
