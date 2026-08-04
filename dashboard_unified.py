@@ -314,33 +314,20 @@ st.markdown("""
   }
 
   .control-panel h3 {
-      color: #e0e7ff !important;
+      color: #ffffff !important;
       margin-top: 0 !important;
+      font-size: 1.1rem !important;
   }
 
-  .control-panel label {
-      color: #1a202c !important;
-      font-weight: 600 !important;
-      font-size: 0.9rem !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.08em !important;
-  }
-
-  .control-panel .stSlider {
-      color: #1a202c !important;
-  }
-
+  /* Slider labels in control panel - force black */
   .control-panel .stSlider label {
-      color: #1a202c !important;
+      color: #000000 !important;
+      font-weight: 600 !important;
   }
 
-  /* Force black text on all control panel form elements */
-  .control-panel * {
-      color: #1a202c !important;
-  }
-
-  .control-panel [data-testid="stSlider"] label {
-      color: #1a202c !important;
+  /* All text elements in sliders should be black */
+  .control-panel .stSlider div {
+      color: #000000 !important;
   }
 </style>
 """, unsafe_allow_html=True)
