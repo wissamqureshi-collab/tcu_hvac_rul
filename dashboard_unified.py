@@ -304,30 +304,11 @@ st.markdown("""
       color: #ffffff !important;
   }
 
-  /* Control panel styling */
-  .control-panel {
-      background: linear-gradient(135deg, #1e3a5f 0%, #2d5a8f 100%);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-
-  .control-panel h3 {
-      color: #ffffff !important;
-      margin-top: 0 !important;
-      font-size: 1.1rem !important;
-  }
-
-  /* Slider labels in control panel - force black */
-  .control-panel .stSlider label {
+  /* Main slider label styling - make labels black and visible */
+  .stSlider label {
       color: #000000 !important;
-      font-weight: 600 !important;
-  }
-
-  /* All text elements in sliders should be black */
-  .control-panel .stSlider div {
-      color: #000000 !important;
+      font-weight: 700 !important;
+      font-size: 0.9rem !important;
   }
 </style>
 """, unsafe_allow_html=True)
@@ -437,24 +418,21 @@ sites = data['sites']
 st.markdown(f"<h1 style='color: #1a202c; margin-bottom: 0.5rem;'>🌡️   Rogers HVAC Filter RUL Dashboard</h1>", unsafe_allow_html=True)
 
 # CONTROL PANEL - NOW IN MAIN CONTENT WITH PROMINENT STYLING
-st.markdown('<div class="control-panel">', unsafe_allow_html=True)
-st.markdown('<h3 style="color: #e0e7ff; margin-top: 0; text-transform: uppercase; letter-spacing: 0.1em; font-size: 1rem;">⚙️ Analysis Controls</h3>', unsafe_allow_html=True)
+st.markdown("### ⚙️ Analysis Controls", help="Adjust these parameters to recalculate RUL")
 
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-  min_duration = st.slider("Min episode duration (min)", 10, 120, 30, step=5, label_visibility='visible')
+  min_duration = st.slider("Min episode\nduration (min)", 10, 120, 30, step=5)
 
 with col2:
-  fan_threshold = st.slider("Min fan speed (%)", 80, 100, 95, step=1, label_visibility='visible')
+  fan_threshold = st.slider("Min fan\nspeed (%)", 80, 100, 95, step=1)
 
 with col3:
-  rolling_window = st.slider("Rolling median window (episodes)", 3, 10, 5, step=1, label_visibility='visible')
+  rolling_window = st.slider("Rolling median\nwindow (episodes)", 3, 10, 5, step=1)
 
 with col4:
-  failure_dt = st.slider("ΔT at filter failure (°C)", 5.0, 20.0, 10.0, step=0.5, label_visibility='visible')
-
-st.markdown('</div>', unsafe_allow_html=True)
+  failure_dt = st.slider("ΔT at filter\nfailure (°C)", 5.0, 20.0, 10.0, step=0.5)
 
 # FILTER CONTROLS - ALSO IN MAIN CONTENT
 with st.expander("🔍 **Filter & Sort Options**", expanded=False):
