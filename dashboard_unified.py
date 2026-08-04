@@ -498,25 +498,29 @@ Each site uses a **linear regression model** to project filter failure based on 
 
 ---
 
-### Model Variants
+### Regression Models (for fitting pollution coefficients)
 
-| Model | When Used | Equation |
+| Model | When Used | Regression Fit |
 |-------|-----------|----------|
-| **1-Factor** | No air quality data | ΔT = β₀ + β₁ × (adj_hours) |
-| **2-Factor** | Partial AQ data | ΔT = β₀ + β₁ × (adj_hours) + β₂ × (PM10 or PM2.5) |
-| **3-Factor** | Full AQ data | ΔT = β₀ + β₁ × (adj_hours) + β₂ × (PM10) + β₃ × (PM2.5) |
+| **1-Factor** | No air quality data | slope ~ adjusted_hours (no adjustment) |
+| **2-Factor** | Partial AQ data | slope ~ adjusted_hours + PM10 (or PM2.5) |
+| **3-Factor** | Full AQ data | slope ~ adjusted_hours + PM10 + PM2.5 |
+
+**Note:** All sites use the same base equation: ΔT = β₀ + β₁ × (adj_hours), but with an adjusted slope.
 
 ---
 
-### Pollution Effect Multiplier
+### Pollution Effect Multiplier (Applied to All Sites with Air Quality Data)
 
-For sites with air quality data, RUL is further adjusted using pollution coefficients:
+**How it works:**
+1. **Fit regression** across all sites with air quality data: `slope ~ adjusted_hours + PM10 + PM2.5`
+   - This finds coefficients β_pm10 and β_pm25 that relate pollutant levels to degradation rate
+2. **Apply multiplier** to each individual site's slope:
+   - effect = β_pm10 × PM10 + β_pm25 × PM2.5
+   - adjusted_slope = raw_slope × (1 + effect)
+3. **Calculate RUL** using the adjusted slope (same ΔT equation, but steeper/shallower trend)
 
-**Formula:**
-- effect = β₂₅ × PM2.5 + β₁₀ × PM10
-- adjusted_slope = raw_slope × (1 + effect)
-
-**Interpretation:** Polluted air accelerates filter clogging beyond fan runtime alone. A positive effect coefficient means higher pollutant levels → faster degradation → shorter RUL.
+**Interpretation:** Polluted air acts as a multiplier on filter degradation. Positive effect coefficient means higher pollution accelerates clogging (shorter RUL); negative means it slows degradation (longer RUL).
 
 {regression_info}
 
