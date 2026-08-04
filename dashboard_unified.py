@@ -311,8 +311,7 @@ with st.sidebar:
     )
 
     # Analysis parameters
-    st.markdown('<div style="color: #e0e7ff; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; 
-letter-spacing: 0.1em; margin: 1.5rem 0 1rem 0;">Analysis Parameters</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #e0e7ff; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin: 1.5rem 0 1rem 0;">Analysis Parameters</div>', unsafe_allow_html=True)
     fan_threshold = st.slider("Min fan speed (%)", 80, 100, 95, step=1, label_visibility='visible')
     min_duration = st.slider("Min episode duration (min)", 10, 120, 30, step=5, label_visibility='visible')
     rolling_window = st.slider("Rolling median window (episodes)", 3, 10, 5, step=1, label_visibility='visible')
