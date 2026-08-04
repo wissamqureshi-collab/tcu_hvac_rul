@@ -513,7 +513,7 @@ Each site uses a **linear regression model** to project filter failure based on 
 ### Pollution Effect Multiplier (Applied to All Sites with Air Quality Data)
 
 **How it works:**
-1. **Fit regression** across all sites with air quality data: `slope ~ adjusted_hours + PM10 + PM2.5`
+1. **Fit regression** across all sites with air quality data: slope ~ adjusted_hours + PM10 + PM2.5
    - This finds coefficients β_pm10 and β_pm25 that relate pollutant levels to degradation rate
 2. **Apply multiplier** to each individual site's slope:
    - effect = β_pm10 × PM10 + β_pm25 × PM2.5
