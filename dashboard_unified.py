@@ -334,7 +334,7 @@ def load_sites_data(json_file='sites_data.json'):
 def recalculate_rul(site_result, new_failure_dt):
   """
   Recalculate RUL for a site using a custom failure ΔT threshold.
-  Uses adjusted_slope (with pollution effect) if available, otherwise raw slope.
+  Uses raw slope only (1-factor model). Pollution effect shown as informational impact only.
   Returns updated site_result with new rul_days and urgency.
   """
   site_copy = site_result.copy()
@@ -343,8 +343,8 @@ def recalculate_rul(site_result, new_failure_dt):
       return site_copy
 
   current_dt = site_result.get('current_dt', 0)
-  # Use adjusted slope if pollution effect was applied, otherwise use raw slope
-  slope = site_result.get('adjusted_slope') if site_result.get('adjusted_slope') is not None else site_result.get('slope', 0)
+  # Always use raw slope (1-factor model)
+  slope = site_result.get('slope', 0)
   r2 = site_result.get('r2', 0)
   baseline_dt = site_result.get('baseline_dt', 0)
   intercept = site_result.get('intercept', 0)
@@ -390,32 +390,80 @@ def recalculate_rul(site_result, new_failure_dt):
   return site_copy
 
 
+def calculate_pollution_impact_blurb(site_result, all_sites_data):
+  """
+  Calculate how this site's pollution compares to the site average.
+  Returns a blurb explaining the impact on filter degradation.
+  """
+  if not site_result.get('air_quality'):
+      return None
+
+  # Get regression coefficients
+  regression = all_sites_data.get('air_quality_regression', {})
+  if not regression or (not regression.get('coefficient_pm25') and not regression.get('coefficient_pm10')):
+      return None
+
+  beta_pm25 = regression.get('coefficient_pm25') or 0
+  beta_pm10 = regression.get('coefficient_pm10') or 0
+
+  # Calculate site averages for PM2.5 and PM10
+  pm25_values = []
+  pm10_values = []
+  for site_id, result_item in all_sites_data.get('sites', {}).items():
+      if result_item.get('air_quality'):
+          pm25 = result_item['air_quality'].get('pm25')
+          pm10 = result_item['air_quality'].get('pm10')
+          if pm25 is not None:
+              pm25_values.append(pm25)
+          if pm10 is not None:
+              pm10_values.append(pm10)
+
+  if not pm25_values or not pm10_values:
+      return None
+
+  avg_pm25 = np.mean(pm25_values)
+  avg_pm10 = np.mean(pm10_values)
+
+  # This site's pollution
+  site_pm25 = site_result['air_quality'].get('pm25')
+  site_pm10 = site_result['air_quality'].get('pm10')
+
+  if site_pm25 is None or site_pm10 is None:
+      return None
+
+  # Calculate slope impact (degradation rate adjustment)
+  slope_impact = (beta_pm25 * (site_pm25 - avg_pm25)) + (beta_pm10 * (site_pm10 - avg_pm10))
+
+  # Convert slope impact to RUL impact in days
+  raw_slope = site_result.get('slope', 0.001)
+  if raw_slope <= 0:
+      return None
+
+  # Approximate RUL impact: assume typical site has ~30 day RUL
+  avg_rul_days = 30
+  rul_impact_days = (slope_impact / raw_slope) * avg_rul_days
+
+  # Format the blurb
+  pm25_diff = site_pm25 - avg_pm25
+  pm10_diff = site_pm10 - avg_pm10
+  direction = "faster" if rul_impact_days < 0 else "slower"
+
+  blurb = f"**Pollution Impact (vs Site Average):**\n"
+  blurb += f"- PM2.5: {site_pm25:.1f} μg/m³ ({pm25_diff:+.1f} vs avg {avg_pm25:.1f})\n"
+  blurb += f"- PM10: {site_pm10:.1f} μg/m³ ({pm10_diff:+.1f} vs avg {avg_pm10:.1f})\n"
+  blurb += f"\nBased on air quality patterns across all sites, this location's air quality would cause the filter to degrade **{abs(rul_impact_days):.1f} days {direction}** than typical."
+
+  return blurb
+
+
 def get_model_type_and_equation(result):
-  """Determine model type and generate equation string with actual parameters."""
+  """Generate 1-factor equation with actual parameters."""
   intercept = result.get('intercept', 0)
   slope = result.get('slope', 0)
-  has_aq = result.get('air_quality')
-  pollution_effect = result.get('pollution_effect')
 
-  # Base equation with actual intercept and slope values
-  base_eq = f"ΔT = {intercept:.2f} + {slope:.4f} × (adj_hours)"
-
-  if has_aq and pollution_effect is not None:
-      pm10 = has_aq.get('pm10')
-      pm25 = has_aq.get('pm25')
-      adjusted_slope = result.get('adjusted_slope', slope)
-
-      if pm10 is not None and pm25 is not None:
-          eq_with_pollution = f"ΔT = {intercept:.2f} + {adjusted_slope:.4f} × (adj_hours)  [adjusted by pollution effect: {pollution_effect:+.4f}]"
-          return "3-Factor (with Pollution)", eq_with_pollution
-      elif pm10 is not None:
-          eq_with_pollution = f"ΔT = {intercept:.2f} + {adjusted_slope:.4f} × (adj_hours)  [adjusted by PM10: {pollution_effect:+.4f}]"
-          return "2-Factor PM10 (with Pollution)", eq_with_pollution
-      elif pm25 is not None:
-          eq_with_pollution = f"ΔT = {intercept:.2f} + {adjusted_slope:.4f} × (adj_hours)  [adjusted by PM2.5: {pollution_effect:+.4f}]"
-          return "2-Factor PM2.5 (with Pollution)", eq_with_pollution
-
-  return "1-Factor", base_eq
+  # All sites use 1-factor model
+  equation = f"ΔT = {intercept:.2f} + {slope:.4f} × (adj_hours)"
+  return "1-Factor", equation
 
 
 # ============================================================================
@@ -743,7 +791,9 @@ else:
 
       air_quality_html = ""
       if has_air_quality:
-        air_quality_html = f"""<div style='background: #ecfdf5; padding: 14px; border-radius: 8px; border-left: 4px solid #059669;'><strong style='font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;'>🌍 Air Quality (90-day avg)</strong><br><div style='margin-top: 8px; font-size: 0.85rem; color: #374151;'><div>PM2.5: <strong style='font-size: 1.1em; color: #1a202c;'>{pm25_val} μg/m³</strong></div><div>PM10: <strong style='font-size: 1.1em; color: #1a202c;'>{pm10_val} μg/m³</strong></div><div>Pollution Effect: <span style='background: #f0fdf4; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.8rem;'>{pollution_effect_display}</span></div><div style='margin-top: 6px; color: #6b7280; font-size: 0.8rem;'>Adjusted slope = raw_slope × (1 + effect)</div></div></div>"""
+        pollution_blurb = calculate_pollution_impact_blurb(result, data)
+        blurb_html = f"<div style='margin-top: 12px; padding: 10px; background: #f0fdf4; border-radius: 4px; font-size: 0.85rem; color: #374151; line-height: 1.6;'>{pollution_blurb.replace(chr(10), '<br>')}</div>" if pollution_blurb else ""
+        air_quality_html = f"""<div style='background: #ecfdf5; padding: 14px; border-radius: 8px; border-left: 4px solid #059669;'><strong style='font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;'>🌍 Air Quality (90-day avg)</strong><br><div style='margin-top: 8px; font-size: 0.85rem; color: #374151;'><div>PM2.5: <strong style='font-size: 1.1em; color: #1a202c;'>{pm25_val} μg/m³</strong></div><div>PM10: <strong style='font-size: 1.1em; color: #1a202c;'>{pm10_val} μg/m³</strong></div>{blurb_html}</div></div>"""
 
       with st.expander(expander_label):
           col1, col2 = st.columns([1, 2])
