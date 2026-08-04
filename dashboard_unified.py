@@ -333,6 +333,15 @@ st.markdown("""
   .control-panel .stSlider label {
       color: #1a202c !important;
   }
+
+  /* Force black text on all control panel form elements */
+  .control-panel * {
+      color: #1a202c !important;
+  }
+
+  .control-panel [data-testid="stSlider"] label {
+      color: #1a202c !important;
+  }
 </style>
 """, unsafe_allow_html=True)
 
