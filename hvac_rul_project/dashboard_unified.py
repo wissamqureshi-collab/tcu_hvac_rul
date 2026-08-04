@@ -312,14 +312,22 @@ st.markdown("""
 # ============================================================================
 
 @st.cache_data(ttl=300)
-def load_sites_data(json_file='sites_data.json'):
+def load_sites_data():
   """Load aggregated site data from JSON."""
   try:
-      if not Path(json_file).exists():
-          return None
-      with open(json_file) as f:
-          data = json.load(f)
-      return data
+      # Try current directory first, then hvac_rul_project
+      possible_paths = [
+          Path('sites_data.json'),
+          Path('hvac_rul_project/sites_data.json'),
+          Path(__file__).parent / 'sites_data.json'
+      ]
+
+      for path in possible_paths:
+          if path.exists():
+              with open(path) as f:
+                  return json.load(f)
+
+      return None
   except Exception as e:
       st.error(f"Error loading data: {e}")
       return None
