@@ -335,15 +335,15 @@ def recalculate_rul(site_result, new_failure_dt):
   if not site_result.get('success'):
       return site_copy
 
-  rolling_median = site_result.get('rolling_median', [])
+  current_dt = site_result.get('current_dt', 0)
   slope = site_result.get('slope', 0)
   r2 = site_result.get('r2', 0)
   baseline_dt = site_result.get('baseline_dt', 0)
   episode_interval_days = site_result.get('episode_interval_days', 1)
 
-  if not rolling_median or len(rolling_median) < 2:
-      site_copy['rul_days'] = None
-      site_copy['urgency'] = 'UNKNOWN'
+  if current_dt <= 0 or slope <= 0:
+      site_copy['rul_days'] = site_result.get('rul_days', 999)
+      site_copy['urgency'] = site_result.get('urgency', 'UNKNOWN')
       return site_copy
 
   current_dt = rolling_median[-1]
@@ -718,30 +718,20 @@ Readings</strong><br>
 """, unsafe_allow_html=True)
 
           with col2:
-              onset_deltas = result.get('onset_deltas', [])
-              rolling_median = result.get('rolling_median', [])
+              max_deltas = result.get('max_deltas', [])
 
-              if len(onset_deltas) > 2:
-                  episodes = list(range(len(onset_deltas)))
+              if len(max_deltas) > 2:
+                  episodes = list(range(len(max_deltas)))
 
                   fig = go.Figure()
 
-
                   fig.add_trace(go.Scatter(
-                      x=episodes, y=onset_deltas,
-                      mode='markers',
-                      marker=dict(size=6, color='#a5b4fc', opacity=0.7),
-                      name='Onset ΔT (raw)',
-                      hovertemplate='Episode %{x}<br>Onset ΔT: %{y:.2f}°C<extra></extra>'
-                  ))
-
-                  fig.add_trace(go.Scatter(
-                      x=episodes, y=rolling_median,
+                      x=episodes, y=max_deltas,
                       mode='lines+markers',
                       line=dict(color='#f59e0b', width=2.5),
                       marker=dict(size=5, color='#f59e0b'),
-                      name='Rolling Median',
-                      hovertemplate='Episode %{x}<br>Rolling Median: %{y:.2f}°C<extra></extra>'
+                      name='Max ΔT Per Episode',
+                      hovertemplate='Episode %{x}<br>Max ΔT: %{y:.2f}°C<extra></extra>'
                   ))
 
                   fig.add_hline(
@@ -755,7 +745,7 @@ Readings</strong><br>
                   if len(episodes) >= 2:
                       r2 = result.get('r2', 0)
                       slope = result.get('slope', 0)
-                      coeffs = np.polyfit(episodes, rolling_median, 1)
+                      coeffs = np.polyfit(episodes, max_deltas, 1)
                       trend_line = np.polyval(coeffs, episodes)
                       fig.add_trace(go.Scatter(
                           x=episodes, y=trend_line,
@@ -807,7 +797,7 @@ Readings</strong><br>
 
                   st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
               else:
-                  st.info("Not enough episodes for trend plot.")
+                  st.info("Not enough data points for trend plot.")
 
 st.markdown("---")
 st.markdown(f"""
