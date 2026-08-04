@@ -326,7 +326,7 @@ def load_sites_data(json_file='sites_data.json'):
 
 
 def recalculate_rul(site_result, new_failure_dt):
-  """                                  
+  """
   Recalculate RUL for a site using a custom failure ΔT threshold.
   Returns updated site_result with new rul_days and urgency.
   """
@@ -335,19 +335,16 @@ def recalculate_rul(site_result, new_failure_dt):
   if not site_result.get('success'):
       return site_copy
 
-  rolling_median = site_result.get('rolling_median', [])
+  current_dt = site_result.get('current_dt', 0)
   slope = site_result.get('slope', 0)
   r2 = site_result.get('r2', 0)
   baseline_dt = site_result.get('baseline_dt', 0)
-  episode_interval_days = site_result.get('episode_interval_days', 1)
 
-  if not rolling_median or len(rolling_median) < 2:
+  if current_dt <= 0 or slope <= 0:
       site_copy['rul_days'] = None
-      site_copy['urgency'] = 'UNKNOWN'
+      site_copy['urgency'] = site_result.get('urgency', 'UNKNOWN')
       return site_copy
 
-  current_dt = rolling_median[-1]
-  site_copy['current_dt'] = current_dt
   site_copy['failure_dt'] = new_failure_dt
 
   if current_dt >= new_failure_dt:
@@ -356,21 +353,20 @@ def recalculate_rul(site_result, new_failure_dt):
       site_copy['pct_life'] = 100
       return site_copy
 
-  if r2 < 0.25 or slope <= 0:
+  if r2 < 0.25:
       site_copy['rul_days'] = 999
       site_copy['urgency'] = 'OK'
       site_copy['pct_life'] = 0
       return site_copy
 
-  episodes_to_failure = (new_failure_dt - current_dt) / slope if slope > 0 else 999
-  rul_days = episodes_to_failure * episode_interval_days
+  rul_days = (new_failure_dt - current_dt) / slope
   site_copy['rul_days'] = max(0, rul_days)
 
   if baseline_dt > 0:
       pct_life = (current_dt - baseline_dt) / (new_failure_dt - baseline_dt) * 100
       site_copy['pct_life'] = max(0, min(100, pct_life))
 
-  if rul_days < 14: 
+  if rul_days < 14:
       site_copy['urgency'] = 'URGENT'
   elif rul_days < 30:
       site_copy['urgency'] = 'WARNING'
