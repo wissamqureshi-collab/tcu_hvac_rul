@@ -328,6 +328,7 @@ def load_sites_data(json_file='sites_data.json'):
 def recalculate_rul(site_result, new_failure_dt):
   """
   Recalculate RUL for a site using a custom failure ΔT threshold.
+  Uses adjusted_slope (with pollution effect) if available, otherwise raw slope.
   Returns updated site_result with new rul_days and urgency.
   """
   site_copy = site_result.copy()
@@ -336,9 +337,11 @@ def recalculate_rul(site_result, new_failure_dt):
       return site_copy
 
   current_dt = site_result.get('current_dt', 0)
-  slope = site_result.get('slope', 0)
+  # Use adjusted slope if pollution effect was applied, otherwise use raw slope
+  slope = site_result.get('adjusted_slope') if site_result.get('adjusted_slope') is not None else site_result.get('slope', 0)
   r2 = site_result.get('r2', 0)
   baseline_dt = site_result.get('baseline_dt', 0)
+  intercept = site_result.get('intercept', 0)
 
   if current_dt <= 0 or slope <= 0:
       site_copy['rul_days'] = None
@@ -359,7 +362,12 @@ def recalculate_rul(site_result, new_failure_dt):
       site_copy['pct_life'] = 0
       return site_copy
 
-  rul_days = (new_failure_dt - current_dt) / slope
+  # Convert to days using avg hours per day
+  avg_hours_per_day = site_result.get('avg_adjusted_hours_per_day', 1.0)
+  hours_to_failure = (new_failure_dt - intercept) / slope if slope > 0 else 999
+  current_hours = site_result.get('total_adjusted_hours', 0)
+  remaining_hours = hours_to_failure - current_hours
+  rul_days = remaining_hours / avg_hours_per_day if avg_hours_per_day > 0 else 999
   site_copy['rul_days'] = max(0, rul_days)
 
   if baseline_dt > 0:
@@ -451,16 +459,19 @@ st.markdown(f"<h2 style='color: #1a202c; margin-bottom: 1.5rem;'>🌡️   Roger
 
 # Model Architecture Explanation
 with st.expander("📚 **Model Architecture & Methodology**", expanded=False):
-  st.markdown("""
+  regression_data = data.get('air_quality_regression', {})
+
+  st.markdown(f"""
 <div style="color: #1a202c; line-height: 1.9; font-size: 0.95rem;">
 
-### Current RUL Prediction System (Mode 3)
+### Current RUL Prediction System (Mode 3 + Pollution Effect)
 
 **Per-Site RUL Calculation**
 
 Each site uses a **linear regression model** to project filter failure based on temperature differential (ΔT) trends:
 - Fit a line through historical ΔT measurements vs. cumulative adjusted fan runtime
 - Project when ΔT reaches the failure threshold (default: 10°C)
+- Optionally apply **pollution effect multiplier** if air quality data available
 - Convert remaining runtime to days based on average daily fan usage
 
 ---
@@ -472,6 +483,23 @@ Each site uses a **linear regression model** to project filter failure based on 
 | **1-Factor** | No air quality data | `ΔT = β₀ + β₁ × (adj_hours)` |
 | **2-Factor** | Partial AQ data | `ΔT = β₀ + β₁ × (adj_hours) + β₂ × (PM10 or PM2.5)` |
 | **3-Factor** | Full AQ data | `ΔT = β₀ + β₁ × (adj_hours) + β₂ × (PM10) + β₃ × (PM2.5)` |
+
+---
+
+### Pollution Effect Multiplier
+
+For sites with air quality data, RUL is further adjusted using pollution coefficients:
+
+**Formula:**
+- **effect** = β₂₅ × PM2.5 + β₁₀ × PM10
+- **adjusted_slope** = raw_slope × (1 + effect)
+
+**Interpretation:** Polluted air accelerates filter clogging beyond fan runtime alone. A positive effect coefficient means higher pollutant levels → faster degradation → shorter RUL.
+
+{"<br>**Fitted Coefficients (from regression):**" if regression_data else ""}
+{"<br>- PM2.5: β = " + f"{regression_data.get('coefficient_pm25', 0):.6f}" if regression_data.get('coefficient_pm25') else ""}
+{"<br>- PM10: β = " + f"{regression_data.get('coefficient_pm10', 0):.6f}" if regression_data.get('coefficient_pm10') else ""}
+{"<br>- R² = " + f"{regression_data.get('r_squared', 0):.4f} ({regression_data.get('sites_analyzed', 0)} sites)" if regression_data else ""}
 
 ---
 
@@ -492,9 +520,11 @@ Each site uses a **linear regression model** to project filter failure based on 
 
 1. **Extract Episodes** — Identify freecooling periods (fan ≥95%, ≥30 min duration)
 2. **Calculate Adjusted Hours** — Weight each episode by fan_speed²
-3. **Fit Regression** — Find the ΔT trend line (slope = degradation rate)
-4. **Project Failure** — When ΔT reaches threshold at current degradation rate
-5. **Urgency Classification**
+3. **Query Air Quality** — Fetch 90-day Weatherbit PM10/PM2.5 for sites with coordinates
+4. **Fit Regression** — Find ΔT trend + pollution coefficients (if ≥2 sites with AQ data)
+5. **Apply Pollution Effect** — For each site with AQ, adjust slope by pollution multiplier
+6. **Project Failure** — When (adjusted) ΔT reaches threshold at current degradation rate
+7. **Urgency Classification**
  - 🔴 **URGENT** → RUL < 14 days (Replace immediately)
  - 🟡 **WARNING** → 14–30 days (Schedule replacement soon)
  - 🟢 **OK** → ≥30 days (Monitor, no action needed)
@@ -508,6 +538,7 @@ Each site uses a **linear regression model** to project filter failure based on 
 | **InfluxDB** | 1–10 min intervals | Site HVAC data (fan speed, ΔT, mode) |
 | **Weatherbit API** | Hourly records | PM10 & PM2.5 (aggregated to 90-day avg) |
 | **Episodes** | 30 min–hours | Filtered freecooling windows |
+| **Regression** | Batch fit | Pollution coefficients (β₁₀, β₂₅) |
 
 ---
 
@@ -516,9 +547,12 @@ Each site uses a **linear regression model** to project filter failure based on 
 - This dashboard reads **pre-computed** `sites_data.json` (generated by `query_sites.py`)
 - Model coefficients are fixed at query time; data queries run **offline**
 - Use the `failure_dt` slider to **dynamically recalculate RUL** (doesn't re-query sites)
-- Air quality impact requires ≥30 days of historical data per site
+- Air quality impact requires:
+  - Site coordinates in `sites_inventory_2.csv`
+  - ≥90 days of historical data from Weatherbit
+  - ≥2 sites with complete air quality to fit regression
 
-</div>    
+</div>
   """, unsafe_allow_html=True)
 
 st.markdown("---")
@@ -577,6 +611,16 @@ for site_id, result in sites_recalc.items():
 
   rul = result.get('rul_days', None)
   model_type, _ = get_model_type_and_equation(result)
+
+  # Check if pollution effect was applied
+  has_pollution_effect = result.get('pollution_effect') is not None
+  pollution_indicator = f"({result.get('pollution_effect'):+.3f})" if has_pollution_effect else "—"
+
+  # Air quality info
+  aq = result.get('air_quality', {})
+  pm10_str = f"{aq.get('pm10', 0):.1f}" if aq.get('pm10') else "—"
+  pm25_str = f"{aq.get('pm25', 0):.1f}" if aq.get('pm25') else "—"
+
   table_data.append({
       'Site ID': site_id,
       'Site Name': result.get('site_name', '?'),
@@ -589,6 +633,9 @@ for site_id, result in sites_recalc.items():
       'Current ΔT (°C)': f"{result.get('current_dt', 0):.1f}",
       'Failure ΔT (°C)': f"{result.get('failure_dt', 0):.1f}",
       'Filter Life Used': f"{result.get('pct_life', 0):.0f}%",
+      'PM10 (μg/m³)': pm10_str,
+      'PM2.5 (μg/m³)': pm25_str,
+      'Pollution Effect': pollution_indicator,
       '_rul_raw': rul if rul is not None else float('inf'),
       '_urgency_rank': {'URGENT': 0, 'WARNING': 1, 'OK': 2, 'UNKNOWN': 3}.get(result.get('urgency'), 4),
   })
@@ -673,6 +720,9 @@ Configuration</strong><br>
 <div style="margin-top: 6px;">Air Quality: <span style="background: {'#dcfce7' if result.get('air_quality') else
 '#f3f4f6'}; color: {'#166534' if result.get('air_quality') else '#6b7280'}; padding: 2px 8px; border-radius: 4px;
 font-weight: 600; font-size: 0.8rem;">{"✓ Available" if result.get('air_quality') else "✗ Unavailable"}</span></div>
+<div style="margin-top: 6px;">Pollution Effect: <span style="background: {'#fce7f3' if result.get('pollution_effect') else
+'#f3f4f6'}; color: {'#831843' if result.get('pollution_effect') else '#6b7280'}; padding: 2px 8px; border-radius: 4px;
+font-weight: 600; font-size: 0.8rem;">{"✓ Applied" if result.get('pollution_effect') is not None else "✗ Not applied"}</span></div>
 </div>
 </div>
 
@@ -695,10 +745,12 @@ Estimate</strong><br>
 <div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
 <div>Days Until Replacement: <strong style="font-size: 1.2em; color: #dc2626;">{f'{rul:.0f}' if isinstance(rul, (int, float)) else '?'} days</strong></div>
 <div>Filter Life Used: <strong style="font-size: 1.1em; color: #1a202c;">{f"{result.get('pct_life', 0):.0f}" if isinstance(result.get('pct_life'), (int, float)) else '?'}%</strong></div>
+<div style="margin-top: 6px;">Raw Slope: <strong style="font-size: 0.95em; color: #1a202c;">{f"{result.get('slope', 0):.4f}" if isinstance(result.get('slope'), (int, float)) else '?'}°C/ep</strong></div>
+{f"<div>Adjusted Slope: <strong style='font-size: 0.95em; color: #dc2626;'>{result.get('adjusted_slope', 0):.4f}°C/ep</strong> (effect: {result.get('pollution_effect', 0):+.3f})</div>" if result.get('adjusted_slope') is not None else ""}
 </div>
 </div>    
 
-<div style="background: #f0f9ff; padding: 14px; border-radius: 8px; border-left: 4px solid #0284c7;">
+<div style="background: #f0f9ff; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #0284c7;">
 <strong style="font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;">🌡️   Temperature
 Readings</strong><br>
 <div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
@@ -706,7 +758,9 @@ Readings</strong><br>
 <div>Failure Threshold: <strong style="font-size: 1.1em; color: #ef4444;">{f"{result.get('failure_dt', 0):.1f}" if isinstance(result.get('failure_dt'), (int, float)) else '?'}°C</strong></div>
 <div>Baseline ΔT: <span style="color: #6b7280;">{f"{result.get('baseline_dt', 0):.1f}" if isinstance(result.get('baseline_dt'), (int, float)) else '?'}°C</span></div>
 </div>
-</div>    
+</div>
+
+{"<div style='background: #ecfdf5; padding: 14px; border-radius: 8px; border-left: 4px solid #059669;'><strong style='font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;'>🌍 Air Quality (90-day avg)</strong><br><div style='margin-top: 8px; font-size: 0.85rem; color: #374151;'><div>PM2.5: <strong style='font-size: 1.1em; color: #1a202c;'>" + (f"{result.get('air_quality', {}).get('pm25', 0):.1f}" if isinstance(result.get('air_quality', {}).get('pm25'), (int, float)) else '?') + f" μg/m³</strong></div><div>PM10: <strong style='font-size: 1.1em; color: #1a202c;'>" + (f"{result.get('air_quality', {}).get('pm10', 0):.1f}" if isinstance(result.get('air_quality', {}).get('pm10'), (int, float)) else '?') + f" μg/m³</strong></div><div>Pollution Effect: <span style='background: #f0fdf4; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.8rem;'>" + (f"{result.get('pollution_effect', 0):+.4f}" if result.get('pollution_effect') is not None else 'Not applied') + f"</span></div><div style='margin-top: 6px; color: #6b7280; font-size: 0.8rem;'>Adjusted slope = raw_slope × (1 + effect)</div></div></div>" if result.get('air_quality') else ""}    
 
 </div>
 """, unsafe_allow_html=True)

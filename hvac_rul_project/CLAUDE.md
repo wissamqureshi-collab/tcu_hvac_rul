@@ -46,24 +46,43 @@ __pycache__/
 ## Current Status
 
 **Data Flow**:
-- Query InfluxDB from 1020 sites (68 successful sites with RUL data)
+- Load site inventory from two CSVs: sites_inventory.csv (IP, Site) + sites_inventory_2.csv (Site ID, Lat, Lon)
+- Cross-reference Site ↔ Site ID to attach coordinates to each site
+- Query InfluxDB from 1020 sites via SSH (68 sites currently return RUL data)
 - Extract freecooling episodes (fan ≥95%, FC mode active, ≥30 min)
 - Compute max ΔT vs percentage-adjusted cooling hours (physics-based: fan_speed²)
-- Fetch 90-day PM10 + PM2.5 averages from Weatherbit (3×30-day chunks per site) — **BLOCKED: missing lat/long coordinates**
-- Flexible regression: Currently all 1-factor (hours only) due to missing air quality data
+- For sites WITH coordinates: Fetch 90-day hourly air quality from Weatherbit → calculate PM2.5/PM10 averages
+- For sites WITHOUT coordinates: Skip Weatherbit, use InfluxDB data only
+- Run regression on all sites with air quality data: fit β₁, β₂ from observed slopes vs pollutants
+- Apply pollution effect multiplier: adjusted_slope = slope × (1 + β₁×PM2.5 + β₂×PM10)
 - Linear projection to failure (10°C threshold); convert adjusted hours → days RUL
 
-**August 4, 2026 Session Updates**:
+**August 4 (Session 1) Updates**:
 - ✅ Fixed dashboard TypeError: Type-checking before formatting floats
 - ✅ Fixed trend plots: Now using `max_deltas` (actual data field) instead of `onset_deltas`/`rolling_median` (missing)
 - ✅ Simplified data loading: dashboard_unified.py at root reads sites_data.json directly
 - ✅ Confirmed 68 successful sites with RUL data in sites_data.json
-- ❌ **Air quality blocked**: 0 of 68 sites have lat/long coordinates → Weatherbit API can't be called
-- 📍 Coordinates stored in separate file on Bell laptop (filename TBD) — needs to be integrated into query_sites.py
+- ❌ Air quality blocked: 0 of 68 sites had lat/long coordinates
 
-**Regression Model** (3-factor when both pollutants available):
+**August 4 (Session 2) Updates**:
+- ✅ Located coordinate files on Bell laptop: `sites_inventory.csv` (IP, Site, Device) + `sites_inventory_2.csv` (Site ID, Lat, Lon)
+- ✅ Verified Weatherbit API format: Hourly historical data with PM2.5, PM10 in μg/m³
+- ✅ Verified InfluxDB schema: Contains hvac_DELTA_T, hvac_FREE_COOL_MODE, fan_status fields as expected
+- ✅ Implemented dual-model pollution effect approach:
+  - Sites WITH coordinates: `adjusted_slope = slope × (1 + effect)` where `effect = β₁×PM2.5 + β₂×PM10`
+  - Sites WITHOUT coordinates: Simple linear `slope` (no adjustment)
+- ✅ Updated query_sites.py to cross-reference Site (sites_inventory.csv) ↔ Site ID (sites_inventory_2.csv)
+- ✅ Added regression module to fit pollution coefficients from 90-day air quality + slope data
+
+**Pollution Effect Model**:
 ```
-Slope ~ β₀ + β₁*(adjusted_fan_hours_per_day) + β₂*(PM10_avg) + β₃*(PM2.5_avg)
+For sites WITH air quality:
+  adjusted_slope = raw_slope × (1 + β₁×PM2.5 + β₂×PM10)
+  RUL = (FAILURE_DT - intercept) / adjusted_slope
+
+For sites WITHOUT air quality:
+  slope = raw_slope (no adjustment)
+  RUL = (FAILURE_DT - intercept) / slope
 ```
 
 **Urgency Logic**:
@@ -96,14 +115,6 @@ adjusted_hours = duration_min × (fan_speed_pct)² / 60
 
 ## Known Issues
 
-**Missing Coordinates → No Air Quality Data**:
-- Root cause: Sites don't have lat/long fields in InfluxDB query results
-- Impact: Weatherbit API can't fetch PM10/PM2.5 → all sites show 1-Factor model (hours only)
-- Fix: Integrate coordinate file from Bell laptop into query_sites.py
-  - File location: TBD (on Bell laptop, filename unknown)
-  - Solution: Load coords from separate CSV/JSON → merge into site data before Weatherbit call
-  - Once fixed: 2/3-factor models available → air quality correlation analysis enabled
-
 **Network Access** (66% of sites unreachable from Bell office):
 - Root cause: Sites on isolated regional networks
 - Workaround: Script gracefully skips unreachable sites, continues with successful ones
@@ -116,13 +127,16 @@ adjusted_hours = duration_min × (fan_speed_pct)² / 60
 
 ## Next Steps (Priority Order)
 
-1. **BLOCKING: Integrate site coordinates**
-   - Find coordinate file on Bell laptop (filename TBD)
-   - Update query_sites.py to load lat/long from that file
-   - Merge coords into site data before calling Weatherbit API
-   - Re-run query_sites.py to fetch air quality → unlock 2/3-factor models
+1. **TEST: Run full query_sites.py with coordinate integration + pollution effect model**
+   - Place sites_inventory.csv and sites_inventory_2.csv in tcu_hvac_rul folder (Bell laptop)
+   - Run `python query_sites.py` to verify:
+     - CSV cross-reference works (coordinates attached to sites)
+     - Weatherbit API calls succeed for sites with coords
+     - Regression fit calculates β₁, β₂ correctly
+     - RUL values updated with pollution effect multiplier
+   - Monitor output for any API rate limit issues (1500 req/day Weatherbit limit)
 
-2. **Dashboard improvements** (once coordinates are added):
+2. **Dashboard improvements** (after test confirms air quality data flow):
    - Monitor regression outputs: Track which pollutants correlate most with filter clogging
    - Regional analysis: Compare air quality effects across different geographic areas
    - Add model type filter to dashboard (1-factor vs 2/3-factor)
