@@ -498,6 +498,46 @@ st.markdown("""
       background-color: #ffffff !important;
       color: #1a202c !important;
   }
+
+  /* Force all dropdown elements to stay white - no black backgrounds allowed */
+  [data-baseweb="popover"] {
+      background-color: #ffffff !important;
+      color: #1a202c !important;
+  }
+  [data-baseweb="popover"] > div {
+      background-color: #ffffff !important;
+  }
+  [data-baseweb="popover"] > div > div {
+      background-color: #ffffff !important;
+  }
+  [data-baseweb="popover"] ul,
+  [data-baseweb="popover"] li {
+      background-color: #ffffff !important;
+      color: #1a202c !important;
+  }
+
+  /* Prevent all elements inside select/multiselect from going dark */
+  .stSelectbox [data-baseweb="select"] {
+      background-color: #ffffff !important !important;
+  }
+  .stMultiSelect [data-baseweb="select"] {
+      background-color: #ffffff !important !important;
+  }
+
+  /* Sidebar dropdowns - keep dark background for button, white popup */
+  [data-testid="stSidebar"] [data-baseweb="popover"] {
+      background-color: #ffffff !important;
+  }
+  [data-testid="stSidebar"] [data-baseweb="popover"] * {
+      background-color: #ffffff !important;
+      color: #1a202c !important;
+  }
+
+  /* Ensure text in all dropdowns is readable black */
+  [data-baseweb="option"],
+  [data-baseweb="option"] * {
+      color: #1a202c !important;
+  }
 </style>
 """, unsafe_allow_html=True)
 
