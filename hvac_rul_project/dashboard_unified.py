@@ -314,15 +314,15 @@ st.markdown("""
 @st.cache_data(ttl=300)
 def load_sites_data(json_file='sites_data.json'):
   """Load aggregated site data from JSON."""
-  if not Path(json_file).exists():
-      st.error(f"Data file not found: {json_file}")
-      st.info("Run `python3 query_sites.py` on the Bell laptop to generate this file.")
-      st.stop()
-
-  with open(json_file) as f:
-      data = json.load(f)
-
-  return data
+  try:
+      if not Path(json_file).exists():
+          return None
+      with open(json_file) as f:
+          data = json.load(f)
+      return data
+  except Exception as e:
+      st.error(f"Error loading data: {e}")
+      return None
 
 
 def recalculate_rul(site_result, new_failure_dt):
@@ -444,7 +444,17 @@ with st.sidebar:
 # ============================================================================
 
 data = load_sites_data()
-sites = data['sites']
+
+if data is None:
+  st.error("❌ Data file not found: sites_data.json")
+  st.info("The dashboard data file is missing. Please check that sites_data.json is in the repository.")
+  st.stop()
+
+sites = data.get('sites', {})
+
+if not sites:
+  st.error("❌ No sites found in data file")
+  st.stop()
 
 sites_recalc = {}
 for site_id, site_result in sites.items():
