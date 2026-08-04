@@ -431,8 +431,7 @@ with st.sidebar:
   st.markdown("---")
   st.markdown('<div style="font-size:0.75rem;color:#cbd5e1;line-height:1.7;margin-top:1.5rem;">'
               '💡 <strong>Analysis Parameters</strong><br>'
-              '<span style="font-size: 0.7rem; color: #94a3b8;">Assumes 90 days of InfluxDB data. RUL projects when ΔT 
-reaches failure threshold.</span><br><br>'
+              '<span style="font-size: 0.7rem; color: #94a3b8;">Assumes 90 days of InfluxDB data. RUL projects when ΔT reaches failure threshold.</span><br><br>'
               '<strong>Urgency Guide:</strong><br>'
               '🔴 Red = Replace now<br>'
               '🟡 Yellow = Schedule soon<br>'
