@@ -461,6 +461,16 @@ st.markdown(f"<h2 style='color: #1a202c; margin-bottom: 1.5rem;'>🌡️   Roger
 with st.expander("📚 **Model Architecture & Methodology**", expanded=False):
   regression_data = data.get('air_quality_regression', {})
 
+  # Build regression info string if available
+  regression_info = ""
+  if regression_data:
+    regression_info = f"""
+**Fitted Coefficients (from regression):**
+- PM2.5: β = {regression_data.get('coefficient_pm25', 0):.6f}
+- PM10: β = {regression_data.get('coefficient_pm10', 0):.6f}
+- R² = {regression_data.get('r_squared', 0):.4f} ({regression_data.get('sites_analyzed', 0)} sites)
+"""
+
   st.markdown(f"""
 <div style="color: #1a202c; line-height: 1.9; font-size: 0.95rem;">
 
@@ -496,10 +506,7 @@ For sites with air quality data, RUL is further adjusted using pollution coeffic
 
 **Interpretation:** Polluted air accelerates filter clogging beyond fan runtime alone. A positive effect coefficient means higher pollutant levels → faster degradation → shorter RUL.
 
-{"<br>**Fitted Coefficients (from regression):**" if regression_data else ""}
-{"<br>- PM2.5: β = " + f"{regression_data.get('coefficient_pm25', 0):.6f}" if regression_data.get('coefficient_pm25') else ""}
-{"<br>- PM10: β = " + f"{regression_data.get('coefficient_pm10', 0):.6f}" if regression_data.get('coefficient_pm10') else ""}
-{"<br>- R² = " + f"{regression_data.get('r_squared', 0):.4f} ({regression_data.get('sites_analyzed', 0)} sites)" if regression_data else ""}
+{regression_info}
 
 ---
 
@@ -689,6 +696,29 @@ else:
       rul_str = f"{rul:.0f}d" if isinstance(rul, float) else str(rul)
       expander_label = f"{emoji} {site_id} — {result.get('site_name', '?')} [{model_type}] (RUL: {rul_str})"
 
+      # Pre-format values for site details
+      slope_val = f"{result.get('slope', 0):.4f}" if isinstance(result.get('slope'), (int, float)) else '?'
+      adjusted_slope_val = result.get('adjusted_slope')
+      pollution_effect_val = result.get('pollution_effect')
+      has_adjusted_slope = adjusted_slope_val is not None
+      adjusted_slope_str = f"{adjusted_slope_val:.4f}" if has_adjusted_slope else ""
+      effect_str = f"{pollution_effect_val:+.3f}" if pollution_effect_val is not None else ""
+
+      current_dt_val = f"{result.get('current_dt', 0):.1f}" if isinstance(result.get('current_dt'), (int, float)) else '?'
+      failure_dt_val = f"{result.get('failure_dt', 0):.1f}" if isinstance(result.get('failure_dt'), (int, float)) else '?'
+      baseline_dt_val = f"{result.get('baseline_dt', 0):.1f}" if isinstance(result.get('baseline_dt'), (int, float)) else '?'
+
+      # Pre-format air quality values
+      aq = result.get('air_quality', {})
+      pm25_val = f"{aq.get('pm25', 0):.1f}" if isinstance(aq.get('pm25'), (int, float)) else '?'
+      pm10_val = f"{aq.get('pm10', 0):.1f}" if isinstance(aq.get('pm10'), (int, float)) else '?'
+      pollution_effect_display = f"{result.get('pollution_effect', 0):+.4f}" if result.get('pollution_effect') is not None else 'Not applied'
+      has_air_quality = result.get('air_quality') is not None
+
+      air_quality_html = ""
+      if has_air_quality:
+        air_quality_html = f"""<div style='background: #ecfdf5; padding: 14px; border-radius: 8px; border-left: 4px solid #059669;'><strong style='font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;'>🌍 Air Quality (90-day avg)</strong><br><div style='margin-top: 8px; font-size: 0.85rem; color: #374151;'><div>PM2.5: <strong style='font-size: 1.1em; color: #1a202c;'>{pm25_val} μg/m³</strong></div><div>PM10: <strong style='font-size: 1.1em; color: #1a202c;'>{pm10_val} μg/m³</strong></div><div>Pollution Effect: <span style='background: #f0fdf4; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.8rem;'>{pollution_effect_display}</span></div><div style='margin-top: 6px; color: #6b7280; font-size: 0.8rem;'>Adjusted slope = raw_slope × (1 + effect)</div></div></div>"""
+
       with st.expander(expander_label):
           col1, col2 = st.columns([1, 2])
 
@@ -743,10 +773,10 @@ style="color: #6b7280;">({('Excellent' if float(result.get('r2', 0)) > 0.7 else 
 <strong style="font-size: 0.9rem; color: #991b1b; text-transform: uppercase; letter-spacing: 0.05em;">⏱️   RUL
 Estimate</strong><br>
 <div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
-<div>Days Until Replacement: <strong style="font-size: 1.2em; color: #dc2626;">{f'{rul:.0f}' if isinstance(rul, (int, float)) else '?'} days</strong></div>
+<div>Days Until Replacement: <strong style="font-size: 1.2em; color: #dc2626;">{rul_str}</strong></div>
 <div>Filter Life Used: <strong style="font-size: 1.1em; color: #1a202c;">{f"{result.get('pct_life', 0):.0f}" if isinstance(result.get('pct_life'), (int, float)) else '?'}%</strong></div>
-<div style="margin-top: 6px;">Raw Slope: <strong style="font-size: 0.95em; color: #1a202c;">{f"{result.get('slope', 0):.4f}" if isinstance(result.get('slope'), (int, float)) else '?'}°C/ep</strong></div>
-{f"<div>Adjusted Slope: <strong style='font-size: 0.95em; color: #dc2626;'>{result.get('adjusted_slope', 0):.4f}°C/ep</strong> (effect: {result.get('pollution_effect', 0):+.3f})</div>" if result.get('adjusted_slope') is not None else ""}
+<div style="margin-top: 6px;">Raw Slope: <strong style="font-size: 0.95em; color: #1a202c;">{slope_val}°C/ep</strong></div>
+{f"<div>Adjusted Slope: <strong style='font-size: 0.95em; color: #dc2626;'>{adjusted_slope_str}°C/ep</strong> (effect: {effect_str})</div>" if has_adjusted_slope else ""}
 </div>
 </div>    
 
@@ -754,13 +784,13 @@ Estimate</strong><br>
 <strong style="font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;">🌡️   Temperature
 Readings</strong><br>
 <div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
-<div>Current ΔT: <strong style="font-size: 1.1em; color: #1a202c;">{f"{result.get('current_dt', 0):.1f}" if isinstance(result.get('current_dt'), (int, float)) else '?'}°C</strong></div>
-<div>Failure Threshold: <strong style="font-size: 1.1em; color: #ef4444;">{f"{result.get('failure_dt', 0):.1f}" if isinstance(result.get('failure_dt'), (int, float)) else '?'}°C</strong></div>
-<div>Baseline ΔT: <span style="color: #6b7280;">{f"{result.get('baseline_dt', 0):.1f}" if isinstance(result.get('baseline_dt'), (int, float)) else '?'}°C</span></div>
+<div>Current ΔT: <strong style="font-size: 1.1em; color: #1a202c;">{current_dt_val}°C</strong></div>
+<div>Failure Threshold: <strong style="font-size: 1.1em; color: #ef4444;">{failure_dt_val}°C</strong></div>
+<div>Baseline ΔT: <span style="color: #6b7280;">{baseline_dt_val}°C</span></div>
 </div>
 </div>
 
-{"<div style='background: #ecfdf5; padding: 14px; border-radius: 8px; border-left: 4px solid #059669;'><strong style='font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;'>🌍 Air Quality (90-day avg)</strong><br><div style='margin-top: 8px; font-size: 0.85rem; color: #374151;'><div>PM2.5: <strong style='font-size: 1.1em; color: #1a202c;'>" + (f"{result.get('air_quality', {}).get('pm25', 0):.1f}" if isinstance(result.get('air_quality', {}).get('pm25'), (int, float)) else '?') + f" μg/m³</strong></div><div>PM10: <strong style='font-size: 1.1em; color: #1a202c;'>" + (f"{result.get('air_quality', {}).get('pm10', 0):.1f}" if isinstance(result.get('air_quality', {}).get('pm10'), (int, float)) else '?') + f" μg/m³</strong></div><div>Pollution Effect: <span style='background: #f0fdf4; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.8rem;'>" + (f"{result.get('pollution_effect', 0):+.4f}" if result.get('pollution_effect') is not None else 'Not applied') + f"</span></div><div style='margin-top: 6px; color: #6b7280; font-size: 0.8rem;'>Adjusted slope = raw_slope × (1 + effect)</div></div></div>" if result.get('air_quality') else ""}    
+{air_quality_html}    
 
 </div>
 """, unsafe_allow_html=True)
