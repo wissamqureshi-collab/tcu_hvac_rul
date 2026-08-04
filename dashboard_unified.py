@@ -712,30 +712,20 @@ Readings</strong><br>
 """, unsafe_allow_html=True)
 
           with col2:
-              onset_deltas = result.get('onset_deltas', [])
-              rolling_median = result.get('rolling_median', [])
+              max_deltas = result.get('max_deltas', [])
+              cumul_hours = result.get('cumulative_adjusted_hours', [])
 
-              if len(onset_deltas) > 2:
-                  episodes = list(range(len(onset_deltas)))
+              if len(max_deltas) > 2:
+                  episodes = list(range(len(max_deltas)))
 
                   fig = go.Figure()
 
-
                   fig.add_trace(go.Scatter(
-                      x=episodes, y=onset_deltas,
+                      x=episodes, y=max_deltas,
                       mode='markers',
                       marker=dict(size=6, color='#a5b4fc', opacity=0.7),
-                      name='Onset ΔT (raw)',
-                      hovertemplate='Episode %{x}<br>Onset ΔT: %{y:.2f}°C<extra></extra>'
-                  ))
-
-                  fig.add_trace(go.Scatter(
-                      x=episodes, y=rolling_median,
-                      mode='lines+markers',
-                      line=dict(color='#f59e0b', width=2.5),
-                      marker=dict(size=5, color='#f59e0b'),
-                      name='Rolling Median',
-                      hovertemplate='Episode %{x}<br>Rolling Median: %{y:.2f}°C<extra></extra>'
+                      name='Max ΔT per episode',
+                      hovertemplate='Episode %{x}<br>Max ΔT: %{y:.2f}°C<extra></extra>'
                   ))
 
                   fig.add_hline(
@@ -749,8 +739,8 @@ Readings</strong><br>
                   if len(episodes) >= 2:
                       r2 = result.get('r2', 0)
                       slope = result.get('slope', 0)
-                      coeffs = np.polyfit(episodes, rolling_median, 1)
-                      trend_line = np.polyval(coeffs, episodes)
+                      baseline_dt = result.get('baseline_dt', max_deltas[0] if max_deltas else 0)
+                      trend_line = [baseline_dt + slope * i for i in episodes]
                       fig.add_trace(go.Scatter(
                           x=episodes, y=trend_line,
                           mode='lines',
@@ -761,7 +751,7 @@ Readings</strong><br>
 
                   fig.update_layout(
                       title=dict(
-                          text=f"Rolling Median Trend — {site_id}",
+                          text=f"ΔT Trend — {site_id}",
                           font=dict(size=14, color='#1a202c', family='Arial, sans-serif'),
                           x=0.5,
                           xanchor='center'
