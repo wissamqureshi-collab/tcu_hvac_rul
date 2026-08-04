@@ -311,67 +311,118 @@ st.markdown("""
       font-size: 0.9rem !important;
   }
 
-  /* Main content dropdown/selectbox styling - keep white background, black text */
-  .stSelectbox [data-baseweb="select"] {
+  /* ===== MAIN CONTENT SELECTBOX & MULTISELECT STYLING ===== */
+  /* Selectbox - main content */
+  .stSelectbox {
+      color: #1a202c !important;
+  }
+
+  .stSelectbox label {
+      color: #1a202c !important;
+      font-weight: 600 !important;
+  }
+
+  .stSelectbox [role="button"],
+  .stSelectbox [data-testid="stSelectbox"],
+  .stSelectbox button {
       background-color: #ffffff !important;
       color: #1a202c !important;
       border: 1px solid #d1d5db !important;
-      border-radius: 4px !important;
   }
 
-  .stSelectbox [data-baseweb="select"]:hover {
+  .stSelectbox [role="button"]:hover {
       background-color: #f9fafb !important;
       border-color: #9ca3af !important;
   }
 
-  .stSelectbox [data-baseweb="select"]:focus {
+  .stSelectbox div[data-baseweb="select"],
+  .stSelectbox div[data-baseweb="select"] > div {
       background-color: #ffffff !important;
-      border-color: #4f7cff !important;
   }
 
-  .stSelectbox [data-baseweb="select"] span,
-  .stSelectbox [data-baseweb="select"] div {
+  .stSelectbox [data-baseweb="select"] > div > div {
+      background-color: #ffffff !important;
       color: #1a202c !important;
   }
 
-  /* Multiselect styling - keep white background, black text */
-  .stMultiSelect [data-baseweb="select"] {
+  .stSelectbox [data-baseweb="select"] span {
+      color: #1a202c !important;
+  }
+
+  /* Multiselect - main content */
+  .stMultiSelect {
+      color: #1a202c !important;
+  }
+
+  .stMultiSelect label {
+      color: #1a202c !important;
+      font-weight: 600 !important;
+  }
+
+  .stMultiSelect [role="button"],
+  .stMultiSelect button {
       background-color: #ffffff !important;
       color: #1a202c !important;
       border: 1px solid #d1d5db !important;
-      border-radius: 4px !important;
   }
 
-  .stMultiSelect [data-baseweb="select"]:hover {
+  .stMultiSelect [role="button"]:hover {
       background-color: #f9fafb !important;
       border-color: #9ca3af !important;
   }
 
-  .stMultiSelect [data-baseweb="select"]:focus {
+  .stMultiSelect div[data-baseweb="select"],
+  .stMultiSelect div[data-baseweb="select"] > div {
       background-color: #ffffff !important;
-      border-color: #4f7cff !important;
   }
 
-  .stMultiSelect [data-baseweb="select"] span,
-  .stMultiSelect [data-baseweb="select"] div {
-      color: #1a202c !important;
-  }
-
-  /* Dropdown menu styling - prevent black background */
-  [role="listbox"],
-  [role="option"] {
+  .stMultiSelect [data-baseweb="select"] > div > div {
       background-color: #ffffff !important;
       color: #1a202c !important;
   }
 
-  [role="option"]:hover {
+  .stMultiSelect [data-baseweb="select"] span {
+      color: #1a202c !important;
+  }
+
+  /* ===== DROPDOWN MENU POPUP STYLING ===== */
+  /* Prevent the dropdown popup from turning black */
+  div[data-baseweb="popover"] {
+      background-color: #ffffff !important;
+  }
+
+  div[role="listbox"] {
+      background-color: #ffffff !important;
+      color: #1a202c !important;
+  }
+
+  div[role="option"] {
+      background-color: #ffffff !important;
+      color: #1a202c !important;
+  }
+
+  div[role="option"]:hover {
       background-color: #f0f4ff !important;
       color: #1a202c !important;
   }
 
-  [role="option"][aria-selected="true"] {
+  div[role="option"][aria-selected="true"] {
       background-color: #e0e7ff !important;
       color: #1a202c !important;
+  }
+
+  /* Override all text in dropdown to be dark */
+  div[data-baseweb="popover"] * {
+      color: #1a202c !important;
+      background-color: #ffffff !important;
+  }
+
+  div[data-baseweb="popover"] div[role="option"] {
+      background-color: #ffffff !important;
+  }
+
+  div[data-baseweb="popover"] div[role="option"]:hover {
+      background-color: #f0f4ff !important;
   }
 
   /* Text input styling in main content */
@@ -384,6 +435,68 @@ st.markdown("""
   .stTextInput input:focus {
       border-color: #4f7cff !important;
       background-color: #ffffff !important;
+      color: #1a202c !important;
+  }
+
+  /* Sidebar multiselect styling */
+  [data-testid="stSidebar"] .stMultiSelect label {
+      color: #e0e7ff !important;
+      font-size: 0.78rem !important;
+      text-transform: uppercase !important;
+      font-weight: 600 !important;
+  }
+
+  [data-testid="stSidebar"] .stMultiSelect {
+      color: #ffffff !important;
+  }
+
+  [data-testid="stSidebar"] .stMultiSelect div {
+      color: #ffffff !important;
+  }
+
+  [data-testid="stSidebar"] .stMultiSelect [role="button"],
+  [data-testid="stSidebar"] .stMultiSelect button {
+      background-color: #2d4a7a !important;
+      color: #ffffff !important;
+      border: 1px solid #4f7cff !important;
+  }
+
+  [data-testid="stSidebar"] .stMultiSelect [role="button"] span,
+  [data-testid="stSidebar"] .stMultiSelect button span {
+      color: #ffffff !important;
+  }
+
+  /* Main content selectors - comprehensive baseweb override */
+  div[data-baseweb="select"] {
+      background-color: #ffffff !important;
+  }
+
+  div[data-baseweb="select"] > div {
+      background-color: #ffffff !important;
+      color: #1a202c !important;
+  }
+
+  div[data-baseweb="select"] svg {
+      fill: #1a202c !important;
+  }
+
+  /* Dropdown button state - prevent black on click */
+  button[data-baseweb] {
+      background-color: #ffffff !important;
+      color: #1a202c !important;
+  }
+
+  button[data-baseweb]:active,
+  button[data-baseweb]:focus {
+      background-color: #ffffff !important;
+      color: #1a202c !important;
+  }
+
+  /* Extra aggressive popover styling */
+  div[data-baseweb="popover"],
+  div[data-baseweb="popover"] *:not(svg) {
+      background-color: #ffffff !important;
+      color: #1a202c !important;
   }
 </style>
 """, unsafe_allow_html=True)
