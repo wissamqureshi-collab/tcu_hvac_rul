@@ -86,7 +86,7 @@ __pycache__/
 - ✅ Output JSON includes: query timestamp, elapsed time, urgency summary, regression results, per-site metrics
 - ✅ Ready for first full test run
 
-**August 4 (Session 4) Updates**:
+**August 4 (Session 4-5) Updates**:
 - ✅ **First successful full query run completed on Bell laptop**:
   - 60 of 1020 sites successfully queried (remaining unreachable from office network)
   - 575 sites had coordinates loaded from CSV cross-reference
@@ -94,36 +94,44 @@ __pycache__/
   - 3-factor regression fitted: slope ~ adjusted_hours + PM10 + PM2.5
   - Regression coefficients: β_adjusted_hours=0.003935, β_PM10=-0.032911, β_PM2.5=0.047004
   - R²=0.0426 (explains ~4.3% of slope variance; site-specific factors dominate)
-  - Pollution effect successfully applied to adjust RUL for all 48 sites with air quality
+- ✅ **Key realization: Pollution already baked into ΔT measurements**
+  - ΔT trends naturally reflect polluted vs clean air at each site
+  - No need for separate pollution adjustment multiplier on RUL
+  - Regression used only to contextualize: "How does this site's pollution compare to site average?"
 - ✅ **Dashboard rebuilt** with controls in main content (sidebar was causing rendering issues):
   - Control panel at top with 4 sliders: Duration, Fan Speed, Rolling Window, Failure ΔT
-  - Filter/sort options in collapsible section
-  - Air quality regression summary visible in Model Architecture expander
-  - All equations formatted as readable black text (removed code blocks)
-- ✅ **Documentation clarified**:
-  - Pollution effect is a multiplier on raw_slope, not a separate linear factor in ΔT equation
-  - All sites use base equation: ΔT = β₀ + β₁ × (adj_hours)
-  - Adjusted slope = raw_slope × (1 + β_pm10×PM10 + β_pm25×PM2.5)
-- ✅ **Pipeline fully functional**: Query → Regression → RUL Adjustment → Dashboard Display
+  - All sites now use 1-factor model: ΔT = β₀ + β₁ × (adj_hours)
+  - New pollution impact blurb in air quality section:
+    - Shows site's PM2.5 and PM10 vs site average
+    - Predicts impact: "filter degrades X days faster/slower than typical"
+  - All equations formatted as readable black text with actual parameter values
+- ✅ **Model simplified**: 
+  - RUL calculation: Pure 1-factor (no pollution adjustment)
+  - Pollution context: Informational blurb showing site-level comparison
+  - Regression coefficients used only for impact prediction, not RUL modification
+- ✅ **Pipeline fully functional**: Query → Regression → Dashboard Display (no RUL adjustment step)
 
-**Pollution Effect Model** (Multiplier Approach):
+**Model Architecture (1-Factor Only)**:
 
-**Step 1: Fit Regression across all sites with air quality data**
-- Model: slope ~ adjusted_hours + PM10 + PM2.5 (flexible 1/2/3-factor based on data)
-- Output: Coefficients β_hours, β_pm10, β_pm25 that quantify how each factor relates to degradation rate
+**RUL Calculation** (all sites identical):
+- Base equation: ΔT = β₀ + β₁ × (adj_hours)
+- Uses raw slope (no pollution adjustment multiplier)
+- Linear projection: When ΔT reaches 10°C → RUL in days
 
-**Step 2: Apply Multiplier to each site's slope**
-- Base equation (all sites): ΔT = β₀ + β₁ × (adj_hours)
-- Pollution effect: effect = β_pm10 × PM10 + β_pm25 × PM2.5
-- Adjusted slope: adjusted_slope = raw_slope × (1 + effect)
-- Final RUL: (FAILURE_DT - intercept) / adjusted_slope
+**Pollution Impact Context** (informational only):
+- Air quality is already baked into the ΔT measurements (polluted air naturally increases ΔT faster)
+- Regression fitted across all sites: slope ~ adjusted_hours + PM10 + PM2.5
+- For each site, calculate deviation from site average: (site_PM25 - avg_PM25) and (site_PM10 - avg_PM10)
+- Predicted impact = β_pm25 × ΔPM2.5 + β_pm10 × ΔPM10 (in degradation rate days)
+- Display as blurb: "This site's air quality means filter degrades **X days faster/slower than typical**"
 
-**Key insight**: PM10 and PM2.5 are **never** linear factors in the ΔT equation. They only modify the degradation rate slope.
+**Key insight**: Pollution effect is already in the slope; regression just contextualizes how this site's pollution compares to the site average.
 
-**Urgency Logic**:
+**Urgency Logic** (based on 1-factor RUL):
 - 🔴 URGENT: RUL < 14 days
 - 🟡 WARNING: RUL 14–30 days
 - 🟢 OK: RUL ≥ 30 days
+- ⚪ Context: Air quality blurb shows if site's pollution would add/subtract days vs typical site
 
 ## Physics Model: Percentage-Adjusted Hours
 
