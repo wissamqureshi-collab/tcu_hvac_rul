@@ -314,23 +314,9 @@ st.markdown("""
 @st.cache_data(ttl=300)
 def load_sites_data():
   """Load aggregated site data from JSON."""
-  try:
-      # Try current directory first, then hvac_rul_project
-      possible_paths = [
-          Path('sites_data.json'),
-          Path('hvac_rul_project/sites_data.json'),
-          Path(__file__).parent / 'sites_data.json'
-      ]
-
-      for path in possible_paths:
-          if path.exists():
-              with open(path) as f:
-                  return json.load(f)
-
-      return None
-  except Exception as e:
-      st.error(f"Error loading data: {e}")
-      return None
+  with open('sites_data.json') as f:
+      data = json.load(f)
+  return data
 
 
 def recalculate_rul(site_result, new_failure_dt):
@@ -452,17 +438,7 @@ with st.sidebar:
 # ============================================================================
 
 data = load_sites_data()
-
-if data is None:
-  st.error("❌ Data file not found: sites_data.json")
-  st.info("The dashboard data file is missing. Please check that sites_data.json is in the repository.")
-  st.stop()
-
-sites = data.get('sites', {})
-
-if not sites:
-  st.error("❌ No sites found in data file")
-  st.stop()
+sites = data['sites']
 
 sites_recalc = {}
 for site_id, site_result in sites.items():
