@@ -391,21 +391,31 @@ def recalculate_rul(site_result, new_failure_dt):
 
 
 def get_model_type_and_equation(result):
-  """Determine model type (1/2/3-factor) and generate equation string."""
+  """Determine model type and generate equation string with actual parameters."""
+  intercept = result.get('intercept', 0)
+  slope = result.get('slope', 0)
   has_aq = result.get('air_quality')
+  pollution_effect = result.get('pollution_effect')
 
-  if has_aq:
+  # Base equation with actual intercept and slope values
+  base_eq = f"ΔT = {intercept:.2f} + {slope:.4f} × (adj_hours)"
+
+  if has_aq and pollution_effect is not None:
       pm10 = has_aq.get('pm10')
       pm25 = has_aq.get('pm25')
+      adjusted_slope = result.get('adjusted_slope', slope)
 
       if pm10 is not None and pm25 is not None:
-          return "3-Factor", f"ΔT = β₀ + β₁(adj_hours) + β₂(PM10) + β₃(PM2.5)"
+          eq_with_pollution = f"ΔT = {intercept:.2f} + {adjusted_slope:.4f} × (adj_hours)  [adjusted by pollution effect: {pollution_effect:+.4f}]"
+          return "3-Factor (with Pollution)", eq_with_pollution
       elif pm10 is not None:
-          return "2-Factor (PM10)", f"ΔT = β₀ + β₁(adj_hours) + β₂(PM10)"
+          eq_with_pollution = f"ΔT = {intercept:.2f} + {adjusted_slope:.4f} × (adj_hours)  [adjusted by PM10: {pollution_effect:+.4f}]"
+          return "2-Factor PM10 (with Pollution)", eq_with_pollution
       elif pm25 is not None:
-          return "2-Factor (PM2.5)", f"ΔT = β₀ + β₁(adj_hours) + β₂(PM2.5)"
+          eq_with_pollution = f"ΔT = {intercept:.2f} + {adjusted_slope:.4f} × (adj_hours)  [adjusted by PM2.5: {pollution_effect:+.4f}]"
+          return "2-Factor PM2.5 (with Pollution)", eq_with_pollution
 
-  return "1-Factor", f"ΔT = β₀ + β₁(adj_hours)"
+  return "1-Factor", base_eq
 
 
 # ============================================================================
