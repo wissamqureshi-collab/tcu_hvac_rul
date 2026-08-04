@@ -550,8 +550,10 @@ with col4:
 
 with col5:
   successful = [s for s in sites_recalc.values() if s.get('success')]
-  mean_rul = np.mean([s.get('rul_days', 0) for s in successful if s.get('rul_days') is not None])
-  st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div class="value">{mean_rul:.0f}d</div><div class="sub">All sites</div></div>', unsafe_allow_html=True)
+  rul_values = [s.get('rul_days', 0) for s in successful if s.get('rul_days') is not None and isinstance(s.get('rul_days'), (int, float))]
+  mean_rul = np.mean(rul_values) if rul_values else 0
+  mean_rul_str = f'{mean_rul:.0f}d' if not np.isnan(mean_rul) else '?'
+  st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div class="value">{mean_rul_str}</div><div class="sub">All sites</div></div>', unsafe_allow_html=True)
 
 st.markdown("---")
 
@@ -679,11 +681,10 @@ font-weight: 600; font-size: 0.8rem;">{"✓ Available" if result.get('air_qualit
 <strong style="font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;">📈 Trend
 Analysis</strong><br>
 <div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
-<div>Fit Quality (R²): <strong style="font-size: 1.1em; color: #1a202c;">{result.get('r2', '?'):.3f}</strong> <span
+<div>Fit Quality (R²): <strong style="font-size: 1.1em; color: #1a202c;">{f"{result.get('r2', 0):.3f}" if isinstance(result.get('r2'), (int, float)) else '?'}</strong> <span
 style="color: #6b7280;">({('Excellent' if float(result.get('r2', 0)) > 0.7 else 'Good' if float(result.get('r2', 0)) >
 0.5 else 'Fair' if float(result.get('r2', 0)) > 0.25 else 'Poor')})</span></div>
-<div>Degradation Rate: <strong style="font-size: 1.1em; color: #ef4444;">{result.get('slope',
-'?'):.3f}°C</strong>/episode</div>
+<div>Degradation Rate: <strong style="font-size: 1.1em; color: #ef4444;">{f"{result.get('slope', 0):.3f}" if isinstance(result.get('slope'), (int, float)) else '?'}°C</strong>/episode</div>
 </div>
 </div>
 
@@ -692,10 +693,8 @@ style="color: #6b7280;">({('Excellent' if float(result.get('r2', 0)) > 0.7 else 
 <strong style="font-size: 0.9rem; color: #991b1b; text-transform: uppercase; letter-spacing: 0.05em;">⏱️   RUL
 Estimate</strong><br>
 <div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
-<div>Days Until Replacement: <strong style="font-size: 1.2em; color: #dc2626;">{rul if isinstance(rul, str) else
-f'{rul:.0f}'} days</strong></div>
-<div>Filter Life Used: <strong style="font-size: 1.1em; color: #1a202c;">{result.get('pct_life',
-'?'):.0f}%</strong></div>
+<div>Days Until Replacement: <strong style="font-size: 1.2em; color: #dc2626;">{f'{rul:.0f}' if isinstance(rul, (int, float)) else '?'} days</strong></div>
+<div>Filter Life Used: <strong style="font-size: 1.1em; color: #1a202c;">{f"{result.get('pct_life', 0):.0f}" if isinstance(result.get('pct_life'), (int, float)) else '?'}%</strong></div>
 </div>
 </div>    
 
@@ -703,10 +702,9 @@ f'{rul:.0f}'} days</strong></div>
 <strong style="font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;">🌡️   Temperature
 Readings</strong><br>
 <div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
-<div>Current ΔT: <strong style="font-size: 1.1em; color: #1a202c;">{result.get('current_dt', '?'):.1f}°C</strong></div>
-<div>Failure Threshold: <strong style="font-size: 1.1em; color: #ef4444;">{result.get('failure_dt',
-'?'):.1f}°C</strong></div>
-<div>Baseline ΔT: <span style="color: #6b7280;">{result.get('baseline_dt', '?'):.1f}°C</span></div>
+<div>Current ΔT: <strong style="font-size: 1.1em; color: #1a202c;">{f"{result.get('current_dt', 0):.1f}" if isinstance(result.get('current_dt'), (int, float)) else '?'}°C</strong></div>
+<div>Failure Threshold: <strong style="font-size: 1.1em; color: #ef4444;">{f"{result.get('failure_dt', 0):.1f}" if isinstance(result.get('failure_dt'), (int, float)) else '?'}°C</strong></div>
+<div>Baseline ΔT: <span style="color: #6b7280;">{f"{result.get('baseline_dt', 0):.1f}" if isinstance(result.get('baseline_dt'), (int, float)) else '?'}°C</span></div>
 </div>
 </div>    
 
@@ -809,7 +807,7 @@ st.markdown("---")
 st.markdown(f"""
 <div style="text-align:center;font-size:0.75rem;color:#6b7280;margin-top:2rem;padding:1.5rem;background:#f8fafc;border-radius:8px;border:1px solid #e5e7eb;">
   <strong style="color: #1a202c;">Last Updated</strong> {data.get('query_timestamp', 'unknown')}<br>
-  <span style="color: #4b5563;">Query Time: {data.get('query_elapsed_seconds', '?'):.1f}s for {data.get('sites_queried', '?')} sites</span><br>
+  <span style="color: #4b5563;">Query Time: {f"{data.get('query_elapsed_seconds', 0):.1f}" if isinstance(data.get('query_elapsed_seconds'), (int, float)) else '?'}s for {data.get('sites_queried', '?')} sites</span><br>
   <span style="color: #9ca3af; font-size: 0.7rem;">Dashboard: Mode 3 Rolling Median RUL Analysis</span>
 </div>
 """, unsafe_allow_html=True)
