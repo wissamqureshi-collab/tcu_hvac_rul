@@ -22,45 +22,288 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    .stApp { background-color: #f5f6fa; }
-    [data-testid="stSidebar"] { background-color: #1a1f2e; }
-    [data-testid="stSidebar"] * { color: #e8ecf4 !important; }
+    /* Main app background */
+    .stApp { background-color: #ffffff; }
+
+    /* Sidebar styling - all text elements */
+    [data-testid="stSidebar"] { background-color: #1e3a5f; }
+
+    /* Sidebar markdown and text */
+    [data-testid="stSidebar"] .stMarkdown,
+    [data-testid="stSidebar"] .stMarkdown * {
+        color: #ffffff !important;
+    }
+
+    /* Sidebar labels */
+    [data-testid="stSidebar"] label {
+        color: #e0e7ff !important;
+        font-weight: 500 !important;
+    }
+
+    /* Sidebar selectbox styling */
     [data-testid="stSidebar"] .stSelectbox label {
-        color: #a0aec0 !important; font-size: 0.78rem;
-        letter-spacing: 0.08em; text-transform: uppercase;
+        color: #e0e7ff !important;
+        font-size: 0.78rem !important;
+        letter-spacing: 0.08em !important;
+        text-transform: uppercase !important;
+        font-weight: 600 !important;
     }
+    [data-testid="stSidebar"] .stSelectbox div {
+        color: #ffffff !important;
+    }
+
+    /* Sidebar radio styling */
+    [data-testid="stSidebar"] .stRadio label {
+        color: #e0e7ff !important;
+        font-weight: 500 !important;
+    }
+    [data-testid="stSidebar"] .stRadio span {
+        color: #ffffff !important;
+    }
+
+    /* Sidebar slider styling */
+    [data-testid="stSidebar"] .stSlider label {
+        color: #e0e7ff !important;
+        font-weight: 500 !important;
+    }
+    [data-testid="stSidebar"] .stSlider {
+        color: #ffffff !important;
+    }
+
+    /* Sidebar text input */
+    [data-testid="stSidebar"] .stTextInput label {
+        color: #e0e7ff !important;
+        font-weight: 500 !important;
+    }
+    [data-testid="stSidebar"] input {
+        background-color: #2d4a7a !important;
+        color: #ffffff !important;
+        border-color: #4f7cff !important;
+    }
+    [data-testid="stSidebar"] input::placeholder {
+        color: #a5b4fc !important;
+    }
+
+    /* Main content - explicit dark text */
+    body,
+    .stApp,
+    .stMarkdown p,
+    [data-testid="stVerticalBlock"] > div > p {
+        color: #1a202c !important;
+    }
+
+    .stMarkdown,
+    .stMarkdown * {
+        color: #1a202c !important;
+    }
+
+    .stMarkdown p,
+    .stMarkdown h1,
+    .stMarkdown h2,
+    .stMarkdown h3,
+    .stMarkdown h4,
+    .stMarkdown h5,
+    .stMarkdown h6 {
+        color: #1a202c !important;
+    }
+
+    /* Ensure text content is dark */
+    main {
+        color: #1a202c !important;
+    }
+
+    main p, main div, main span {
+        color: #1a202c !important;
+    }
+
+    /* Metric cards */
     .metric-card {
-        background: white; border-radius: 10px; padding: 18px 22px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-        border-left: 4px solid #4f7cff;
-        min-height: 90px; box-sizing: border-box;
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 20px 24px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border-left: 5px solid #4f7cff;
+        min-height: 95px;
+        box-sizing: border-box;
     }
-    .metric-card.warn   { border-left-color: #f59e0b; }
+    .metric-card.warn { border-left-color: #f59e0b; }
     .metric-card.danger { border-left-color: #ef4444; }
     .metric-card .label {
-        font-size: 0.72rem; color: #6b7280; text-transform: uppercase;
-        letter-spacing: 0.07em; margin-bottom: 4px;
+        font-size: 0.7rem;
+        color: #6b7280 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 8px;
+        font-weight: 700;
     }
-    .metric-card .value { font-size: 1.6rem; font-weight: 700; color: #1a202c; }
-    .metric-card .sub   { font-size: 0.78rem; color: #9ca3af; margin-top: 2px; }
+    .metric-card .value {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #1a202c !important;
+    }
+    .metric-card .sub {
+        font-size: 0.75rem;
+        color: #6b7280 !important;
+        margin-top: 4px;
+        font-weight: 500;
+    }
+
+    /* Section headers */
     .section-header {
-        font-size: 0.72rem; font-weight: 700; color: #6b7280;
-        text-transform: uppercase; letter-spacing: 0.1em;
-        margin: 24px 0 10px 0; padding-bottom: 6px;
-        border-bottom: 1px solid #e5e7eb;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: #1a202c !important;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin: 24px 0 14px 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e5e7eb;
     }
+
+    /* Expanders and containers */
+    .stExpander {
+        background-color: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 8px !important;
+    }
+    [data-testid="stExpander"] > button {
+        color: #1a202c !important;
+        font-weight: 600 !important;
+        background-color: #ffffff !important;
+    }
+    [data-testid="stExpander"] > button p {
+        color: #1a202c !important;
+    }
+    [data-testid="stExpanderDetails"] {
+        color: #1a202c !important;
+        background-color: #fafbfc !important;
+    }
+    [data-testid="stExpanderDetails"] * {
+        color: #1a202c !important;
+    }
+
+    /* Mode description box */
     .mode-description {
-        background: white; border-radius: 8px; padding: 12px 16px;
-        border-left: 3px solid #4f7cff; margin-bottom: 1rem;
-        font-size: 0.82rem; color: #374151; line-height: 1.6;
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 14px 18px;
+        border-left: 4px solid #4f7cff;
+        margin-bottom: 1rem;
+        font-size: 0.85rem;
+        color: #374151 !important;
+        line-height: 1.7;
     }
-    h1 { color: #1a202c !important; font-weight: 800 !important; letter-spacing: -0.02em !important; }
-    h3 { color: #374151 !important; font-weight: 600 !important; }
-    h2 { margin-bottom: 1.5rem !important; margin-top: 0 !important; }
+
+    /* Titles and headers */
+    h1 {
+        color: #1a202c !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.02em !important;
+        margin-bottom: 1rem !important;
+    }
+    h2 {
+        color: #1a202c !important;
+        font-weight: 700 !important;
+        margin-bottom: 1.2rem !important;
+        margin-top: 0.5rem !important;
+    }
+    h3 {
+        color: #1a202c !important;
+        font-weight: 700 !important;
+        margin-top: 1rem !important;
+    }
+
+    /* Info and warning boxes */
+    .stInfo, .stWarning, .stSuccess, .stError {
+        background-color: #f0f9ff !important;
+        border-radius: 8px !important;
+        color: #1a202c !important;
+    }
+    .stInfo {
+        border-left: 4px solid #4f7cff !important;
+        color: #1a202c !important;
+    }
+    .stInfo * {
+        color: #1a202c !important;
+    }
+    .stWarning { border-left: 4px solid #f59e0b !important; }
+    .stWarning * { color: #1a202c !important; }
+    .stSuccess { border-left: 4px solid #10b981 !important; }
+    .stSuccess * { color: #1a202c !important; }
+    .stError { border-left: 4px solid #ef4444 !important; }
+    .stError * { color: #1a202c !important; }
+
+    /* Dataframe styling */
+    [data-testid="stDataFrame"] {
+        background-color: #ffffff !important;
+        color: #1a202c !important;
+    }
+    [data-testid="stDataFrame"] * {
+        color: #1a202c !important;
+    }
+
+    /* Plotly graphs */
+    .js-plotly-plot {
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Links */
+    a { color: #4f7cff !important; text-decoration: none !important; }
+    a:hover { text-decoration: underline !important; }
+
+    /* Hide default elements */
     #MainMenu, footer, header { visibility: hidden; }
-    .block-container { padding-top: 4rem; max-width: 100% !important; }
-    [data-testid="column"] { padding: 0 8px !important; }
-    .js-plotly-plot { margin-top: 1rem; }
+
+    /* Block container */
+    .block-container {
+        padding-top: 2rem !important;
+        max-width: 100% !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+    }
+
+    /* Column spacing */
+    [data-testid="column"] { padding: 0 10px !important; }
+
+    /* Force main content text colors for all elements */
+    [role="main"] {
+        color: #1a202c !important;
+    }
+    [role="main"] * {
+        color: #1a202c !important;
+    }
+
+    /* Target any remaining white/unwanted text */
+    .stText, .stInfo * {
+        color: #1a202c !important;
+    }
+
+    /* Sidebar input container styling */
+    [data-testid="stSidebar"] .stMultiSelect,
+    [data-testid="stSidebar"] .stSelectbox,
+    [data-testid="stSidebar"] .stTextInput,
+    [data-testid="stSidebar"] .stSlider,
+    [data-testid="stSidebar"] .stRadio {
+        color: #ffffff !important;
+    }
+
+    [data-testid="stSidebar"] .stTextInput input,
+    [data-testid="stSidebar"] [class*="stTextInput"] input,
+    [data-testid="stSidebar"] input[type="text"] {
+        color: #ffffff !important;
+        background-color: #2d4a7a !important;
+        border: 1px solid #4f7cff !important;
+    }
+
+    /* Override Streamlit theme for sidebar selections */
+    [data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] {
+        color: #ffffff !important;
+    }
+
+    [data-testid="stSidebar"] .stRadio [data-testid="stRadio"] {
+        color: #ffffff !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -103,38 +346,30 @@ def recalculate_rul(site_result, new_failure_dt):
         site_copy['urgency'] = 'UNKNOWN'
         return site_copy
 
-    # Get current (latest) ΔT value
     current_dt = rolling_median[-1]
     site_copy['current_dt'] = current_dt
     site_copy['failure_dt'] = new_failure_dt
 
-    # If already at or past failure threshold, RUL is 0 or negative
     if current_dt >= new_failure_dt:
         site_copy['rul_days'] = 0
         site_copy['urgency'] = 'URGENT'
         site_copy['pct_life'] = 100
         return site_copy
 
-    # If no degradation trend (R² too low or slope ≤ 0), assume healthy
     if r2 < 0.25 or slope <= 0:
         site_copy['rul_days'] = 999
         site_copy['urgency'] = 'OK'
         site_copy['pct_life'] = 0
         return site_copy
 
-    # Calculate episodes until failure
     episodes_to_failure = (new_failure_dt - current_dt) / slope if slope > 0 else 999
-
-    # Convert to days
     rul_days = episodes_to_failure * episode_interval_days
     site_copy['rul_days'] = max(0, rul_days)
 
-    # Calculate % of life used
     if baseline_dt > 0:
         pct_life = (current_dt - baseline_dt) / (new_failure_dt - baseline_dt) * 100
         site_copy['pct_life'] = max(0, min(100, pct_life))
 
-    # Assign urgency based on RUL
     if rul_days < 14:
         site_copy['urgency'] = 'URGENT'
     elif rul_days < 30:
@@ -145,16 +380,33 @@ def recalculate_rul(site_result, new_failure_dt):
     return site_copy
 
 
+def get_model_type_and_equation(result):
+    """Determine model type (1/2/3-factor) and generate equation string."""
+    has_aq = result.get('air_quality')
+
+    if has_aq:
+        pm10 = has_aq.get('pm10')
+        pm25 = has_aq.get('pm25')
+
+        if pm10 is not None and pm25 is not None:
+            return "3-Factor", f"ΔT = β₀ + β₁(adj_hours) + β₂(PM10) + β₃(PM2.5)"
+        elif pm10 is not None:
+            return "2-Factor (PM10)", f"ΔT = β₀ + β₁(adj_hours) + β₂(PM10)"
+        elif pm25 is not None:
+            return "2-Factor (PM2.5)", f"ΔT = β₀ + β₁(adj_hours) + β₂(PM2.5)"
+
+    return "1-Factor", f"ΔT = β₀ + β₁(adj_hours)"
+
+
 # ============================================================================
 # SIDEBAR
 # ============================================================================
 
 with st.sidebar:
-    st.markdown("### 🌡️ Rogers HVAC RUL Dashboard")
+    st.markdown('<h3 style="color: #ffffff; text-align: center; margin-bottom: 1rem;">🌡️ Rogers HVAC RUL Dashboard</h3>', unsafe_allow_html=True)
     st.markdown("---")
-    st.markdown('<div class="section-header">Filters</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #e0e7ff; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin: 1.5rem 0 1rem 0;">Filters</div>', unsafe_allow_html=True)
 
-    # Urgency filter
     urgency_filter = st.multiselect(
         "Urgency Level",
         ['URGENT', 'WARNING', 'OK', 'UNKNOWN'],
@@ -162,28 +414,28 @@ with st.sidebar:
         label_visibility='visible'
     )
 
-    # Search
     search_term = st.text_input("Search site name/ID", "", label_visibility='visible')
 
-    # Sort order
     sort_by = st.radio(
         "Sort by",
         ['RUL (ascending)', 'Site Name (A-Z)', 'Urgency + RUL'],
         label_visibility='visible'
     )
 
-    # Analysis parameters
-    st.markdown('<div class="section-header">Analysis Parameters</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #e0e7ff; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin: 1.5rem 0 1rem 0;">Analysis Parameters</div>', unsafe_allow_html=True)
     fan_threshold = st.slider("Min fan speed (%)", 80, 100, 95, step=1, label_visibility='visible')
     min_duration = st.slider("Min episode duration (min)", 10, 120, 30, step=5, label_visibility='visible')
     rolling_window = st.slider("Rolling median window (episodes)", 3, 10, 5, step=1, label_visibility='visible')
     failure_dt = st.slider("ΔT at filter failure (°C)", 5.0, 20.0, 10.0, step=0.5, label_visibility='visible')
 
     st.markdown("---")
-    st.markdown('<div style="font-size:0.72rem;color:#9ca3af;line-height:1.6;">'
-                '💡 Analysis assumes 90 days of InfluxDB data.<br>'
-                'RUL projects when rolling median hits failure threshold.<br>'
-                'Green = filter healthy. Yellow = plan replacement soon. Red = replace now.'
+    st.markdown('<div style="font-size:0.75rem;color:#cbd5e1;line-height:1.7;margin-top:1.5rem;">'
+                '💡 <strong>Analysis Parameters</strong><br>'
+                '<span style="font-size: 0.7rem; color: #94a3b8;">Assumes 90 days of InfluxDB data. RUL projects when ΔT reaches failure threshold.</span><br><br>'
+                '<strong>Urgency Guide:</strong><br>'
+                '🔴 Red = Replace now<br>'
+                '🟡 Yellow = Schedule soon<br>'
+                '🟢 Green = Monitor'
                 '</div>', unsafe_allow_html=True)
 
 
@@ -194,18 +446,91 @@ with st.sidebar:
 data = load_sites_data()
 sites = data['sites']
 
-# Recalculate RUL with custom failure threshold
 sites_recalc = {}
 for site_id, site_result in sites.items():
     sites_recalc[site_id] = recalculate_rul(site_result, failure_dt)
 
-st.markdown(f"## 🌡️ Rogers HVAC Filter RUL Status — {len([s for s in sites_recalc.values() if s.get('success')])} Sites Analyzed")
+success_count = len([s for s in sites_recalc.values() if s.get('success')])
+st.markdown(f"<h2 style='color: #1a202c; margin-bottom: 1.5rem;'>🌡️ Rogers HVAC Filter RUL Status — {success_count} Sites Analyzed</h2>", unsafe_allow_html=True)
 
-# Show current threshold setting
-threshold_info = f"**Custom Failure Threshold: {failure_dt}°C**"
+# Model Architecture Explanation
+with st.expander("📚 **Model Architecture & Methodology**", expanded=False):
+    st.markdown("""
+<div style="color: #1a202c; line-height: 1.9; font-size: 0.95rem;">
+
+### Current RUL Prediction System (Mode 3)
+
+**Per-Site RUL Calculation**
+
+Each site uses a **linear regression model** to project filter failure based on temperature differential (ΔT) trends:
+- Fit a line through historical ΔT measurements vs. cumulative adjusted fan runtime
+- Project when ΔT reaches the failure threshold (default: 10°C)
+- Convert remaining runtime to days based on average daily fan usage
+
+---
+
+### Model Variants
+
+| Model | When Used | Equation |
+|-------|-----------|----------|
+| **1-Factor** | No air quality data | `ΔT = β₀ + β₁ × (adj_hours)` |
+| **2-Factor** | Partial AQ data | `ΔT = β₀ + β₁ × (adj_hours) + β₂ × (PM10 or PM2.5)` |
+| **3-Factor** | Full AQ data | `ΔT = β₀ + β₁ × (adj_hours) + β₂ × (PM10) + β₃ × (PM2.5)` |
+
+---
+
+### Physics Model: Adjusted Fan Hours
+
+**Formula:** `adjusted_hours = duration_hours × (fan_speed_pct)²`
+
+**Rationale:** Air resistance ∝ fan_speed². Partial-speed operation produces proportionally less filter clogging.
+
+**Examples:**
+- 1 hour at 100% fan = 1.0 adjusted hours
+- 1 hour at 50% fan = 0.25 adjusted hours (0.5² = 0.25)
+- 1 hour at 75% fan = 0.5625 adjusted hours
+
+---
+
+### RUL Projection Steps
+
+1. **Extract Episodes** — Identify freecooling periods (fan ≥95%, ≥30 min duration)
+2. **Calculate Adjusted Hours** — Weight each episode by fan_speed²
+3. **Fit Regression** — Find the ΔT trend line (slope = degradation rate)
+4. **Project Failure** — When ΔT reaches threshold at current degradation rate
+5. **Urgency Classification**
+   - 🔴 **URGENT** → RUL < 14 days (Replace immediately)
+   - 🟡 **WARNING** → 14–30 days (Schedule replacement soon)
+   - 🟢 **OK** → ≥30 days (Monitor, no action needed)
+
+---
+
+### Data Sources & Granularity
+
+| Source | Granularity | Usage |
+|--------|------------|-------|
+| **InfluxDB** | 1–10 min intervals | Site HVAC data (fan speed, ΔT, mode) |
+| **Weatherbit API** | Hourly records | PM10 & PM2.5 (aggregated to 90-day avg) |
+| **Episodes** | 30 min–hours | Filtered freecooling windows |
+
+---
+
+### Notes
+
+- This dashboard reads **pre-computed** `sites_data.json` (generated by `query_sites.py`)
+- Model coefficients are fixed at query time; data queries run **offline**
+- Use the `failure_dt` slider to **dynamically recalculate RUL** (doesn't re-query sites)
+- Air quality impact requires ≥30 days of historical data per site
+
+</div>
+    """, unsafe_allow_html=True)
+
+st.markdown("---")
+
+threshold_info = f"<strong style='color: #1a202c;'>Custom Failure Threshold: {failure_dt}°C</strong>"
 if failure_dt != data.get('default_failure_dt', 10.0):
     original_threshold = data.get('default_failure_dt', 10.0)
-    threshold_info += f" (Original: {original_threshold}°C)"
+    threshold_info += f" <span style='color: #6b7280;'>(Original: {original_threshold}°C)</span>"
 st.info(threshold_info)
 
 # Metrics row
@@ -213,29 +538,24 @@ col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
     urgent_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'URGENT')
-    st.markdown(f'<div class="metric-card danger"><div class="label">🔴 URGENT</div><div class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>',
-                unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-card danger"><div class="label">🔴 URGENT</div><div class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>', unsafe_allow_html=True)
 
 with col2:
     warning_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'WARNING')
-    st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div class="value">{warning_count}</div><div class="sub">14–30 days</div></div>',
-                unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div class="value">{warning_count}</div><div class="sub">14–30 days</div></div>', unsafe_allow_html=True)
 
 with col3:
     ok_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'OK')
-    st.markdown(f'<div class="metric-card"><div class="label">🟢 OK</div><div class="value">{ok_count}</div><div class="sub">≥ 30 days</div></div>',
-                unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-card"><div class="label">🟢 OK</div><div class="value">{ok_count}</div><div class="sub">≥ 30 days</div></div>', unsafe_allow_html=True)
 
 with col4:
     failed_count = sum(1 for s in sites_recalc.values() if not s.get('success'))
-    st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div class="value">{failed_count}</div><div class="sub">Query error</div></div>',
-                unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div class="value">{failed_count}</div><div class="sub">Query error</div></div>', unsafe_allow_html=True)
 
 with col5:
     successful = [s for s in sites_recalc.values() if s.get('success')]
     mean_rul = np.mean([s.get('rul_days', 0) for s in successful if s.get('rul_days') is not None])
-    st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div class="value">{mean_rul:.0f}d</div><div class="sub">All sites</div></div>',
-                unsafe_allow_html=True)
+    st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div class="value">{mean_rul:.0f}d</div><div class="sub">All sites</div></div>', unsafe_allow_html=True)
 
 st.markdown("---")
 
@@ -243,15 +563,13 @@ st.markdown("---")
 # SITES TABLE
 # ============================================================================
 
-st.markdown(f'<div class="section-header">Sites Status Table</div>', unsafe_allow_html=True)
+st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700;">📊 Sites Status Table</h3>', unsafe_allow_html=True)
 
-# Prepare table data
 table_data = []
 for site_id, result in sites_recalc.items():
     if not result.get('success'):
         continue
 
-    # Apply filters
     if result.get('urgency') not in urgency_filter:
         continue
 
@@ -260,10 +578,12 @@ for site_id, result in sites_recalc.items():
         continue
 
     rul = result.get('rul_days', None)
+    model_type, _ = get_model_type_and_equation(result)
     table_data.append({
         'Site ID': site_id,
         'Site Name': result.get('site_name', '?'),
         'IP Address': result.get('ip', '?'),
+        'Model': model_type,
         'Urgency': result.get('urgency', '?'),
         'RUL (days)': f"{rul:.0f}" if rul is not None else "?",
         'Episodes': result.get('episodes_count', '?'),
@@ -280,7 +600,6 @@ if not table_data:
 else:
     df = pd.DataFrame(table_data)
 
-    # Apply sorting
     if sort_by == 'RUL (ascending)':
         df = df.sort_values('_rul_raw')
     elif sort_by == 'Site Name (A-Z)':
@@ -288,10 +607,7 @@ else:
     elif sort_by == 'Urgency + RUL':
         df = df.sort_values(['_urgency_rank', '_rul_raw'])
 
-    # Drop internal columns
     df = df.drop(columns=['_rul_raw', '_urgency_rank'])
-
-    # Display table
     st.dataframe(df, use_container_width=True, hide_index=True)
 
 st.markdown("---")
@@ -300,9 +616,8 @@ st.markdown("---")
 # EXPANDABLE SITE DETAILS
 # ============================================================================
 
-st.markdown(f'<div class="section-header">Site Details & Trend Analysis</div>', unsafe_allow_html=True)
+st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700;">📈 Site Details & Trend Analysis</h3>', unsafe_allow_html=True)
 
-# Filter sites for expandable view
 detail_sites = []
 for site_id, result in sorted(sites_recalc.items()):
     if not result.get('success'):
@@ -314,7 +629,6 @@ for site_id, result in sorted(sites_recalc.items()):
         continue
     detail_sites.append((site_id, result))
 
-# Limit to first 20 for performance
 detail_sites = detail_sites[:20]
 
 if not detail_sites:
@@ -323,35 +637,67 @@ else:
     for site_id, result in detail_sites:
         urgency = result.get('urgency', '?')
         rul = result.get('rul_days', '?')
+        model_type, equation = get_model_type_and_equation(result)
         color_map = {'URGENT': '🔴', 'WARNING': '🟡', 'OK': '🟢', 'UNKNOWN': '⚪'}
         emoji = color_map.get(urgency, '❓')
 
-        with st.expander(f"{emoji} {site_id} — {result.get('site_name', '?')} (RUL: {rul:.0f}d)" if isinstance(rul, float) else f"{emoji} {site_id} — {result.get('site_name', '?')} (RUL: {rul})"):
+        rul_str = f"{rul:.0f}d" if isinstance(rul, float) else str(rul)
+        expander_label = f"{emoji} {site_id} — {result.get('site_name', '?')} [{model_type}] (RUL: {rul_str})"
+
+        with st.expander(expander_label):
             col1, col2 = st.columns([1, 2])
 
             with col1:
                 st.markdown(f"""
-**📍 Site Info**
-- IP: `{result.get('ip')}`
-- Urgency: **{urgency}**
-- Episodes: {result.get('episodes_count')}
+<div style="color: #1a202c; line-height: 2.0; white-space: normal; word-wrap: break-word; font-size: 0.95rem;">
 
-**📈 Trend Analysis**
-- R²: {result.get('r2', '?'):.3f}
-- Slope: {result.get('slope', '?'):.3f} °C/episode
+<div style="background: #f8fafc; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #4f7cff;">
+<strong style="font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;">📍 Site Info</strong><br>
+<div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
+<div>IP Address: <code style="background: #ffffff; padding: 2px 6px; border-radius: 4px; color: #4f7cff;">{result.get('ip')}</code></div>
+<div>Urgency: <strong style="color: {'#ef4444' if urgency == 'URGENT' else '#f59e0b' if urgency == 'WARNING' else '#10b981' if urgency == 'OK' else '#6b7280'};">{urgency}</strong></div>
+<div>Episodes Counted: <strong>{result.get('episodes_count')}</strong></div>
+</div>
+</div>
 
-**⏱️ RUL Estimate**
-- Days: {rul if isinstance(rul, str) else f'{rul:.0f}'}
-- % Life Used: {result.get('pct_life', '?'):.0f}%
+<div style="background: #f8fafc; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #8b5cf6;">
+<strong style="font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;">🔬 Model Configuration</strong><br>
+<div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
+<div>Type: <strong style="color: #1a202c;">{model_type}</strong></div>
+<div style="margin-top: 6px; font-family: monospace; background: #ffffff; padding: 8px; border-radius: 4px; font-size: 0.8rem; color: #4f7cff; word-break: break-all;">{equation}</div>
+<div style="margin-top: 6px;">Air Quality: <span style="background: {'#dcfce7' if result.get('air_quality') else '#f3f4f6'}; color: {'#166534' if result.get('air_quality') else '#6b7280'}; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.8rem;">{"✓ Available" if result.get('air_quality') else "✗ Unavailable"}</span></div>
+</div>
+</div>
 
-**🌡️ Temperature**
-- Current ΔT: {result.get('current_dt', '?'):.1f}°C
-- Failure ΔT: {result.get('failure_dt', '?'):.1f}°C
-- Baseline ΔT: {result.get('baseline_dt', '?'):.1f}°C
-""")
+<div style="background: #f8fafc; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #ec4899;">
+<strong style="font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;">📈 Trend Analysis</strong><br>
+<div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
+<div>Fit Quality (R²): <strong style="font-size: 1.1em; color: #1a202c;">{result.get('r2', '?'):.3f}</strong> <span style="color: #6b7280;">({('Excellent' if float(result.get('r2', 0)) > 0.7 else 'Good' if float(result.get('r2', 0)) > 0.5 else 'Fair' if float(result.get('r2', 0)) > 0.25 else 'Poor')})</span></div>
+<div>Degradation Rate: <strong style="font-size: 1.1em; color: #ef4444;">{result.get('slope', '?'):.3f}°C</strong>/episode</div>
+</div>
+</div>
+
+<div style="background: #fef2f2; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #dc2626;">
+<strong style="font-size: 0.9rem; color: #991b1b; text-transform: uppercase; letter-spacing: 0.05em;">⏱️ RUL Estimate</strong><br>
+<div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
+<div>Days Until Replacement: <strong style="font-size: 1.2em; color: #dc2626;">{rul if isinstance(rul, str) else f'{rul:.0f}'} days</strong></div>
+<div>Filter Life Used: <strong style="font-size: 1.1em; color: #1a202c;">{result.get('pct_life', '?'):.0f}%</strong></div>
+</div>
+</div>
+
+<div style="background: #f0f9ff; padding: 14px; border-radius: 8px; border-left: 4px solid #0284c7;">
+<strong style="font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;">🌡️ Temperature Readings</strong><br>
+<div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
+<div>Current ΔT: <strong style="font-size: 1.1em; color: #1a202c;">{result.get('current_dt', '?'):.1f}°C</strong></div>
+<div>Failure Threshold: <strong style="font-size: 1.1em; color: #ef4444;">{result.get('failure_dt', '?'):.1f}°C</strong></div>
+<div>Baseline ΔT: <span style="color: #6b7280;">{result.get('baseline_dt', '?'):.1f}°C</span></div>
+</div>
+</div>
+
+</div>
+""", unsafe_allow_html=True)
 
             with col2:
-                # Plot rolling median + trend
                 onset_deltas = result.get('onset_deltas', [])
                 rolling_median = result.get('rolling_median', [])
 
@@ -360,16 +706,14 @@ else:
 
                     fig = go.Figure()
 
-                    # Raw onset ΔT
                     fig.add_trace(go.Scatter(
                         x=episodes, y=onset_deltas,
                         mode='markers',
-                        marker=dict(size=6, color='lightblue', opacity=0.6),
+                        marker=dict(size=6, color='#a5b4fc', opacity=0.7),
                         name='Onset ΔT (raw)',
                         hovertemplate='Episode %{x}<br>Onset ΔT: %{y:.2f}°C<extra></extra>'
                     ))
 
-                    # Rolling median
                     fig.add_trace(go.Scatter(
                         x=episodes, y=rolling_median,
                         mode='lines+markers',
@@ -379,16 +723,14 @@ else:
                         hovertemplate='Episode %{x}<br>Rolling Median: %{y:.2f}°C<extra></extra>'
                     ))
 
-                    # Failure threshold
                     fig.add_hline(
                         y=result.get('failure_dt', 10.0),
                         line_dash='dot',
-                        line_color='orange',
+                        line_color='#ef4444',
                         annotation_text=f"Failure: {result.get('failure_dt', 10.0):.1f}°C",
                         annotation_position='right'
                     )
 
-                    # Trend line
                     if len(episodes) >= 2:
                         r2 = result.get('r2', 0)
                         slope = result.get('slope', 0)
@@ -397,19 +739,49 @@ else:
                         fig.add_trace(go.Scatter(
                             x=episodes, y=trend_line,
                             mode='lines',
-                            line=dict(color='red', width=2, dash='dash'),
+                            line=dict(color='#4f7cff', width=2, dash='dash'),
                             name=f'Trend (R²={r2:.3f})',
                             hovertemplate='Episode %{x}<br>Trend: %{y:.2f}°C<extra></extra>'
                         ))
 
                     fig.update_layout(
-                        title=f"Rolling Median Trend — {site_id}",
-                        xaxis_title='Episode #',
-                        yaxis_title='ΔT (°C)',
-                        height=350,
+                        title=dict(
+                            text=f"Rolling Median Trend — {site_id}",
+                            font=dict(size=14, color='#1a202c', family='Arial, sans-serif'),
+                            x=0.5,
+                            xanchor='center'
+                        ),
+                        xaxis=dict(
+                            title='Episode #',
+                            title_font=dict(size=12, color='#1a202c'),
+                            tickfont=dict(size=10, color='#1a202c'),
+                            showgrid=True,
+                            gridwidth=1,
+                            gridcolor='#e5e7eb',
+                        ),
+                        yaxis=dict(
+                            title='ΔT (°C)',
+                            title_font=dict(size=12, color='#1a202c'),
+                            tickfont=dict(size=10, color='#1a202c'),
+                            showgrid=True,
+                            gridwidth=1,
+                            gridcolor='#e5e7eb',
+                        ),
+                        height=380,
                         hovermode='x unified',
-                        paper_bgcolor='#f5f6fa',
-                        plot_bgcolor='#f8f9fb',
+                        paper_bgcolor='#ffffff',
+                        plot_bgcolor='#fafbfc',
+                        margin=dict(l=70, r=70, t=60, b=60),
+                        font=dict(family='Arial, sans-serif', size=10, color='#1a202c'),
+                        showlegend=True,
+                        legend=dict(
+                            x=0.02,
+                            y=0.98,
+                            bgcolor='rgba(255,255,255,0.9)',
+                            bordercolor='#cbd5e1',
+                            borderwidth=1,
+                            font=dict(size=10, color='#1a202c')
+                        ),
                     )
 
                     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
@@ -418,9 +790,9 @@ else:
 
 st.markdown("---")
 st.markdown(f"""
-<div style="text-align:center;font-size:0.75rem;color:#9ca3af;">
-    Last updated: {data.get('query_timestamp', 'unknown')}<br>
-    Query time: {data.get('query_elapsed_seconds', '?'):.1f}s for {data.get('sites_queried', '?')} sites<br>
-    Dashboard: Mode 3 Rolling Median RUL Analysis
+<div style="text-align:center;font-size:0.75rem;color:#6b7280;margin-top:2rem;padding:1.5rem;background:#f8fafc;border-radius:8px;border:1px solid #e5e7eb;">
+    <strong style="color: #1a202c;">Last Updated</strong> {data.get('query_timestamp', 'unknown')}<br>
+    <span style="color: #4b5563;">Query Time: {data.get('query_elapsed_seconds', '?'):.1f}s for {data.get('sites_queried', '?')} sites</span><br>
+    <span style="color: #9ca3af; font-size: 0.7rem;">Dashboard: Mode 3 Rolling Median RUL Analysis</span>
 </div>
 """, unsafe_allow_html=True)
