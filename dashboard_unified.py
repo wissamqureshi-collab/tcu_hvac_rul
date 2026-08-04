@@ -563,8 +563,7 @@ st.markdown("---")
 # SITES TABLE
 # ============================================================================
 
-st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700;">📊 Sites Status 
-Table</h3>', unsafe_allow_html=True)
+st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700;">📊 Sites Status Table</h3>', unsafe_allow_html=True)
 
 table_data = []
 for site_id, result in sites_recalc.items():
