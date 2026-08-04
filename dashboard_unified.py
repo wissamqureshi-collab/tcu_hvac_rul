@@ -529,109 +529,129 @@ st.markdown(f"<h2 style='color: #1a202c; margin-bottom: 1.5rem;'>Status — {suc
 
 # Model Architecture Explanation
 with st.expander("📚 **Model Architecture & Methodology**", expanded=False):
-  regression_data = data.get('air_quality_regression', {})
-
-  # Build regression info string if available
-  regression_info = ""
-  if regression_data:
-    regression_info = f"""
-**Fitted Coefficients (from regression):**
-- PM2.5: β = {regression_data.get('coefficient_pm25', 0):.6f}
-- PM10: β = {regression_data.get('coefficient_pm10', 0):.6f}
-- R² = {regression_data.get('r_squared', 0):.4f} ({regression_data.get('sites_analyzed', 0)} sites)
-"""
-
-  st.markdown(f"""
+  st.markdown("""
 <div style="color: #1a202c; line-height: 1.9; font-size: 0.95rem;">
 
-### Current RUL Prediction System (Mode 3 + Pollution Effect)
+### Filter Degradation Tracking
 
-**Per-Site RUL Calculation**
+**How We Monitor Filter Clogging**
 
-Each site uses a **linear regression model** to project filter failure based on temperature differential (ΔT) trends:
-- Fit a line through historical ΔT measurements vs. cumulative adjusted fan runtime
-- Project when ΔT reaches the failure threshold (default: 10°C)
-- Optionally apply **pollution effect multiplier** if air quality data available
-- Convert remaining runtime to days based on average daily fan usage
+Each HVAC system's filter degrades as air is forced through it. We track this degradation by monitoring the temperature differential (ΔT) between supply air and return air during freecooling episodes:
 
----
+1. **Identify Freecooling Events** — We detect periods where the supply fan speed exceeds the minimum threshold (default: 95%) and the unit is in freecooling mode, lasting at least 30 minutes.
 
-### Regression Models (for fitting pollution coefficients)
+2. **Capture Max Temperature Differential** — During each freecooling episode, we record the maximum ΔT that occurs. A clogged filter causes higher ΔT because air must be forced harder through the restricted filter media.
 
-| Model | When Used | Regression Fit |
-|-------|-----------|----------|
-| **1-Factor** | No air quality data | slope ~ adjusted_hours (no adjustment) |
-| **2-Factor** | Partial AQ data | slope ~ adjusted_hours + PM10 (or PM2.5) |
-| **3-Factor** | Full AQ data | slope ~ adjusted_hours + PM10 + PM2.5 |
-
-**Note:** All sites use the same base equation: ΔT = β₀ + β₁ × (adj_hours), but with an adjusted slope.
+3. **Track Degradation Over Time** — As the filter accumulates particulates, the max ΔT increases episode after episode. We plot this progression: how does max ΔT change as the filter runs?
 
 ---
 
-### Pollution Effect Multiplier (Applied to All Sites with Air Quality Data)
+### Relating Degradation to Runtime (Adjusted Hours)
 
-**How it works:**
-1. **Fit regression** across all sites with air quality data: slope ~ adjusted_hours + PM10 + PM2.5
-   - This finds coefficients β_pm10 and β_pm25 that relate pollutant levels to degradation rate
-2. **Apply multiplier** to each individual site's slope:
-   - effect = β_pm10 × PM10 + β_pm25 × PM2.5
-   - adjusted_slope = raw_slope × (1 + effect)
-3. **Calculate RUL** using the adjusted slope (same ΔT equation, but steeper/shallower trend)
+**Why We Adjust for Fan Speed**
 
-**Interpretation:** Polluted air acts as a multiplier on filter degradation. Positive effect coefficient means higher pollution accelerates clogging (shorter RUL); negative means it slows degradation (longer RUL).
-
-{regression_info}
-
----
-
-### Physics Model: Adjusted Fan Hours
+A filter that runs at 50% fan speed produces less air resistance (and thus less degradation) than one at 100% speed. Air resistance scales with fan speed squared:
 
 **Formula:** adjusted_hours = duration_hours × (fan_speed_pct)²
 
-**Rationale:** Air resistance ∝ fan_speed². Partial-speed operation produces proportionally less filter clogging.
-
 **Examples:**
-- 1 hour at 100% fan = 1.0 adjusted hours
-- 1 hour at 50% fan = 0.25 adjusted hours (0.5² = 0.25)
-- 1 hour at 75% fan = 0.5625 adjusted hours
+- 1 hour at 100% fan speed = 1.0 adjusted hours (maximum degradation)
+- 1 hour at 50% fan speed = 0.25 adjusted hours (one quarter the impact)
+- 1 hour at 75% fan speed = 0.5625 adjusted hours
+
+**Linear Regression Model**
+
+We fit a line through each site's data: **ΔT = β₀ + β₁ × (cumulative adjusted hours)**
+
+- **β₀** (intercept): baseline ΔT when filter is clean
+- **β₁** (slope): how fast ΔT increases per adjusted operating hour
+- Higher slope = faster degradation = shorter remaining life
+
+The slope directly reveals filter health: a steep slope means the filter clogs quickly; a gentle slope means it's still relatively clean.
 
 ---
 
-### RUL Projection Steps
+### Predicting Filter Failure
 
-1. **Extract Episodes** — Identify freecooling periods (fan ≥95%, ≥30 min duration)
-2. **Calculate Adjusted Hours** — Weight each episode by fan_speed²
-3. **Query Air Quality** — Fetch 90-day Weatherbit PM10/PM2.5 for sites with coordinates
-4. **Fit Regression** — Find ΔT trend + pollution coefficients (if ≥2 sites with AQ data)
-5. **Apply Pollution Effect** — For each site with AQ, adjust slope by pollution multiplier
-6. **Project Failure** — When (adjusted) ΔT reaches threshold at current degradation rate
-7. **Urgency Classification**
- - 🔴 **URGENT** → RUL < 14 days (Replace immediately)
- - 🟡 **WARNING** → 14–30 days (Schedule replacement soon)
- - 🟢 **OK** → ≥30 days (Monitor, no action needed)
+**When Does the Filter Fail?**
+
+We assume filter failure occurs when ΔT reaches 10°C (adjustable via the dashboard slider). Using the fitted line and the current average operating pattern, we project when ΔT will cross this threshold:
+
+- **RUL (days)** = (Failure ΔT - Current ΔT) / Slope ÷ (Average Adjusted Hours Per Day)
+
+**Example:**
+- Current max ΔT: 4°C
+- Slope: 0.08°C per adjusted hour
+- Average adjusted hours per day: 8
+- Remaining adjusted hours: (10 - 4) / 0.08 = 75 adjusted hours
+- **RUL: 75 ÷ 8 = 9.4 days** → 🔴 URGENT
 
 ---
 
-### Data Sources & Granularity
+### Accounting for Air Quality Impact
 
-| Source | Granularity | Usage |
-|--------|------------|-------|
-| **InfluxDB** | 1–10 min intervals | Site HVAC data (fan speed, ΔT, mode) |
-| **Weatherbit API** | Hourly records | PM10 & PM2.5 (aggregated to 90-day avg) |
-| **Episodes** | 30 min–hours | Filtered freecooling windows |
-| **Regression** | Batch fit | Pollution coefficients (β₁₀, β₂₅) |
+**Pollution Effect on Filter Life**
+
+Polluted air (high PM10 and PM2.5) causes filters to clog faster than clean air. We quantify this impact by:
+
+1. **Analyzing sites WITH air quality data** — For sites with available coordinates and Weatherbit data, we fit a separate regression to understand the relationship between pollution levels and observed degradation rates (slopes).
+
+2. **Comparing to population average** — Each site's pollution levels (PM2.5 and PM10) are compared to the average across all sites. If a site is cleaner than average, its filter should last longer; if dirtier, it will fail sooner.
+
+3. **Predicting pollution impact** — Using population-level regression coefficients, we calculate how much this site's unique pollution profile would speed up or slow down degradation:
+   - **Pollution Impact (days)** = β_PM2.5 × (site PM2.5 - avg PM2.5) + β_PM10 × (site PM10 - avg PM10)
+   - Positive impact = faster degradation (shorter RUL)
+   - Negative impact = slower degradation (longer RUL)
+
+4. **Sites without air quality data** — No pollution context is available; RUL is based purely on observed ΔT trends and adjusted hours.
+
+**Example:**
+- Site's predicted degradation rate difference vs population: +2.3 days faster
+- This means: "Your filter will likely fail 2.3 days sooner than a typical site due to your air quality"
+
+---
+
+### Urgency Classification
+
+- 🔴 **URGENT** → RUL < 14 days (Replace immediately)
+- 🟡 **WARNING** → 14–30 days (Schedule replacement soon)
+- 🟢 **OK** → ≥30 days (Monitor, no action needed)
+
+---
+
+### Data Processing Pipeline
+
+1. **Extract Freecooling Episodes** — Identify periods where fan ≥95%, mode = freecooling, duration ≥30 min
+2. **Record Max ΔT** — Capture the maximum temperature differential in each episode
+3. **Calculate Adjusted Hours** — Weight runtime by (fan_speed_pct)²
+4. **Fit Degradation Line** — Linear regression: max ΔT vs cumulative adjusted hours
+5. **Fetch Air Quality** — For sites with coordinates, retrieve 90-day PM10/PM2.5 averages from Weatherbit
+6. **Analyze Pollution Correlation** — Fit regression across all sites with AQ data to find pollution coefficients
+7. **Predict RUL & Impact** — Project when ΔT hits failure threshold; calculate pollution impact for sites with data
+8. **Classify Urgency** — Assign URGENT/WARNING/OK based on RUL days remaining
+
+---
+
+### Data Sources
+
+| Source | Granularity | Purpose |
+|--------|------------|---------|
+| **InfluxDB** | 1–10 min intervals | HVAC data (fan speed, ΔT, freecooling mode) |
+| **Weatherbit API** | Hourly records | Air quality (PM10, PM2.5) — 90-day average |
+| **Freecooling Episodes** | 30 min–hours | Periods where filter experiences load |
+| **Regression Analysis** | Batch fit (one-time) | Pollution coefficients from population data |
 
 ---
 
 ### Notes
 
 - This dashboard reads pre-computed sites_data.json (generated by query_sites.py)
-- Model coefficients are fixed at query time; data queries run offline
-- Use the failure_dt slider to dynamically recalculate RUL (doesn't re-query sites)
-- Air quality impact requires:
+- All sites use the same 1-factor model (ΔT vs adjusted hours); pollution is analyzed separately
+- Use the failure ΔT slider to dynamically recalculate RUL (doesn't re-query sites)
+- Air quality analysis requires:
   - Site coordinates in sites_inventory_2.csv
-  - ≥90 days of historical data from Weatherbit
-  - ≥2 sites with complete air quality to fit regression
+  - ≥90 days of historical Weatherbit data available
+  - Multiple sites with complete air quality data to fit population-level regression
 
 </div>
   """, unsafe_allow_html=True)

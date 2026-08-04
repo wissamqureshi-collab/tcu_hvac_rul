@@ -50,11 +50,13 @@ __pycache__/
 - Cross-reference Site ↔ Site ID to attach coordinates to each site
 - Query InfluxDB from 1020 sites via SSH (68 sites currently return RUL data)
 - Extract freecooling episodes (fan ≥95%, FC mode active, ≥30 min)
+- **Track max ΔT at each freecooling event** to measure filter clogging progression
 - Compute max ΔT vs percentage-adjusted cooling hours (physics-based: fan_speed²)
 - For sites WITH coordinates: Fetch 90-day hourly air quality from Weatherbit → calculate PM2.5/PM10 averages
 - For sites WITHOUT coordinates: Skip Weatherbit, use InfluxDB data only
-- Run regression on all sites with air quality data: fit β₁, β₂ from observed slopes vs pollutants
-- Apply pollution effect multiplier: adjusted_slope = slope × (1 + β₁×PM2.5 + β₂×PM10)
+- Run regression across sites with air quality data to quantify pollution impact on filter degradation: fit β₁, β₂ from observed slopes vs pollutants
+- **For sites WITH air quality data**: Calculate how pollution (PM2.5/PM10) deviates from site-average and predict impact on degradation rate
+- **For sites WITHOUT air quality data**: Use raw slope with only max delta values (no pollution context)
 - Linear projection to failure (10°C threshold); convert adjusted hours → days RUL
 
 **August 4 (Session 1) Updates**:
@@ -113,19 +115,29 @@ __pycache__/
 
 **Model Architecture (1-Factor Only)**:
 
+**Core Methodology**:
+- **Filter degradation tracking**: Analyze max ΔT recorded at each freecooling event to measure filter clogging progression over time
+- **Single-factor RUL model**: All sites use identical 1-factor model based on percentage-adjusted cooling hours
+- **Air quality analysis**: Separate regression layer that quantifies how pollution correlates with filter degradation rates across the site population
+- **Differentiated treatment**:
+  - **Sites WITH air quality data** (full or partial): Display pollution impact context showing how this site's PM2.5/PM10 deviates from population average
+  - **Sites WITHOUT air quality data**: Use only max delta values; no pollution context available
+
 **RUL Calculation** (all sites identical):
 - Base equation: ΔT = β₀ + β₁ × (adj_hours)
-- Uses raw slope (no pollution adjustment multiplier)
+- Fitted from max_ΔT values across all freecooling events
+- Uses raw slope (no pollution adjustment multiplier on RUL itself)
 - Linear projection: When ΔT reaches 10°C → RUL in days
 
-**Pollution Impact Context** (informational only):
-- Air quality is already baked into the ΔT measurements (polluted air naturally increases ΔT faster)
-- Regression fitted across all sites: slope ~ adjusted_hours + PM10 + PM2.5
-- For each site, calculate deviation from site average: (site_PM25 - avg_PM25) and (site_PM10 - avg_PM10)
+**Pollution Impact Context** (informational, sites with air quality data only):
+- Air quality is already baked into the ΔT measurements (polluted air naturally increases ΔT faster at that site)
+- Regression fitted across all sites WITH air quality: slope ~ adjusted_hours + PM10 + PM2.5
+- For each site with data, calculate deviation from population average: (site_PM25 - avg_PM25) and (site_PM10 - avg_PM10)
 - Predicted impact = β_pm25 × ΔPM2.5 + β_pm10 × ΔPM10 (in degradation rate days)
 - Display as blurb: "This site's air quality means filter degrades **X days faster/slower than typical**"
+- Sites without air quality data show no pollution impact context (only RUL based on max delta values)
 
-**Key insight**: Pollution effect is already in the slope; regression just contextualizes how this site's pollution compares to the site average.
+**Key insight**: Pollution effect is already in each site's observed slope; regression contextualizes how this site's pollution compares to the population average.
 
 **Urgency Logic** (based on 1-factor RUL):
 - 🔴 URGENT: RUL < 14 days
@@ -162,11 +174,11 @@ adjusted_hours = duration_min × (fan_speed_pct)² / 60
 1. **Load inventory** → CSV cross-reference (sites_inventory.csv ↔ sites_inventory_2.csv by normalized Site ID)
 2. **Parallel SSH queries** → 10 concurrent ThreadPoolExecutor workers, query each site's InfluxDB
 3. **Extract episodes** → Identify freecooling bursts (fan ≥95%, FC mode active, ≥30 min)
-4. **Compute RUL** → Linear regression max_ΔT vs cumulative adjusted hours, R² ≥ 0.25 required
-5. **Fetch air quality** → Weatherbit 90-day historical for sites with coordinates (chunked 30-day requests)
-6. **Fit regression** → Slope ~ adjusted_hours ± PM10 ± PM2.5 (flexible 1/2/3-factor)
-7. **Apply adjustment** → Recalculate RUL with pollution effect for sites with air quality data
-8. **Output JSON** → sites_data.json with full metrics, regression results, urgency summary
+4. **Compute RUL** → Linear regression of max_ΔT vs cumulative adjusted hours, R² ≥ 0.25 required; all sites use same 1-factor model
+5. **Fetch air quality** → Weatherbit 90-day historical for sites with coordinates (chunked 30-day requests); skip for sites without coordinates
+6. **Fit regression** → For sites WITH air quality data, fit slope ~ adjusted_hours ± PM10 ± PM2.5 (flexible 1/2/3-factor) to quantify pollution impact
+7. **Calculate impact context** → For each site with air quality data, compute deviation from population average and predicted pollution effect on degradation rate
+8. **Output JSON** → sites_data.json with full metrics, regression results, urgency summary, per-site air quality impact
 
 **Configuration** (tunable in script):
 - `FAN_THRESHOLD = 95.0` — Minimum fan % to trigger episode
@@ -201,13 +213,26 @@ adjusted_hours = duration_min × (fan_speed_pct)² / 60
       "site_id": "SITE-001",
       "success": true,
       "slope": 0.08,
-      "adjusted_slope": 0.085,
-      "pollution_effect": 0.0625,
       "rul_days": 18.5,
       "urgency": "WARNING",
       "air_quality": {"pm10": 45.2, "pm25": 12.8},
+      "pollution_impact_days": 2.3,
       "latitude": 40.123,
       "longitude": -75.456,
+      "has_air_quality_data": true,
+      ...
+    },
+    "SITE-002": {
+      "site_id": "SITE-002",
+      "success": true,
+      "slope": 0.06,
+      "rul_days": 24.8,
+      "urgency": "OK",
+      "air_quality": null,
+      "pollution_impact_days": null,
+      "latitude": null,
+      "longitude": null,
+      "has_air_quality_data": false,
       ...
     }
   }
@@ -240,16 +265,17 @@ adjusted_hours = duration_min × (fan_speed_pct)² / 60
 
 ## Next Steps (Priority Order)
 
-1. **Validate regression model** (Session 5):
+1. **Validate pollution impact analysis** (ongoing):
    - Inspect which pollutants drive filter degradation (β_PM2.5 > 0 suggests pollution accelerates clogging)
    - β_PM10 < 0 is counterintuitive; possible confounding factors (e.g., sites in polluted areas run cooler)
-   - Consider: add humidity/temperature normalization in future iterations
+   - Verify predicted impact values align with observed degradation differences between clean vs polluted sites
    - Monitor: Check if R² improves as more sites accumulate air quality data
+   - Consider: add humidity/temperature normalization in future iterations to improve correlation
 
 2. **Dashboard monitoring** (ongoing):
-   - Verify RUL values make physical sense (sites in clean air should have longer RUL than polluted sites)
-   - Watch for outliers: Sites with dramatic RUL shifts due to pollution effect
-   - Track urgency category shifts as pollution effect adjusts slopes
+   - Verify RUL values make physical sense based on max delta degradation trends
+   - Correlate urgency categories with air quality data: sites in clean air should show slower degradation than polluted sites
+   - Watch for outliers: Sites with unexpected degradation rates that don't align with observed pollution levels
 
 3. **Operational** (after current test confirmed stable):
    - Schedule daily runs: `0 */6 * * * cd /home/aillm/hvac_rul_project && python query_sites.py && cd /home/aillm && git add sites_data.json && git commit -m "Auto-update RUL data" && git push`
