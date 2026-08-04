@@ -895,17 +895,15 @@ Readings</strong><br>
               max_deltas = result.get('max_deltas', [])
               cumul_hours = result.get('cumulative_adjusted_hours', [])
 
-              if len(max_deltas) > 2:
-                  episodes = list(range(len(max_deltas)))
-
+              if len(max_deltas) > 2 and len(cumul_hours) == len(max_deltas):
                   fig = go.Figure()
 
                   fig.add_trace(go.Scatter(
-                      x=episodes, y=max_deltas,
+                      x=cumul_hours, y=max_deltas,
                       mode='markers',
                       marker=dict(size=6, color='#a5b4fc', opacity=0.7),
                       name='Max ΔT per episode',
-                      hovertemplate='Episode %{x}<br>Max ΔT: %{y:.2f}°C<extra></extra>'
+                      hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Max ΔT: %{y:.2f}°C<extra></extra>'
                   ))
 
                   fig.add_hline(
@@ -916,17 +914,17 @@ Readings</strong><br>
                       annotation_position='right'
                   )
 
-                  if len(episodes) >= 2:
+                  if len(cumul_hours) >= 2:
                       r2 = result.get('r2', 0)
                       slope = result.get('slope', 0)
                       baseline_dt = result.get('baseline_dt', max_deltas[0] if max_deltas else 0)
-                      trend_line = [baseline_dt + slope * i for i in episodes]
+                      trend_line = [baseline_dt + slope * h for h in cumul_hours]
                       fig.add_trace(go.Scatter(
-                          x=episodes, y=trend_line,
+                          x=cumul_hours, y=trend_line,
                           mode='lines',
                           line=dict(color='#4f7cff', width=2, dash='dash'),
                           name=f'Trend (R²={r2:.3f})',
-                          hovertemplate='Episode %{x}<br>Trend: %{y:.2f}°C<extra></extra>'
+                          hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Trend: %{y:.2f}°C<extra></extra>'
                       ))
 
                   fig.update_layout(
@@ -937,7 +935,7 @@ Readings</strong><br>
                           xanchor='center'
                       ),
                       xaxis=dict(
-                          title='Episode #',
+                          title='Cumulative Adjusted Fan Hours',
                           title_font=dict(size=12, color='#1a202c'),
                           tickfont=dict(size=10, color='#1a202c'),
                           showgrid=True,
