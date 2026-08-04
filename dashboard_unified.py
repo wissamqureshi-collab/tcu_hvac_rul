@@ -310,6 +310,81 @@ st.markdown("""
       font-weight: 700 !important;
       font-size: 0.9rem !important;
   }
+
+  /* Main content dropdown/selectbox styling - keep white background, black text */
+  .stSelectbox [data-baseweb="select"] {
+      background-color: #ffffff !important;
+      color: #1a202c !important;
+      border: 1px solid #d1d5db !important;
+      border-radius: 4px !important;
+  }
+
+  .stSelectbox [data-baseweb="select"]:hover {
+      background-color: #f9fafb !important;
+      border-color: #9ca3af !important;
+  }
+
+  .stSelectbox [data-baseweb="select"]:focus {
+      background-color: #ffffff !important;
+      border-color: #4f7cff !important;
+  }
+
+  .stSelectbox [data-baseweb="select"] span,
+  .stSelectbox [data-baseweb="select"] div {
+      color: #1a202c !important;
+  }
+
+  /* Multiselect styling - keep white background, black text */
+  .stMultiSelect [data-baseweb="select"] {
+      background-color: #ffffff !important;
+      color: #1a202c !important;
+      border: 1px solid #d1d5db !important;
+      border-radius: 4px !important;
+  }
+
+  .stMultiSelect [data-baseweb="select"]:hover {
+      background-color: #f9fafb !important;
+      border-color: #9ca3af !important;
+  }
+
+  .stMultiSelect [data-baseweb="select"]:focus {
+      background-color: #ffffff !important;
+      border-color: #4f7cff !important;
+  }
+
+  .stMultiSelect [data-baseweb="select"] span,
+  .stMultiSelect [data-baseweb="select"] div {
+      color: #1a202c !important;
+  }
+
+  /* Dropdown menu styling - prevent black background */
+  [role="listbox"],
+  [role="option"] {
+      background-color: #ffffff !important;
+      color: #1a202c !important;
+  }
+
+  [role="option"]:hover {
+      background-color: #f0f4ff !important;
+      color: #1a202c !important;
+  }
+
+  [role="option"][aria-selected="true"] {
+      background-color: #e0e7ff !important;
+      color: #1a202c !important;
+  }
+
+  /* Text input styling in main content */
+  .stTextInput input {
+      background-color: #ffffff !important;
+      color: #1a202c !important;
+      border: 1px solid #d1d5db !important;
+  }
+
+  .stTextInput input:focus {
+      border-color: #4f7cff !important;
+      background-color: #ffffff !important;
+  }
 </style>
 """, unsafe_allow_html=True)
 
@@ -475,46 +550,35 @@ sites = data['sites']
 
 st.markdown(f"<h1 style='color: #1a202c; margin-bottom: 0.5rem;'>🌡️   Rogers HVAC Filter RUL Dashboard</h1>", unsafe_allow_html=True)
 
-# CONTROL PANEL - NOW IN MAIN CONTENT WITH PROMINENT STYLING
-st.markdown("### ⚙️ Analysis Controls", help="Adjust these parameters to recalculate RUL")
+# ============================================================================
+# SIDEBAR CONTROLS
+# ============================================================================
 
-col1, col2, col3, col4 = st.columns(4)
+with st.sidebar:
+  st.markdown("### ⚙️ Analysis Controls")
 
-with col1:
-  min_duration = st.slider("Min episode\nduration (min)", 10, 120, 30, step=5)
+  min_duration = st.slider("Min episode duration (min)", 10, 120, 30, step=5)
+  fan_threshold = st.slider("Min fan speed (%)", 80, 100, 95, step=1)
+  rolling_window = st.slider("Rolling median window (episodes)", 3, 10, 5, step=1)
+  failure_dt = st.slider("ΔT at filter failure (°C)", 5.0, 20.0, 10.0, step=0.5)
 
-with col2:
-  fan_threshold = st.slider("Min fan\nspeed (%)", 80, 100, 95, step=1)
+  st.markdown("---")
 
-with col3:
-  rolling_window = st.slider("Rolling median\nwindow (episodes)", 3, 10, 5, step=1)
+  st.markdown("### 🔍 Filter & Sort")
 
-with col4:
-  failure_dt = st.slider("ΔT at filter\nfailure (°C)", 5.0, 20.0, 10.0, step=0.5)
+  urgency_filter = st.multiselect(
+      "Urgency Level",
+      ['URGENT', 'WARNING', 'OK', 'UNKNOWN'],
+      default=['URGENT', 'WARNING', 'OK']
+  )
 
-# FILTER CONTROLS - ALSO IN MAIN CONTENT
-with st.expander("🔍 **Filter & Sort Options**", expanded=False):
-  col_f1, col_f2, col_f3 = st.columns(3)
+  search_term = st.text_input("Search site name/ID", "")
 
-  with col_f1:
-    urgency_filter = st.multiselect(
-        "Urgency Level",
-        ['URGENT', 'WARNING', 'OK', 'UNKNOWN'],
-        default=['URGENT', 'WARNING', 'OK'],
-        label_visibility='visible'
-    )
+  sort_by = st.radio(
+      "Sort by",
+      ['RUL (ascending)', 'Site Name (A-Z)', 'Urgency + RUL']
+  )
 
-  with col_f2:
-    search_term = st.text_input("Search site name/ID", "", label_visibility='visible')
-
-  with col_f3:
-    sort_by = st.radio(
-        "Sort by",
-        ['RUL (ascending)', 'Site Name (A-Z)', 'Urgency + RUL'],
-        label_visibility='visible'
-    )
-
-st.markdown("---")
 
 # ============================================================================
 # RECALCULATE WITH NEW PARAMETERS
