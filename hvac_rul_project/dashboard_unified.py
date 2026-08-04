@@ -531,7 +531,7 @@ threshold_info = f"<strong style='color: #1a202c;'>Custom Failure Threshold: {fa
 if failure_dt != data.get('default_failure_dt', 10.0):
   original_threshold = data.get('default_failure_dt', 10.0)
   threshold_info += f" <span style='color: #6b7280;'>(Original: {original_threshold}°C)</span>"
-st.info(threshold_info)
+st.markdown(threshold_info, unsafe_allow_html=True)
 
 # Metrics row
 col1, col2, col3, col4, col5 = st.columns(5)
