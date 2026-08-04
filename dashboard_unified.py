@@ -695,16 +695,7 @@ def get_model_type_and_equation(result):
 
 
 # ============================================================================
-# MAIN CONTENT - CONTROLS PANEL AT TOP
-# ============================================================================
-
-data = load_sites_data()
-sites = data['sites']
-
-st.markdown(f"<h1 style='color: #1a202c; margin-bottom: 0.5rem;'>🌡️   Rogers HVAC Filter RUL Dashboard</h1>", unsafe_allow_html=True)
-
-# ============================================================================
-# SIDEBAR CONTROLS
+# SIDEBAR CONTROLS - CREATED FIRST BEFORE DATA LOADING
 # ============================================================================
 
 with st.sidebar:
@@ -731,6 +722,15 @@ with st.sidebar:
       "Sort by",
       ['RUL (ascending)', 'Site Name (A-Z)', 'Urgency + RUL']
   )
+
+# ============================================================================
+# MAIN CONTENT - LOAD DATA AND DISPLAY
+# ============================================================================
+
+st.markdown(f"<h1 style='color: #1a202c; margin-bottom: 0.5rem;'>🌡️   Rogers HVAC Filter RUL Dashboard</h1>", unsafe_allow_html=True)
+
+data = load_sites_data()
+sites = data['sites']
 
 
 # ============================================================================
