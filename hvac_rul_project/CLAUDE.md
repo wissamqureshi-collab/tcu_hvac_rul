@@ -74,16 +74,51 @@ __pycache__/
 - ✅ Updated query_sites.py to cross-reference Site (sites_inventory.csv) ↔ Site ID (sites_inventory_2.csv)
 - ✅ Added regression module to fit pollution coefficients from 90-day air quality + slope data
 
-**Pollution Effect Model**:
-```
-For sites WITH air quality:
-  adjusted_slope = raw_slope × (1 + β₁×PM2.5 + β₂×PM10)
-  RUL = (FAILURE_DT - intercept) / adjusted_slope
+**August 4 (Session 3) Updates**:
+- ✅ **Complete query_sites.py implementation delivered** with:
+  - `load_inventory()`: Robust CSV cross-reference with case/whitespace normalization
+  - `fetch_weatherbit_90day_avg()`: Chunked 90-day historical fetch (3 × 30-day chunks to avoid "Request too large")
+  - `extract_episodes()`: Robust sensor naming (fallback chains for fan_status, fc_mode, delta_t)
+  - `compute_rul_mode3()`: Returns full metrics dict (max_deltas, cumulative_hours, slope, R², RUL, urgency, % life)
+  - `run_air_quality_regression()`: Flexible 1/2/3-factor regression (auto-selects features based on available data)
+  - `apply_pollution_effect_to_rul()`: Recalculates RUL for sites with air quality using adjusted slope
+  - `query_all_sites_parallel()`: ThreadPoolExecutor with concurrent workers (default 10)
+- ✅ Output JSON includes: query timestamp, elapsed time, urgency summary, regression results, per-site metrics
+- ✅ Ready for first full test run
 
-For sites WITHOUT air quality:
-  slope = raw_slope (no adjustment)
-  RUL = (FAILURE_DT - intercept) / slope
-```
+**August 4 (Session 4) Updates**:
+- ✅ **First successful full query run completed on Bell laptop**:
+  - 60 of 1020 sites successfully queried (remaining unreachable from office network)
+  - 575 sites had coordinates loaded from CSV cross-reference
+  - 48 sites with complete Weatherbit air quality data (90-day averages)
+  - 3-factor regression fitted: slope ~ adjusted_hours + PM10 + PM2.5
+  - Regression coefficients: β_adjusted_hours=0.003935, β_PM10=-0.032911, β_PM2.5=0.047004
+  - R²=0.0426 (explains ~4.3% of slope variance; site-specific factors dominate)
+  - Pollution effect successfully applied to adjust RUL for all 48 sites with air quality
+- ✅ **Dashboard rebuilt** with controls in main content (sidebar was causing rendering issues):
+  - Control panel at top with 4 sliders: Duration, Fan Speed, Rolling Window, Failure ΔT
+  - Filter/sort options in collapsible section
+  - Air quality regression summary visible in Model Architecture expander
+  - All equations formatted as readable black text (removed code blocks)
+- ✅ **Documentation clarified**:
+  - Pollution effect is a multiplier on raw_slope, not a separate linear factor in ΔT equation
+  - All sites use base equation: ΔT = β₀ + β₁ × (adj_hours)
+  - Adjusted slope = raw_slope × (1 + β_pm10×PM10 + β_pm25×PM2.5)
+- ✅ **Pipeline fully functional**: Query → Regression → RUL Adjustment → Dashboard Display
+
+**Pollution Effect Model** (Multiplier Approach):
+
+**Step 1: Fit Regression across all sites with air quality data**
+- Model: slope ~ adjusted_hours + PM10 + PM2.5 (flexible 1/2/3-factor based on data)
+- Output: Coefficients β_hours, β_pm10, β_pm25 that quantify how each factor relates to degradation rate
+
+**Step 2: Apply Multiplier to each site's slope**
+- Base equation (all sites): ΔT = β₀ + β₁ × (adj_hours)
+- Pollution effect: effect = β_pm10 × PM10 + β_pm25 × PM2.5
+- Adjusted slope: adjusted_slope = raw_slope × (1 + effect)
+- Final RUL: (FAILURE_DT - intercept) / adjusted_slope
+
+**Key insight**: PM10 and PM2.5 are **never** linear factors in the ΔT equation. They only modify the degradation rate slope.
 
 **Urgency Logic**:
 - 🔴 URGENT: RUL < 14 days
@@ -113,37 +148,111 @@ adjusted_hours = duration_min × (fan_speed_pct)² / 60
 - Reads pre-computed `sites_data.json` (no SSH/InfluxDB access needed)
 - Workflow: User runs query_sites.py locally → commits sites_data.json → pushes → dashboard auto-updates
 
-## Known Issues
+## query_sites.py Implementation Details
 
-**Network Access** (66% of sites unreachable from Bell office):
+**Workflow**:
+1. **Load inventory** → CSV cross-reference (sites_inventory.csv ↔ sites_inventory_2.csv by normalized Site ID)
+2. **Parallel SSH queries** → 10 concurrent ThreadPoolExecutor workers, query each site's InfluxDB
+3. **Extract episodes** → Identify freecooling bursts (fan ≥95%, FC mode active, ≥30 min)
+4. **Compute RUL** → Linear regression max_ΔT vs cumulative adjusted hours, R² ≥ 0.25 required
+5. **Fetch air quality** → Weatherbit 90-day historical for sites with coordinates (chunked 30-day requests)
+6. **Fit regression** → Slope ~ adjusted_hours ± PM10 ± PM2.5 (flexible 1/2/3-factor)
+7. **Apply adjustment** → Recalculate RUL with pollution effect for sites with air quality data
+8. **Output JSON** → sites_data.json with full metrics, regression results, urgency summary
+
+**Configuration** (tunable in script):
+- `FAN_THRESHOLD = 95.0` — Minimum fan % to trigger episode
+- `MIN_EPISODE_MINUTES = 30.0` — Minimum episode duration
+- `R2_THRESHOLD = 0.25` — Minimum R² to estimate RUL
+- `FAILURE_DT = 10.0` — Temperature threshold for filter failure
+- `SSH_TIMEOUT = 30` — SSH connection timeout (seconds)
+- `QUERY_TIMEOUT = 60` — InfluxDB query timeout (seconds)
+- `QUERY_DAYS = 90` — Historical data window
+- `max_workers = 10` — Parallel threads (increase for faster runs, decrease if rate-limited)
+
+**Output JSON structure**:
+```json
+{
+  "query_timestamp": "2026-08-04T...",
+  "query_elapsed_seconds": 1234,
+  "sites_queried": 68,
+  "sites_total": 1020,
+  "sites_failed": 952,
+  "sites_with_air_quality": 45,
+  "urgency_summary": {"URGENT": 5, "WARNING": 12, "OK": 51},
+  "air_quality_regression": {
+    "model_type": "2-factor (adjusted_hours + PM2.5)",
+    "sites_analyzed": 45,
+    "r_squared": 0.42,
+    "coefficient_adjusted_hours": 0.001234,
+    "coefficient_pm25": 0.000567,
+    "coefficient_pm10": null
+  },
+  "sites": {
+    "SITE-001": {
+      "site_id": "SITE-001",
+      "success": true,
+      "slope": 0.08,
+      "adjusted_slope": 0.085,
+      "pollution_effect": 0.0625,
+      "rul_days": 18.5,
+      "urgency": "WARNING",
+      "air_quality": {"pm10": 45.2, "pm25": 12.8},
+      "latitude": 40.123,
+      "longitude": -75.456,
+      ...
+    }
+  }
+}
+```
+
+## Known Issues & Mitigations
+
+**Network Access** (~66% of sites unreachable from Bell office):
 - Root cause: Sites on isolated regional networks
-- Workaround: Script gracefully skips unreachable sites, continues with successful ones
-- Resolution: Would need to run from server/Pi on internal network
+- Mitigation: Script gracefully skips timeouts, continues with successful sites
+- Resolution: Run from internal server/Pi to reach blocked sites
 
-**Authentication** (16% of sites):
-- Some sites don't use default `plc` / `sitelogic` credentials
-- Workaround: Script logs failures; manual SSH testing needed
-- Resolution: Document per-site credentials
+**Authentication** (~16% of sites):
+- Root cause: Non-standard plc user credentials per site
+- Mitigation: Script logs failures; continue with sites that authenticate
+- Resolution: Manual SSH probe per site; document credentials in CLAUDE.md
+
+**Weatherbit API Rate Limits**:
+- Limit: 1500 requests/day (depends on API tier)
+- Chunked requests: Script splits 90-day window into 3 × 30-day chunks to avoid "Request too large" error
+- Mitigations:
+  - If 429 (rate-limited): Retry next day or reduce `max_workers` (fewer concurrent sites → fewer simultaneous Weatherbit calls)
+  - If quota exceeded: Script logs warning and continues without air quality for that site (degrades to 1-factor model)
+
+**CSV Cross-Reference**:
+- Issue: Site ID format might differ (leading zeros, case sensitivity, whitespace)
+- Mitigation: Script normalizes both CSVs (uppercase, strip whitespace) before matching
+- Fallback: Sites without matched coordinates skip Weatherbit; use raw slope (1-factor model)
 
 ## Next Steps (Priority Order)
 
-1. **TEST: Run full query_sites.py with coordinate integration + pollution effect model**
-   - Place sites_inventory.csv and sites_inventory_2.csv in tcu_hvac_rul folder (Bell laptop)
-   - Run `python query_sites.py` to verify:
-     - CSV cross-reference works (coordinates attached to sites)
-     - Weatherbit API calls succeed for sites with coords
-     - Regression fit calculates β₁, β₂ correctly
-     - RUL values updated with pollution effect multiplier
-   - Monitor output for any API rate limit issues (1500 req/day Weatherbit limit)
+1. **Validate regression model** (Session 5):
+   - Inspect which pollutants drive filter degradation (β_PM2.5 > 0 suggests pollution accelerates clogging)
+   - β_PM10 < 0 is counterintuitive; possible confounding factors (e.g., sites in polluted areas run cooler)
+   - Consider: add humidity/temperature normalization in future iterations
+   - Monitor: Check if R² improves as more sites accumulate air quality data
 
-2. **Dashboard improvements** (after test confirms air quality data flow):
-   - Monitor regression outputs: Track which pollutants correlate most with filter clogging
-   - Regional analysis: Compare air quality effects across different geographic areas
-   - Add model type filter to dashboard (1-factor vs 2/3-factor)
+2. **Dashboard monitoring** (ongoing):
+   - Verify RUL values make physical sense (sites in clean air should have longer RUL than polluted sites)
+   - Watch for outliers: Sites with dramatic RUL shifts due to pollution effect
+   - Track urgency category shifts as pollution effect adjusts slopes
 
-3. **Operational**:
-   - Daily query runs: Schedule `python query_sites.py` to run daily, commit/push results
-   - Network expansion: Test running script from internal server to reach more sites
+3. **Operational** (after current test confirmed stable):
+   - Schedule daily runs: `0 */6 * * * cd /home/aillm/hvac_rul_project && python query_sites.py && cd /home/aillm && git add sites_data.json && git commit -m "Auto-update RUL data" && git push`
+   - Network expansion: Test running from internal server to reach blocked sites (currently 66% unreachable)
+   - Monitor Weatherbit API quota: Track cumulative requests vs 1500/day limit
+
+4. **Future enhancements** (after pipeline stable):
+   - Refactor regression: Add temperature/humidity normalization (may improve R²)
+   - Regional analysis: Geographic heatmap of pollution effect strength
+   - Predictive alerts: Notify when sites entering URGENT or WARNING thresholds
+   - Historical tracking: Store daily RUL snapshots to monitor degradation acceleration
 
 ## Token Efficiency Note
 
