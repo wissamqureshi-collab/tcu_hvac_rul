@@ -288,8 +288,7 @@ def get_model_type_and_equation(result):
 # ============================================================================
 
 with st.sidebar:
-    st.markdown('<h3 style="color: #ffffff; text-align: center; margin-bottom: 1rem;">🌡️  Rogers HVAC RUL 
-Dashboard</h3>', unsafe_allow_html=True)
+    st.markdown('<h3 style="color: #ffffff; text-align: center; margin-bottom: 1rem;">🌡️  Rogers HVAC RUL Dashboard</h3>', unsafe_allow_html=True)
     st.markdown("---")
     st.markdown('<div style="color: #e0e7ff; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; 
 letter-spacing: 0.1em; margin: 1.5rem 0 1rem 0;">Filters</div>', unsafe_allow_html=True)
