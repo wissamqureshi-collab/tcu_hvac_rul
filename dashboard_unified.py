@@ -762,7 +762,7 @@ Readings</strong><br>
                           mode='lines',
                           line=dict(color='#4f7cff', width=2, dash='dash'),
                           name=f'Trend (R²={r2:.3f})',
-                          hovertemplate='Episode %{x}<br>Trend: %{y:.2f}°C<extra></extra>'
+                          hovertemplate='Episode %{x}<br>Trend: %{y:.2f}°C<extra></extra>',
                           line=dict(color='#4f7cff', width=2, dash='dash'),
                           name=f'Trend (R²={r2:.3f})',
                           hovertemplate='Episode %{x}<br>Trend: %{y:.2f}°C<extra></extra>'
