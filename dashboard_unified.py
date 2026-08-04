@@ -616,8 +616,7 @@ st.markdown("---")
 # EXPANDABLE SITE DETAILS
 # ============================================================================
 
-st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700;">📈 Site Details & 
-Trend Analysis</h3>', unsafe_allow_html=True)
+st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700;">📈 Site Details & Trend Analysis</h3>', unsafe_allow_html=True)
 
 detail_sites = []
 for site_id, result in sorted(sites_recalc.items()):
