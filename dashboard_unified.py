@@ -14,315 +14,315 @@ from datetime import datetime
 from pathlib import Path
 
 st.set_page_config(
-  page_title="Rogers HVAC RUL Dashboard",
-  page_icon="🌡️  ",
-  layout="wide",
-  initial_sidebar_state="expanded"
+    page_title="Rogers HVAC RUL Dashboard",
+    page_icon="🌡️  ",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 st.markdown("""
 <style>
-  /* Main app background */
-  .stApp { background-color: #ffffff; }
+    /* Main app background */
+    .stApp { background-color: #ffffff; }
 
-  /* Sidebar styling - all text elements */
-  [data-testid="stSidebar"] { background-color: #1e3a5f; }
+    /* Sidebar styling - all text elements */
+    [data-testid="stSidebar"] { background-color: #1e3a5f; }
 
-  /* Sidebar markdown and text */
-  [data-testid="stSidebar"] .stMarkdown,
-  [data-testid="stSidebar"] .stMarkdown * {
-      color: #ffffff !important;
-  }
+    /* Sidebar markdown and text */
+    [data-testid="stSidebar"] .stMarkdown,
+    [data-testid="stSidebar"] .stMarkdown * {
+        color: #ffffff !important;
+    }
 
-  /* Sidebar labels */
-  [data-testid="stSidebar"] label {
-      color: #e0e7ff !important;
-      font-weight: 500 !important;
-  }
+    /* Sidebar labels */
+    [data-testid="stSidebar"] label {
+        color: #e0e7ff !important;
+        font-weight: 500 !important;
+    }
 
-  /* Sidebar selectbox styling */
-  [data-testid="stSidebar"] .stSelectbox label {
-      color: #e0e7ff !important;
-      font-size: 0.78rem !important;
-      letter-spacing: 0.08em !important;
-      text-transform: uppercase !important;
-      font-weight: 600 !important;
-  }
-  [data-testid="stSidebar"] .stSelectbox div {
-      color: #ffffff !important;
-  }
+    /* Sidebar selectbox styling */
+    [data-testid="stSidebar"] .stSelectbox label {
+        color: #e0e7ff !important;
+        font-size: 0.78rem !important;
+        letter-spacing: 0.08em !important;
+        text-transform: uppercase !important;
+        font-weight: 600 !important;
+    }
+    [data-testid="stSidebar"] .stSelectbox div {
+        color: #ffffff !important;
+    }
 
-  /* Sidebar radio styling */
-  [data-testid="stSidebar"] .stRadio label {
-      color: #e0e7ff !important;
-      font-weight: 500 !important;
-  }
-  [data-testid="stSidebar"] .stRadio span {
-      color: #ffffff !important;
-  }
+    /* Sidebar radio styling */
+    [data-testid="stSidebar"] .stRadio label {
+        color: #e0e7ff !important;
+        font-weight: 500 !important;
+    }
+    [data-testid="stSidebar"] .stRadio span {
+        color: #ffffff !important;
+    }
 
-  /* Sidebar slider styling */
-  [data-testid="stSidebar"] .stSlider label {
-      color: #e0e7ff !important;
-      font-weight: 500 !important;
-  }
-  [data-testid="stSidebar"] .stSlider {
-      color: #ffffff !important;
-  }
+    /* Sidebar slider styling */
+    [data-testid="stSidebar"] .stSlider label {
+        color: #e0e7ff !important;
+        font-weight: 500 !important;
+    }
+    [data-testid="stSidebar"] .stSlider {
+        color: #ffffff !important;
+    }
 
-  /* Sidebar text input */
-  [data-testid="stSidebar"] .stTextInput label {
-      color: #e0e7ff !important;
-      font-weight: 500 !important;
-  }
-  [data-testid="stSidebar"] input {
-      background-color: #2d4a7a !important;
-      color: #ffffff !important;
-      border-color: #4f7cff !important;
-  }
-  [data-testid="stSidebar"] input::placeholder {
-      color: #a5b4fc !important;
-  }
+    /* Sidebar text input */
+    [data-testid="stSidebar"] .stTextInput label {
+        color: #e0e7ff !important;
+        font-weight: 500 !important;
+    }
+    [data-testid="stSidebar"] input {
+        background-color: #2d4a7a !important;
+        color: #ffffff !important;
+        border-color: #4f7cff !important;
+    }
+    [data-testid="stSidebar"] input::placeholder {
+        color: #a5b4fc !important;
+    }
 
-  /* Main content - explicit dark text */
-  body,
-  .stApp,
-  .stMarkdown p,
-  [data-testid="stVerticalBlock"] > div > p {
-      color: #1a202c !important;
-  }
+    /* Main content - explicit dark text */
+    body,
+    .stApp,
+    .stMarkdown p,
+    [data-testid="stVerticalBlock"] > div > p {
+        color: #1a202c !important;
+    }
 
-  .stMarkdown,
-  .stMarkdown * {
-      color: #1a202c !important;
-  }
+    .stMarkdown,
+    .stMarkdown * {
+        color: #1a202c !important;
+    }
 
-  .stMarkdown p,
-  .stMarkdown h1,
-  .stMarkdown h2,
-  .stMarkdown h3,
-  .stMarkdown h4,
-  .stMarkdown h5,
-  .stMarkdown h6 {
-      color: #1a202c !important;
-  }
+    .stMarkdown p,
+    .stMarkdown h1,
+    .stMarkdown h2,
+    .stMarkdown h3,
+    .stMarkdown h4,
+    .stMarkdown h5,
+    .stMarkdown h6 {
+        color: #1a202c !important;
+    }
 
-  /* Ensure text content is dark */
-  main {
-      color: #1a202c !important;
-  }
+    /* Ensure text content is dark */
+    main {
+        color: #1a202c !important;
+    }
 
-  main p, main div, main span {
-      color: #1a202c !important;
-  }
+    main p, main div, main span {
+        color: #1a202c !important;
+    }
 
-  /* Metric cards */
-  .metric-card {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 20px 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      border-left: 5px solid #4f7cff;
-      min-height: 95px;
-      box-sizing: border-box;
-  }
-  .metric-card.warn { border-left-color: #f59e0b; }
-  .metric-card.danger { border-left-color: #ef4444; }
-  .metric-card .label {
-      font-size: 0.7rem;
-      color: #6b7280 !important;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 8px;
-      font-weight: 700;
-  }
-  .metric-card .value {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #1a202c !important;
-  }
-  .metric-card .sub {
-      font-size: 0.75rem;
-      color: #6b7280 !important;
-      margin-top: 4px;
-      font-weight: 500;
-  }
+    /* Metric cards */
+    .metric-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 20px 24px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border-left: 5px solid #4f7cff;
+        min-height: 95px;
+        box-sizing: border-box;
+    }
+    .metric-card.warn { border-left-color: #f59e0b; }
+    .metric-card.danger { border-left-color: #ef4444; }
+    .metric-card .label {
+        font-size: 0.7rem;
+        color: #6b7280 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 8px;
+        font-weight: 700;
+    }
+    .metric-card .value {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #1a202c !important;
+    }
+    .metric-card .sub {
+        font-size: 0.75rem;
+        color: #6b7280 !important;
+        margin-top: 4px;
+        font-weight: 500;
+    }
 
-  /* Section headers */
-  .section-header {
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: #1a202c !important;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin: 24px 0 14px 0;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #e5e7eb;
-  }
+    /* Section headers */
+    .section-header {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: #1a202c !important;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin: 24px 0 14px 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e5e7eb;
+    }
 
-  /* Expanders and containers */
-  [data-testid="stExpander"] {
-      background-color: #ffffff !important;
-      border: 1px solid #e5e7eb !important;
-      border-radius: 8px !important;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05) !important;
-  }
-  
-  [data-testid="stExpander"] summary,
-  [data-testid="stExpander"] summary:hover,
-  [data-testid="stExpander"] summary:focus,
-  [data-testid="stExpander"] summary:active,
-  [data-testid="stExpander"] > button,
-  [data-testid="stExpander"] > button:hover,
-  [data-testid="stExpander"] > button:focus,
-  [data-testid="stExpander"] > button:active {
-      background-color: #ffffff !important;
-      color: #1a202c !important;
-      font-weight: 600 !important;
-  }
+    /* Expanders and containers */
+    [data-testid="stExpander"] {
+        background-color: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05) !important;
+    }
+    
+    [data-testid="stExpander"] summary,
+    [data-testid="stExpander"] summary:hover,
+    [data-testid="stExpander"] summary:focus,
+    [data-testid="stExpander"] summary:active,
+    [data-testid="stExpander"] > button,
+    [data-testid="stExpander"] > button:hover,
+    [data-testid="stExpander"] > button:focus,
+    [data-testid="stExpander"] > button:active {
+        background-color: #ffffff !important;
+        color: #1a202c !important;
+        font-weight: 600 !important;
+    }
 
-  [data-testid="stExpander"] summary p,
-  [data-testid="stExpander"] > button p {
-      color: #1a202c !important;
-  }
-  
-  [data-testid="stExpanderDetails"] {
-      color: #1a202c !important;
-      background-color: #fafbfc !important;
-  }
-  [data-testid="stExpanderDetails"] * {
-      color: #1a202c !important;
-  }
+    [data-testid="stExpander"] summary p,
+    [data-testid="stExpander"] > button p {
+        color: #1a202c !important;
+    }
+    
+    [data-testid="stExpanderDetails"] {
+        color: #1a202c !important;
+        background-color: #fafbfc !important;
+    }
+    [data-testid="stExpanderDetails"] * {
+        color: #1a202c !important;
+    }
 
-  /* Mode description box */
-  .mode-description {
-      background: #f8fafc;
-      border-radius: 8px;
-      padding: 14px 18px;
-      border-left: 4px solid #4f7cff;
-      margin-bottom: 1rem;
-      font-size: 0.85rem;
-      color: #374151 !important;
-      line-height: 1.7;
-  }
+    /* Mode description box */
+    .mode-description {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 14px 18px;
+        border-left: 4px solid #4f7cff;
+        margin-bottom: 1rem;
+        font-size: 0.85rem;
+        color: #374151 !important;
+        line-height: 1.7;
+    }
 
-  /* Titles and headers */
-  h1 {
-      color: #1a202c !important;
-      font-weight: 800 !important;
-      letter-spacing: -0.02em !important;
-      margin-bottom: 1rem !important;
-  }
-  h2 {
-      color: #1a202c !important;
-      font-weight: 700 !important;
-      margin-bottom: 1.2rem !important;
-      margin-top: 0.5rem !important;
-  }
-  h3 {
-      color: #1a202c !important;
-      font-weight: 700 !important;
-      margin-top: 1rem !important;
-  }
+    /* Titles and headers */
+    h1 {
+        color: #1a202c !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.02em !important;
+        margin-bottom: 1rem !important;
+    }
+    h2 {
+        color: #1a202c !important;
+        font-weight: 700 !important;
+        margin-bottom: 1.2rem !important;
+        margin-top: 0.5rem !important;
+    }
+    h3 {
+        color: #1a202c !important;
+        font-weight: 700 !important;
+        margin-top: 1rem !important;
+    }
 
-  /* Info and warning boxes */
-  .stInfo, .stWarning, .stSuccess, .stError {
-      background-color: #f0f9ff !important;
-      border-radius: 8px !important;
-      color: #1a202c !important;
-  }
-  .stInfo {
-      border-left: 4px solid #4f7cff !important;
-      color: #1a202c !important;
-  }
-  .stInfo * {
-      color: #1a202c !important;
-  }
-  .stWarning { border-left: 4px solid #f59e0b !important; }
-  .stWarning * { color: #1a202c !important; }
-  .stSuccess { border-left: 4px solid #10b981 !important; }
-  .stSuccess * { color: #1a202c !important; }
-  .stError { border-left: 4px solid #ef4444 !important; }
-  .stError * { color: #1a202c !important; }
+    /* Info and warning boxes */
+    .stInfo, .stWarning, .stSuccess, .stError {
+        background-color: #f0f9ff !important;
+        border-radius: 8px !important;
+        color: #1a202c !important;
+    }
+    .stInfo {
+        border-left: 4px solid #4f7cff !important;
+        color: #1a202c !important;
+    }
+    .stInfo * {
+        color: #1a202c !important;
+    }
+    .stWarning { border-left: 4px solid #f59e0b !important; }
+    .stWarning * { color: #1a202c !important; }
+    .stSuccess { border-left: 4px solid #10b981 !important; }
+    .stSuccess * { color: #1a202c !important; }
+    .stError { border-left: 4px solid #ef4444 !important; }
+    .stError * { color: #1a202c !important; }
 
-  /* Dataframe styling */
-  [data-testid="stDataFrame"] {
-      background-color: #ffffff !important;
-      color: #1a202c !important;
-  }
-  [data-testid="stDataFrame"] * {
-      color: #1a202c !important;
-  }
+    /* Dataframe styling */
+    [data-testid="stDataFrame"] {
+        background-color: #ffffff !important;
+        color: #1a202c !important;
+    }
+    [data-testid="stDataFrame"] * {
+        color: #1a202c !important;
+    }
 
-  /* Plotly graphs */
-  .js-plotly-plot {
-      margin-top: 1.5rem;
-      margin-bottom: 1.5rem;
-  }
+    /* Plotly graphs */
+    .js-plotly-plot {
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
 
-  /* Links */
-  a { color: #4f7cff !important; text-decoration: none !important; }
-  a:hover { text-decoration: underline !important; }
+    /* Links */
+    a { color: #4f7cff !important; text-decoration: none !important; }
+    a:hover { text-decoration: underline !important; }
 
-  /* Hide default elements EXCEPT header (header has the sidebar toggle) */
-  #MainMenu, footer { visibility: hidden; }
+    /* Hide default elements EXCEPT header (header has the sidebar toggle) */
+    #MainMenu, footer { visibility: hidden; }
 
-  /* Block container */
-  .block-container {
-      padding-top: 2rem !important;
-      max-width: 100% !important;
-      padding-left: 2rem !important;
-      padding-right: 2rem !important;
-  }
+    /* Block container */
+    .block-container {
+        padding-top: 2rem !important;
+        max-width: 100% !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+    }
 
-  /* Column spacing */
-  [data-testid="column"] { padding: 0 10px !important; }
+    /* Column spacing */
+    [data-testid="column"] { padding: 0 10px !important; }
 
-  /* Force main content text colors for all elements */
-  [role="main"] {
-      color: #1a202c !important;
-  }
-  [role="main"] * {
-      color: #1a202c !important;
-  }
+    /* Force main content text colors for all elements */
+    [role="main"] {
+        color: #1a202c !important;
+    }
+    [role="main"] * {
+        color: #1a202c !important;
+    }
 
-  /* Target any remaining white/unwanted text */
-  .stText, .stInfo * {
-      color: #1a202c !important;
-  }
+    /* Target any remaining white/unwanted text */
+    .stText, .stInfo * {
+        color: #1a202c !important;
+    }
 
-  /* Sidebar input container styling */
-  [data-testid="stSidebar"] .stMultiSelect,
-  [data-testid="stSidebar"] .stSelectbox,
-  [data-testid="stSidebar"] .stTextInput,
-  [data-testid="stSidebar"] .stSlider,
-  [data-testid="stSidebar"] .stRadio {
-      color: #ffffff !important;
-  }
+    /* Sidebar input container styling */
+    [data-testid="stSidebar"] .stMultiSelect,
+    [data-testid="stSidebar"] .stSelectbox,
+    [data-testid="stSidebar"] .stTextInput,
+    [data-testid="stSidebar"] .stSlider,
+    [data-testid="stSidebar"] .stRadio {
+        color: #ffffff !important;
+    }
 
-  [data-testid="stSidebar"] .stTextInput input,
-  [data-testid="stSidebar"] [class*="stTextInput"] input,
-  [data-testid="stSidebar"] input[type="text"] {
-      color: #ffffff !important;
-      background-color: #2d4a7a !important;
-      border: 1px solid #4f7cff !important;
-  }
+    [data-testid="stSidebar"] .stTextInput input,
+    [data-testid="stSidebar"] [class*="stTextInput"] input,
+    [data-testid="stSidebar"] input[type="text"] {
+        color: #ffffff !important;
+        background-color: #2d4a7a !important;
+        border: 1px solid #4f7cff !important;
+    }
 
-  /* Override Streamlit theme for sidebar selections */
-  [data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] {
-      color: #ffffff !important;
-  }
+    /* Override Streamlit theme for sidebar selections */
+    [data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] {
+        color: #ffffff !important;
+    }
 
-  [data-testid="stSidebar"] .stRadio [data-testid="stRadio"] {
-      color: #ffffff !important;
-  }
+    [data-testid="stSidebar"] .stRadio [data-testid="stRadio"] {
+        color: #ffffff !important;
+    }
 
-  /* Main slider label styling - make labels black and visible */
-  .stSlider label {
-      color: #000000 !important;
-      font-weight: 700 !important;
-      font-size: 0.9rem !important;
-  }
+    /* Main slider label styling - make labels black and visible */
+    .stSlider label {
+        color: #000000 !important;
+        font-weight: 700 !important;
+        font-size: 0.9rem !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -332,151 +332,151 @@ st.markdown("""
 
 @st.cache_data(ttl=300)
 def load_sites_data(json_file='sites_data.json'):
-  """Load aggregated site data from JSON."""
-  if not Path(json_file).exists():
-      st.error(f"Data file not found: {json_file}")
-      st.info("Run `python3 query_sites.py` on the Bell laptop to generate this file.")
-      st.stop()
+    """Load aggregated site data from JSON."""
+    if not Path(json_file).exists():
+        st.error(f"Data file not found: {json_file}")
+        st.info("Run `python3 query_sites.py` on the Bell laptop to generate this file.")
+        st.stop()
 
-  with open(json_file) as f:
-      data = json.load(f)
+    with open(json_file) as f:
+        data = json.load(f)
 
-  return data
+    return data
 
 
 def recalculate_rul(site_result, new_failure_dt):
-  """
-  Recalculate RUL for a site using a custom failure ΔT threshold.
-  Uses raw slope only (1-factor model). Pollution effect shown as informational impact only.
-  Returns updated site_result with new rul_days and urgency.
-  """
-  site_copy = site_result.copy()
+    """
+    Recalculate RUL for a site using a custom failure ΔT threshold.
+    Uses raw slope only. Pollution effect shown as informational impact only.
+    Returns updated site_result with new rul_days and urgency.
+    """
+    site_copy = site_result.copy()
 
-  if not site_result.get('success'):
-      return site_copy
+    if not site_result.get('success'):
+        return site_copy
 
-  current_dt = site_result.get('current_dt', 0)
-  # Always use raw slope (1-factor model)
-  slope = site_result.get('slope', 0)
-  r2 = site_result.get('r2', 0)
-  baseline_dt = site_result.get('baseline_dt', 0)
-  intercept = site_result.get('intercept', 0)
+    current_dt = site_result.get('current_dt', 0)
+    # Always use raw slope
+    slope = site_result.get('slope', 0)
+    r2 = site_result.get('r2', 0)
+    baseline_dt = site_result.get('baseline_dt', 0)
+    intercept = site_result.get('intercept', 0)
 
-  if current_dt <= 0 or slope <= 0:
-      site_copy['rul_days'] = None
-      site_copy['urgency'] = site_result.get('urgency', 'UNKNOWN')
-      return site_copy
+    if current_dt <= 0 or slope <= 0:
+        site_copy['rul_days'] = None
+        site_copy['urgency'] = site_result.get('urgency', 'UNKNOWN')
+        return site_copy
 
-  site_copy['failure_dt'] = new_failure_dt
+    site_copy['failure_dt'] = new_failure_dt
 
-  if current_dt >= new_failure_dt:
-      site_copy['rul_days'] = 0
-      site_copy['urgency'] = 'URGENT'
-      site_copy['pct_life'] = 100
-      return site_copy
+    if current_dt >= new_failure_dt:
+        site_copy['rul_days'] = 0
+        site_copy['urgency'] = 'URGENT'
+        site_copy['pct_life'] = 100
+        return site_copy
 
-  if r2 < 0.25:
-      site_copy['rul_days'] = 999
-      site_copy['urgency'] = 'OK'
-      site_copy['pct_life'] = 0
-      return site_copy
+    if r2 < 0.25:
+        site_copy['rul_days'] = 999
+        site_copy['urgency'] = 'OK'
+        site_copy['pct_life'] = 0
+        return site_copy
 
-  # Convert to days using avg hours per day
-  avg_hours_per_day = site_result.get('avg_adjusted_hours_per_day', 1.0)
-  hours_to_failure = (new_failure_dt - intercept) / slope if slope > 0 else 999
-  current_hours = site_result.get('total_adjusted_hours', 0)
-  remaining_hours = hours_to_failure - current_hours
-  rul_days = remaining_hours / avg_hours_per_day if avg_hours_per_day > 0 else 999
-  site_copy['rul_days'] = max(0, rul_days)
+    # Convert to days using avg hours per day
+    avg_hours_per_day = site_result.get('avg_adjusted_hours_per_day', 1.0)
+    hours_to_failure = (new_failure_dt - intercept) / slope if slope > 0 else 999
+    current_hours = site_result.get('total_adjusted_hours', 0)
+    remaining_hours = hours_to_failure - current_hours
+    rul_days = remaining_hours / avg_hours_per_day if avg_hours_per_day > 0 else 999
+    site_copy['rul_days'] = max(0, rul_days)
 
-  if baseline_dt > 0:
-      pct_life = (current_dt - baseline_dt) / (new_failure_dt - baseline_dt) * 100
-      site_copy['pct_life'] = max(0, min(100, pct_life))
+    if baseline_dt > 0:
+        pct_life = (current_dt - baseline_dt) / (new_failure_dt - baseline_dt) * 100
+        site_copy['pct_life'] = max(0, min(100, pct_life))
 
-  if rul_days < 14:
-      site_copy['urgency'] = 'URGENT'
-  elif rul_days < 30:
-      site_copy['urgency'] = 'WARNING'
-  else:
-      site_copy['urgency'] = 'OK'
+    if rul_days < 14:
+        site_copy['urgency'] = 'URGENT'
+    elif rul_days < 30:
+        site_copy['urgency'] = 'WARNING'
+    else:
+        site_copy['urgency'] = 'OK'
 
-  return site_copy
+    return site_copy
 
 
 def calculate_pollution_impact_blurb(site_result, all_sites_data):
-  """
-  Calculate how this site's pollution compares to the site average.
-  Returns a blurb explaining the impact on filter degradation.
-  """
-  if not site_result.get('air_quality'):
-      return None
+    """
+    Calculate how this site's pollution compares to the site average.
+    Returns a blurb explaining the impact on filter degradation.
+    """
+    if not site_result.get('air_quality'):
+        return None
 
-  # Get regression coefficients
-  regression = all_sites_data.get('air_quality_regression', {})
-  if not regression or (not regression.get('coefficient_pm25') and not regression.get('coefficient_pm10')):
-      return None
+    # Get regression coefficients
+    regression = all_sites_data.get('air_quality_regression', {})
+    if not regression or (not regression.get('coefficient_pm25') and not regression.get('coefficient_pm10')):
+        return None
 
-  beta_pm25 = regression.get('coefficient_pm25') or 0
-  beta_pm10 = regression.get('coefficient_pm10') or 0
+    beta_pm25 = regression.get('coefficient_pm25') or 0
+    beta_pm10 = regression.get('coefficient_pm10') or 0
 
-  # Calculate site averages for PM2.5 and PM10
-  pm25_values = []
-  pm10_values = []
-  for site_id, result_item in all_sites_data.get('sites', {}).items():
-      if result_item.get('air_quality'):
-          pm25 = result_item['air_quality'].get('pm25')
-          pm10 = result_item['air_quality'].get('pm10')
-          if pm25 is not None:
-              pm25_values.append(pm25)
-          if pm10 is not None:
-              pm10_values.append(pm10)
+    # Calculate site averages for PM2.5 and PM10
+    pm25_values = []
+    pm10_values = []
+    for site_id, result_item in all_sites_data.get('sites', {}).items():
+        if result_item.get('air_quality'):
+            pm25 = result_item['air_quality'].get('pm25')
+            pm10 = result_item['air_quality'].get('pm10')
+            if pm25 is not None:
+                pm25_values.append(pm25)
+            if pm10 is not None:
+                pm10_values.append(pm10)
 
-  if not pm25_values or not pm10_values:
-      return None
+    if not pm25_values or not pm10_values:
+        return None
 
-  avg_pm25 = np.mean(pm25_values)
-  avg_pm10 = np.mean(pm10_values)
+    avg_pm25 = np.mean(pm25_values)
+    avg_pm10 = np.mean(pm10_values)
 
-  # This site's pollution
-  site_pm25 = site_result['air_quality'].get('pm25')
-  site_pm10 = site_result['air_quality'].get('pm10')
+    # This site's pollution
+    site_pm25 = site_result['air_quality'].get('pm25')
+    site_pm10 = site_result['air_quality'].get('pm10')
 
-  if site_pm25 is None or site_pm10 is None:
-      return None
+    if site_pm25 is None or site_pm10 is None:
+        return None
 
-  # Calculate slope impact (degradation rate adjustment)
-  slope_impact = (beta_pm25 * (site_pm25 - avg_pm25)) + (beta_pm10 * (site_pm10 - avg_pm10))
+    # Calculate slope impact (degradation rate adjustment)
+    slope_impact = (beta_pm25 * (site_pm25 - avg_pm25)) + (beta_pm10 * (site_pm10 - avg_pm10))
 
-  # Convert slope impact to RUL impact in days
-  raw_slope = site_result.get('slope', 0.001)
-  if raw_slope <= 0:
-      return None
+    # Convert slope impact to RUL impact in days
+    raw_slope = site_result.get('slope', 0.001)
+    if raw_slope <= 0:
+        return None
 
-  # Approximate RUL impact: assume typical site has ~30 day RUL
-  avg_rul_days = 30
-  rul_impact_days = (slope_impact / raw_slope) * avg_rul_days
+    # Approximate RUL impact: assume typical site has ~30 day RUL
+    avg_rul_days = 30
+    rul_impact_days = (slope_impact / raw_slope) * avg_rul_days
 
-  # Format the blurb
-  pm25_diff = site_pm25 - avg_pm25
-  pm10_diff = site_pm10 - avg_pm10
-  direction = "faster" if rul_impact_days < 0 else "slower"
+    # Format the blurb
+    pm25_diff = site_pm25 - avg_pm25
+    pm10_diff = site_pm10 - avg_pm10
+    direction = "faster" if rul_impact_days < 0 else "slower"
 
-  blurb = f"**Pollution Impact (vs Site Average):**\n"
-  blurb += f"- PM2.5: {site_pm25:.1f} μg/m³ ({pm25_diff:+.1f} vs avg {avg_pm25:.1f})\n"
-  blurb += f"- PM10: {site_pm10:.1f} μg/m³ ({pm10_diff:+.1f} vs avg {avg_pm10:.1f})\n"
-  blurb += f"\nBased on air quality patterns across all sites, this location's air quality would cause the filter to degrade **{abs(rul_impact_days):.1f} days {direction}** than typical."
+    blurb = f"**Pollution Impact (vs Site Average):**\n"
+    blurb += f"- PM2.5: {site_pm25:.1f} μg/m³ ({pm25_diff:+.1f} vs avg {avg_pm25:.1f})\n"
+    blurb += f"- PM10: {site_pm10:.1f} μg/m³ ({pm10_diff:+.1f} vs avg {avg_pm10:.1f})\n"
+    blurb += f"\nBased on air quality patterns across all sites, this location's air quality would cause the filter to degrade **{abs(rul_impact_days):.1f} days {direction}** than typical."
 
-  return blurb
+    return blurb
 
 
-def get_model_type_and_equation(result):
-  """Generate 1-factor equation with actual parameters."""
-  intercept = result.get('intercept', 0)
-  slope = result.get('slope', 0)
+def get_model_equation(result):
+    """Generate the equation with actual parameters."""
+    intercept = result.get('intercept', 0)
+    slope = result.get('slope', 0)
 
-  # All sites use 1-factor model
-  equation = f"ΔT = {intercept:.2f} + {slope:.4f} × (adj_hours)"
-  return "1-Factor", equation
+    # All sites use 1-factor model
+    equation = f"ΔT = {intercept:.2f} + {slope:.4f} × (adj_hours)"
+    return equation
 
 
 # ============================================================================
@@ -487,28 +487,28 @@ data = load_sites_data()
 sites = data['sites']
 
 with st.sidebar:
-  st.markdown("### ⚙️ Analysis Controls", help="Adjust these parameters to recalculate RUL")
-  
-  min_duration = st.slider("Min episode duration (min)", 10, 120, 30, step=5)
-  fan_threshold = st.slider("Min fan speed (%)", 80, 100, 95, step=1)
-  rolling_window = st.slider("Rolling median window (episodes)", 3, 10, 5, step=1)
-  failure_dt = st.slider("ΔT at filter failure (°C)", 5.0, 20.0, 10.0, step=0.5)
+    st.markdown("### ⚙️ Analysis Controls", help="Adjust these parameters to recalculate RUL")
+    
+    min_duration = st.slider("Min episode duration (min)", 10, 120, 30, step=5)
+    fan_threshold = st.slider("Min fan speed (%)", 80, 100, 95, step=1)
+    rolling_window = st.slider("Rolling median window (episodes)", 3, 10, 5, step=1)
+    failure_dt = st.slider("ΔT at filter failure (°C)", 5.0, 20.0, 10.0, step=0.5)
 
-  st.markdown("---")
-  
-  st.markdown("### 🔍 Filter & Sort Options")
-  urgency_filter = st.multiselect(
-      "Urgency Level",
-      ['URGENT', 'WARNING', 'OK', 'UNKNOWN'],
-      default=['URGENT', 'WARNING', 'OK']
-  )
-  
-  search_term = st.text_input("Search site name/ID", "")
-  
-  sort_by = st.radio(
-      "Sort by",
-      ['RUL (ascending)', 'Site Name (A-Z)', 'Urgency + RUL']
-  )
+    st.markdown("---")
+    
+    st.markdown("### 🔍 Filter & Sort Options")
+    urgency_filter = st.multiselect(
+        "Urgency Level",
+        ['URGENT', 'WARNING', 'OK', 'UNKNOWN'],
+        default=['URGENT', 'WARNING', 'OK']
+    )
+    
+    search_term = st.text_input("Search site name/ID", "")
+    
+    sort_by = st.radio(
+        "Sort by",
+        ['RUL (ascending)', 'Site Name (A-Z)', 'Urgency + RUL']
+    )
 
 # ============================================================================
 # MAIN CONTENT
@@ -533,14 +533,14 @@ st.markdown("""
 
 sites_recalc = {}
 for site_id, site_result in sites.items():
-  sites_recalc[site_id] = recalculate_rul(site_result, failure_dt)
+    sites_recalc[site_id] = recalculate_rul(site_result, failure_dt)
 
 success_count = len([s for s in sites_recalc.values() if s.get('success')])
 st.markdown(f"<h2 style='color: #1a202c; margin-bottom: 1.5rem;'>Status — {success_count} Sites Analyzed</h2>", unsafe_allow_html=True)
 
 # Model Architecture Explanation
 with st.expander("📚 **Model Architecture & Methodology**", expanded=False):
-  st.markdown("""
+    st.markdown("""
 <div style="color: #1a202c; line-height: 1.9; font-size: 0.95rem;">
 
 ### Filter Degradation Tracking
@@ -660,35 +660,35 @@ st.markdown("---")
 
 threshold_info = f"<strong style='color: #1a202c;'>Custom Failure Threshold: {failure_dt}°C</strong>"
 if failure_dt != data.get('default_failure_dt', 10.0):
-  original_threshold = data.get('default_failure_dt', 10.0)
-  threshold_info += f" <span style='color: #6b7280;'>(Original: {original_threshold}°C)</span>"
+    original_threshold = data.get('default_failure_dt', 10.0)
+    threshold_info += f" <span style='color: #6b7280;'>(Original: {original_threshold}°C)</span>"
 st.markdown(threshold_info, unsafe_allow_html=True)
 
 # Metrics row
 col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
-  urgent_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'URGENT')
-  st.markdown(f'<div class="metric-card danger"><div class="label">🔴 URGENT</div><div class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>', unsafe_allow_html=True)
+    urgent_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'URGENT')
+    st.markdown(f'<div class="metric-card danger"><div class="label">🔴 URGENT</div><div class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>', unsafe_allow_html=True)
 
 with col2:
-  warning_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'WARNING')
-  st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div class="value">{warning_count}</div><div class="sub">14–30 days</div></div>', unsafe_allow_html=True)
+    warning_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'WARNING')
+    st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div class="value">{warning_count}</div><div class="sub">14–30 days</div></div>', unsafe_allow_html=True)
 
 with col3:
-  ok_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'OK')
-  st.markdown(f'<div class="metric-card"><div class="label">🟢 OK</div><div class="value">{ok_count}</div><div class="sub">≥ 30 days</div></div>', unsafe_allow_html=True)
+    ok_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'OK')
+    st.markdown(f'<div class="metric-card"><div class="label">🟢 OK</div><div class="value">{ok_count}</div><div class="sub">≥ 30 days</div></div>', unsafe_allow_html=True)
 
 with col4:
-  failed_count = sum(1 for s in sites_recalc.values() if not s.get('success'))
-  st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div class="value">{failed_count}</div><div class="sub">Query error</div></div>', unsafe_allow_html=True)
+    failed_count = sum(1 for s in sites_recalc.values() if not s.get('success'))
+    st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div class="value">{failed_count}</div><div class="sub">Query error</div></div>', unsafe_allow_html=True)
 
 with col5:
-  successful = [s for s in sites_recalc.values() if s.get('success')]
-  rul_values = [s.get('rul_days', 0) for s in successful if s.get('rul_days') is not None and isinstance(s.get('rul_days'), (int, float))]
-  mean_rul = np.mean(rul_values) if rul_values else 0
-  mean_rul_str = f'{mean_rul:.0f}d' if not np.isnan(mean_rul) else '?'
-  st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div class="value">{mean_rul_str}</div><div class="sub">All sites</div></div>', unsafe_allow_html=True)
+    successful = [s for s in sites_recalc.values() if s.get('success')]
+    rul_values = [s.get('rul_days', 0) for s in successful if s.get('rul_days') is not None and isinstance(s.get('rul_days'), (int, float))]
+    mean_rul = np.mean(rul_values) if rul_values else 0
+    mean_rul_str = f'{mean_rul:.0f}d' if not np.isnan(mean_rul) else '?'
+    st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div class="value">{mean_rul_str}</div><div class="sub">All sites</div></div>', unsafe_allow_html=True)
 
 st.markdown("---")
 
@@ -700,61 +700,59 @@ st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem
 
 table_data = []
 for site_id, result in sites_recalc.items():
-  if not result.get('success'):
-      continue
+    if not result.get('success'):
+        continue
 
-  if result.get('urgency') not in urgency_filter:
-      continue
+    if result.get('urgency') not in urgency_filter:
+        continue
 
-  search_str = f"{site_id} {result.get('site_name', '')}".lower()
-  if search_term.lower() and search_term.lower() not in search_str:
-      continue
+    search_str = f"{site_id} {result.get('site_name', '')}".lower()
+    if search_term.lower() and search_term.lower() not in search_str:
+        continue
 
-  rul = result.get('rul_days', None)
-  model_type, _ = get_model_type_and_equation(result)
+    rul = result.get('rul_days', None)
 
-  # Check if pollution effect was applied
-  has_pollution_effect = result.get('pollution_effect') is not None
-  pollution_indicator = f"({result.get('pollution_effect'):+.3f})" if has_pollution_effect else "—"
+    # Check if pollution effect was applied
+    has_pollution_effect = result.get('pollution_effect') is not None
+    pollution_indicator = f"({result.get('pollution_effect'):+.3f})" if has_pollution_effect else "—"
 
-  # Air quality info
-  aq = result.get('air_quality', {})
-  pm10_str = f"{aq.get('pm10', 0):.1f}" if aq.get('pm10') else "—"
-  pm25_str = f"{aq.get('pm25', 0):.1f}" if aq.get('pm25') else "—"
+    # Air quality info
+    aq = result.get('air_quality', {})
+    pm10_str = f"{aq.get('pm10', 0):.1f}" if aq.get('pm10') else "—"
+    pm25_str = f"{aq.get('pm25', 0):.1f}" if aq.get('pm25') else "—"
 
-  table_data.append({
-      'Site ID': site_id,
-      'Site Name': result.get('site_name', '?'),
-      'IP Address': result.get('ip', '?'),
-      'Model': model_type,
-      'Urgency': result.get('urgency', '?'),
-      'RUL (days)': f"{rul:.0f}" if rul is not None else "?",
-      'Episodes': result.get('episodes_count', '?'),
-      'R²': f"{result.get('r2', 0):.3f}",
-      'Current ΔT (°C)': f"{result.get('current_dt', 0):.1f}",
-      'Failure ΔT (°C)': f"{result.get('failure_dt', 0):.1f}",
-      'Filter Life Used': f"{result.get('pct_life', 0):.0f}%",
-      'PM10 (μg/m³)': pm10_str,
-      'PM2.5 (μg/m³)': pm25_str,
-      'Pollution Effect': pollution_indicator,
-      '_rul_raw': rul if rul is not None else float('inf'),
-      '_urgency_rank': {'URGENT': 0, 'WARNING': 1, 'OK': 2, 'UNKNOWN': 3}.get(result.get('urgency'), 4),
-  })
+    table_data.append({
+        'Site ID': site_id,
+        'Site Name': result.get('site_name', '?'),
+        'IP Address': result.get('ip', '?'),
+        'Urgency': result.get('urgency', '?'),
+        'RUL (days)': f"{rul:.0f}" if rul is not None else "?",
+        'Episodes': result.get('episodes_count', '?'),
+        'R²': f"{result.get('r2', 0):.3f}",
+        'Current ΔT (°C)': f"{result.get('current_dt', 0):.1f}",
+        'Failure ΔT (°C)': f"{result.get('failure_dt', 0):.1f}",
+        'Filter Life Used': f"{result.get('pct_life', 0):.0f}%",
+        'PM10 (μg/m³)': pm10_str,
+        'PM2.5 (μg/m³)': pm25_str,
+        'Pollution Effect': pollution_indicator,
+        '_rul_raw': rul if rul is not None else float('inf'),
+        '_urgency_rank': {'URGENT': 0, 'WARNING': 1, 'OK': 2, 'UNKNOWN': 3}.get(result.get('urgency'), 4),
+    })
 
 if not table_data:
-  st.warning("No sites match filter criteria.")
+    st.warning("No sites match filter criteria.")
 else:
-  df = pd.DataFrame(table_data)
+    df = pd.DataFrame(table_data)
 
-  if sort_by == 'RUL (ascending)':
-      df = df.sort_values('_rul_raw')
-  elif sort_by == 'Site Name (A-Z)':
-      df = df.sort_values('Site Name')
-  elif sort_by == 'Urgency + RUL':
-      df = df.sort_values(['_urgency_rank', '_rul_raw'])
+    if sort_by == 'RUL (ascending)':
+        df = df.sort_values('_rul_raw')
+    elif sort_by == 'Site Name (A-Z)':
+        df = df.sort_values('Site Name')
+    elif sort_by == 'Urgency + RUL':
+        df = df.sort_values(['_urgency_rank', '_rul_raw'])
 
-  df = df.drop(columns=['_rul_raw', '_urgency_rank'])
-  st.dataframe(df, use_container_width=True, hide_index=True)
+    df = df.drop(columns=['_rul_raw', '_urgency_rank'])
+    st.dataframe(df, use_container_width=True, hide_index=True)
 
 st.markdown("---")
 
@@ -766,60 +764,60 @@ st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem
 
 detail_sites = []
 for site_id, result in sorted(sites_recalc.items()):
-  if not result.get('success'):
-      continue
-  if result.get('urgency') not in urgency_filter:
-      continue
-  search_str = f"{site_id} {result.get('site_name', '')}".lower()
-  if search_term.lower() and search_term.lower() not in search_str:
-      continue
-  detail_sites.append((site_id, result))
+    if not result.get('success'):
+        continue
+    if result.get('urgency') not in urgency_filter:
+        continue
+    search_str = f"{site_id} {result.get('site_name', '')}".lower()
+    if search_term.lower() and search_term.lower() not in search_str:
+        continue
+    detail_sites.append((site_id, result))
 
 detail_sites = detail_sites[:20]
 
 if not detail_sites:
-  st.info("No sites to display. Adjust filters to see site details.")
+    st.info("No sites to display. Adjust filters to see site details.")
 else:
-  for site_id, result in detail_sites:
-      urgency = result.get('urgency', '?')
-      rul = result.get('rul_days', '?')
-      model_type, equation = get_model_type_and_equation(result)
-      color_map = {'URGENT': '🔴', 'WARNING': '🟡', 'OK': '🟢', 'UNKNOWN': '⚪'}
-      emoji = color_map.get(urgency, '❓')
+    for site_id, result in detail_sites:
+        urgency = result.get('urgency', '?')
+        rul = result.get('rul_days', '?')
+        equation = get_model_equation(result)
+        color_map = {'URGENT': '🔴', 'WARNING': '🟡', 'OK': '🟢', 'UNKNOWN': '⚪'}
+        emoji = color_map.get(urgency, '❓')
 
-      rul_str = f"{rul:.0f}d" if isinstance(rul, float) else str(rul)
-      expander_label = f"{emoji} {site_id} — {result.get('site_name', '?')} [{model_type}] (RUL: {rul_str})"
+        rul_str = f"{rul:.0f}d" if isinstance(rul, float) else str(rul)
+        expander_label = f"{emoji} {site_id} — {result.get('site_name', '?')} (RUL: {rul_str})"
 
-      # Pre-format values for site details
-      slope_val = f"{result.get('slope', 0):.4f}" if isinstance(result.get('slope'), (int, float)) else '?'
-      adjusted_slope_val = result.get('adjusted_slope')
-      pollution_effect_val = result.get('pollution_effect')
-      has_adjusted_slope = adjusted_slope_val is not None
-      adjusted_slope_str = f"{adjusted_slope_val:.4f}" if has_adjusted_slope else ""
-      effect_str = f"{pollution_effect_val:+.3f}" if pollution_effect_val is not None else ""
+        # Pre-format values for site details
+        slope_val = f"{result.get('slope', 0):.4f}" if isinstance(result.get('slope'), (int, float)) else '?'
+        adjusted_slope_val = result.get('adjusted_slope')
+        pollution_effect_val = result.get('pollution_effect')
+        has_adjusted_slope = adjusted_slope_val is not None
+        adjusted_slope_str = f"{adjusted_slope_val:.4f}" if has_adjusted_slope else ""
+        effect_str = f"{pollution_effect_val:+.3f}" if pollution_effect_val is not None else ""
 
-      current_dt_val = f"{result.get('current_dt', 0):.1f}" if isinstance(result.get('current_dt'), (int, float)) else '?'
-      failure_dt_val = f"{result.get('failure_dt', 0):.1f}" if isinstance(result.get('failure_dt'), (int, float)) else '?'
-      baseline_dt_val = f"{result.get('baseline_dt', 0):.1f}" if isinstance(result.get('baseline_dt'), (int, float)) else '?'
+        current_dt_val = f"{result.get('current_dt', 0):.1f}" if isinstance(result.get('current_dt'), (int, float)) else '?'
+        failure_dt_val = f"{result.get('failure_dt', 0):.1f}" if isinstance(result.get('failure_dt'), (int, float)) else '?'
+        baseline_dt_val = f"{result.get('baseline_dt', 0):.1f}" if isinstance(result.get('baseline_dt'), (int, float)) else '?'
 
-      # Pre-format air quality values
-      aq = result.get('air_quality', {})
-      pm25_val = f"{aq.get('pm25', 0):.1f}" if isinstance(aq.get('pm25'), (int, float)) else '?'
-      pm10_val = f"{aq.get('pm10', 0):.1f}" if isinstance(aq.get('pm10'), (int, float)) else '?'
-      pollution_effect_display = f"{result.get('pollution_effect', 0):+.4f}" if result.get('pollution_effect') is not None else 'Not applied'
-      has_air_quality = result.get('air_quality') is not None
+        # Pre-format air quality values
+        aq = result.get('air_quality', {})
+        pm25_val = f"{aq.get('pm25', 0):.1f}" if isinstance(aq.get('pm25'), (int, float)) else '?'
+        pm10_val = f"{aq.get('pm10', 0):.1f}" if isinstance(aq.get('pm10'), (int, float)) else '?'
+        pollution_effect_display = f"{result.get('pollution_effect', 0):+.4f}" if result.get('pollution_effect') is not None else 'Not applied'
+        has_air_quality = result.get('air_quality') is not None
 
-      air_quality_html = ""
-      if has_air_quality:
-        pollution_blurb = calculate_pollution_impact_blurb(result, data)
-        blurb_html = f"<div style='margin-top: 12px; padding: 10px; background: #f0fdf4; border-radius: 4px; font-size: 0.85rem; color: #374151; line-height: 1.6;'>{pollution_blurb.replace(chr(10), '<br>')}</div>" if pollution_blurb else ""
-        air_quality_html = f"""<div style='background: #ecfdf5; padding: 14px; border-radius: 8px; border-left: 4px solid #059669;'><strong style='font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;'>🌍 Air Quality (90-day avg)</strong><br><div style='margin-top: 8px; font-size: 0.85rem; color: #374151;'><div>PM2.5: <strong style='font-size: 1.1em; color: #1a202c;'>{pm25_val} μg/m³</strong></div><div>PM10: <strong style='font-size: 1.1em; color: #1a202c;'>{pm10_val} μg/m³</strong></div>{blurb_html}</div></div>"""
+        air_quality_html = ""
+        if has_air_quality:
+            pollution_blurb = calculate_pollution_impact_blurb(result, data)
+            blurb_html = f"<div style='margin-top: 12px; padding: 10px; background: #f0fdf4; border-radius: 4px; font-size: 0.85rem; color: #374151; line-height: 1.6;'>{pollution_blurb.replace(chr(10), '<br>')}</div>" if pollution_blurb else ""
+            air_quality_html = f"""<div style='background: #ecfdf5; padding: 14px; border-radius: 8px; border-left: 4px solid #059669;'><strong style='font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;'>🌍 Air Quality (90-day avg)</strong><br><div style='margin-top: 8px; font-size: 0.85rem; color: #374151;'><div>PM2.5: <strong style='font-size: 1.1em; color: #1a202c;'>{pm25_val} μg/m³</strong></div><div>PM10: <strong style='font-size: 1.1em; color: #1a202c;'>{pm10_val} μg/m³</strong></div>{blurb_html}</div></div>"""
 
-      with st.expander(expander_label):
-          col1, col2 = st.columns([1, 2])
+        with st.expander(expander_label):
+            col1, col2 = st.columns([1, 2])
 
-          with col1:
-              st.markdown(f"""
+            with col1:
+                st.markdown(f"""
 <div style="color: #1a202c; line-height: 2.0; white-space: normal; word-wrap: break-word; font-size: 0.95rem;">
 
 <div style="background: #f8fafc; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid
@@ -840,7 +838,6 @@ Info</strong><br>
 <strong style="font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;">🔬 Model
 Configuration</strong><br>
 <div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
-<div>Type: <strong style="color: #1a202c;">{model_type}</strong></div>
 <div style="margin-top: 6px; font-family: monospace; background: #ffffff; padding: 8px; border-radius: 4px; font-size:
 0.8rem; color: #4f7cff; word-break: break-all;">{equation}</div>
 <div style="margin-top: 6px;">Air Quality: <span style="background: {'#dcfce7' if result.get('air_quality') else
@@ -891,85 +888,85 @@ Readings</strong><br>
 </div>
 """, unsafe_allow_html=True)
 
-          with col2:
-              max_deltas = result.get('max_deltas', [])
-              cumul_hours = result.get('cumulative_adjusted_hours', [])
+            with col2:
+                max_deltas = result.get('max_deltas', [])
+                cumul_hours = result.get('cumulative_adjusted_hours', [])
 
-              if len(max_deltas) > 2 and len(cumul_hours) == len(max_deltas):
-                  fig = go.Figure()
+                if len(max_deltas) > 2 and len(cumul_hours) == len(max_deltas):
+                    fig = go.Figure()
 
-                  fig.add_trace(go.Scatter(
-                      x=cumul_hours, y=max_deltas,
-                      mode='markers',
-                      marker=dict(size=6, color='#a5b4fc', opacity=0.7),
-                      name='Max ΔT per episode',
-                      hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Max ΔT: %{y:.2f}°C<extra></extra>'
-                  ))
+                    fig.add_trace(go.Scatter(
+                        x=cumul_hours, y=max_deltas,
+                        mode='markers',
+                        marker=dict(size=6, color='#a5b4fc', opacity=0.7),
+                        name='Max ΔT per episode',
+                        hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Max ΔT: %{y:.2f}°C<extra></extra>'
+                    ))
 
-                  fig.add_hline(
-                      y=result.get('failure_dt', 10.0),
-                      line_dash='dot',
-                      line_color='#ef4444',
-                      annotation_text=f"Failure: {result.get('failure_dt', 10.0):.1f}°C",
-                      annotation_position='right'
-                  )
+                    fig.add_hline(
+                        y=result.get('failure_dt', 10.0),
+                        line_dash='dot',
+                        line_color='#ef4444',
+                        annotation_text=f"Failure: {result.get('failure_dt', 10.0):.1f}°C",
+                        annotation_position='right'
+                    )
 
-                  if len(cumul_hours) >= 2:
-                      r2 = result.get('r2', 0)
-                      slope = result.get('slope', 0)
-                      baseline_dt = result.get('baseline_dt', max_deltas[0] if max_deltas else 0)
-                      trend_line = [baseline_dt + slope * h for h in cumul_hours]
-                      fig.add_trace(go.Scatter(
-                          x=cumul_hours, y=trend_line,
-                          mode='lines',
-                          line=dict(color='#4f7cff', width=2, dash='dash'),
-                          name=f'Trend (R²={r2:.3f})',
-                          hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Trend: %{y:.2f}°C<extra></extra>'
-                      ))
+                    if len(cumul_hours) >= 2:
+                        r2 = result.get('r2', 0)
+                        slope = result.get('slope', 0)
+                        baseline_dt = result.get('baseline_dt', max_deltas[0] if max_deltas else 0)
+                        trend_line = [baseline_dt + slope * h for h in cumul_hours]
+                        fig.add_trace(go.Scatter(
+                            x=cumul_hours, y=trend_line,
+                            mode='lines',
+                            line=dict(color='#4f7cff', width=2, dash='dash'),
+                            name=f'Trend (R²={r2:.3f})',
+                            hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Trend: %{y:.2f}°C<extra></extra>'
+                        ))
 
-                  fig.update_layout(
-                      title=dict(
-                          text=f"ΔT Trend — {site_id}",
-                          font=dict(size=14, color='#1a202c', family='Arial, sans-serif'),
-                          x=0.5,
-                          xanchor='center'
-                      ),
-                      xaxis=dict(
-                          title='Cumulative Adjusted Fan Hours',
-                          title_font=dict(size=12, color='#1a202c'),
-                          tickfont=dict(size=10, color='#1a202c'),
-                          showgrid=True,
-                          gridwidth=1,
-                          gridcolor='#e5e7eb',
-                      ),
-                      yaxis=dict(
-                          title='ΔT (°C)',
-                          title_font=dict(size=12, color='#1a202c'),
-                          tickfont=dict(size=10, color='#1a202c'),
-                          showgrid=True,
-                          gridwidth=1,
-                          gridcolor='#e5e7eb',
-                      ),
-                      height=380,
-                      hovermode='x unified',
-                      paper_bgcolor='#ffffff',
-                      plot_bgcolor='#fafbfc',
-                      margin=dict(l=70, r=70, t=60, b=60),
-                      font=dict(family='Arial, sans-serif', size=10, color='#1a202c'),
-                      showlegend=True,
-                      legend=dict(
-                          x=0.02,
-                          y=0.98,
-                          bgcolor='rgba(255,255,255,0.9)',
-                          bordercolor='#cbd5e1',
-                          borderwidth=1,
-                          font=dict(size=10, color='#1a202c')
-                      ),
-                  )
+                    fig.update_layout(
+                        title=dict(
+                            text=f"ΔT Trend — {site_id}",
+                            font=dict(size=14, color='#1a202c', family='Arial, sans-serif'),
+                            x=0.5,
+                            xanchor='center'
+                        ),
+                        xaxis=dict(
+                            title='Cumulative Adjusted Fan Hours',
+                            title_font=dict(size=12, color='#1a202c'),
+                            tickfont=dict(size=10, color='#1a202c'),
+                            showgrid=True,
+                            gridwidth=1,
+                            gridcolor='#e5e7eb',
+                        ),
+                        yaxis=dict(
+                            title='ΔT (°C)',
+                            title_font=dict(size=12, color='#1a202c'),
+                            tickfont=dict(size=10, color='#1a202c'),
+                            showgrid=True,
+                            gridwidth=1,
+                            gridcolor='#e5e7eb',
+                        ),
+                        height=380,
+                        hovermode='x unified',
+                        paper_bgcolor='#ffffff',
+                        plot_bgcolor='#fafbfc',
+                        margin=dict(l=70, r=70, t=60, b=60),
+                        font=dict(family='Arial, sans-serif', size=10, color='#1a202c'),
+                        showlegend=True,
+                        legend=dict(
+                            x=0.02,
+                            y=0.98,
+                            bgcolor='rgba(255,255,255,0.9)',
+                            bordercolor='#cbd5e1',
+                            borderwidth=1,
+                            font=dict(size=10, color='#1a202c')
+                        ),
+                    )
 
-                  st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-              else:
-                  st.info("Not enough episodes for trend plot.")
+                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+                else:
+                    st.info("Not enough episodes for trend plot.")
 
 st.markdown("---")
 st.markdown(f"""
