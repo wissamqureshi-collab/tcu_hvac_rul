@@ -790,12 +790,8 @@ else:
 
         # Pre-format values for site details
         slope_val = f"{result.get('slope', 0):.4f}" if isinstance(result.get('slope'), (int, float)) else '?'
-        adjusted_slope_val = result.get('adjusted_slope')
-        pollution_effect_val = result.get('pollution_effect')
-        has_adjusted_slope = adjusted_slope_val is not None
-        adjusted_slope_str = f"{adjusted_slope_val:.4f}" if has_adjusted_slope else ""
-        effect_str = f"{pollution_effect_val:+.3f}" if pollution_effect_val is not None else ""
-
+        avg_hrs_val = f"{result.get('avg_adjusted_hours_per_day', 0):.2f}" if isinstance(result.get('avg_adjusted_hours_per_day'), (int, float)) else '?'
+        
         current_dt_val = f"{result.get('current_dt', 0):.1f}" if isinstance(result.get('current_dt'), (int, float)) else '?'
         failure_dt_val = f"{result.get('failure_dt', 0):.1f}" if isinstance(result.get('failure_dt'), (int, float)) else '?'
         baseline_dt_val = f"{result.get('baseline_dt', 0):.1f}" if isinstance(result.get('baseline_dt'), (int, float)) else '?'
@@ -804,7 +800,6 @@ else:
         aq = result.get('air_quality', {})
         pm25_val = f"{aq.get('pm25', 0):.1f}" if isinstance(aq.get('pm25'), (int, float)) else '?'
         pm10_val = f"{aq.get('pm10', 0):.1f}" if isinstance(aq.get('pm10'), (int, float)) else '?'
-        pollution_effect_display = f"{result.get('pollution_effect', 0):+.4f}" if result.get('pollution_effect') is not None else 'Not applied'
         has_air_quality = result.get('air_quality') is not None
 
         air_quality_html = ""
@@ -861,15 +856,13 @@ style="color: #6b7280;">({('Excellent' if float(result.get('r2', 0)) > 0.7 else 
 </div>
 </div>
 
-<div style="background: #fef2f2; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid
-#dc2626;">
-<strong style="font-size: 0.9rem; color: #991b1b; text-transform: uppercase; letter-spacing: 0.05em;">⏱️  RUL
-Estimate</strong><br>
+<div style="background: #fef2f2; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #dc2626;">
+<strong style="font-size: 0.9rem; color: #991b1b; text-transform: uppercase; letter-spacing: 0.05em;">⏱️ RUL Estimate</strong><br>
 <div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
-<div>Days Until Replacement: <strong style="font-size: 1.2em; color: #dc2626;">{rul_str}</strong></div>
+<div>Slope: <strong style="font-size: 1.1em; color: #1a202c;">{slope_val}°C/hr</strong></div>
+<div>Avg Adjusted Hours/Day: <strong style="font-size: 1.1em; color: #1a202c;">{avg_hrs_val}</strong></div>
+<div style="margin-top: 6px;">Days Until Replacement: <strong style="font-size: 1.2em; color: #dc2626;">{rul_str}</strong></div>
 <div>Filter Life Used: <strong style="font-size: 1.1em; color: #1a202c;">{f"{result.get('pct_life', 0):.0f}" if isinstance(result.get('pct_life'), (int, float)) else '?'}%</strong></div>
-<div style="margin-top: 6px;">Raw Slope: <strong style="font-size: 0.95em; color: #1a202c;">{slope_val}°C/ep</strong></div>
-{f"<div>Adjusted Slope: <strong style='font-size: 0.95em; color: #dc2626;'>{adjusted_slope_str}°C/ep</strong> (effect: {effect_str})</div>" if has_adjusted_slope else ""}
 </div>
 </div>
 
