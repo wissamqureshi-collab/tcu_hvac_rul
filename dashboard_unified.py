@@ -467,54 +467,52 @@ def get_model_type_and_equation(result):
 
 
 # ============================================================================
-# MAIN CONTENT - CONTROLS PANEL AT TOP
+# DATA LOADING & SIDEBAR CONTROLS
 # ============================================================================
 
 data = load_sites_data()
 sites = data['sites']
 
-st.markdown(f"<h1 style='color: #1a202c; margin-bottom: 0.5rem;'>🌡️   Rogers HVAC Filter RUL Dashboard</h1>", unsafe_allow_html=True)
+with st.sidebar:
+  st.markdown("### ⚙️ Analysis Controls", help="Adjust these parameters to recalculate RUL")
+  
+  min_duration = st.slider("Min episode duration (min)", 10, 120, 30, step=5)
+  fan_threshold = st.slider("Min fan speed (%)", 80, 100, 95, step=1)
+  rolling_window = st.slider("Rolling median window (episodes)", 3, 10, 5, step=1)
+  failure_dt = st.slider("ΔT at filter failure (°C)", 5.0, 20.0, 10.0, step=0.5)
 
-# CONTROL PANEL - NOW IN MAIN CONTENT WITH PROMINENT STYLING
-st.markdown("### ⚙️ Analysis Controls", help="Adjust these parameters to recalculate RUL")
+  st.markdown("---")
+  
+  st.markdown("### 🔍 Filter & Sort Options")
+  urgency_filter = st.multiselect(
+      "Urgency Level",
+      ['URGENT', 'WARNING', 'OK', 'UNKNOWN'],
+      default=['URGENT', 'WARNING', 'OK']
+  )
+  
+  search_term = st.text_input("Search site name/ID", "")
+  
+  sort_by = st.radio(
+      "Sort by",
+      ['RUL (ascending)', 'Site Name (A-Z)', 'Urgency + RUL']
+  )
 
-col1, col2, col3, col4 = st.columns(4)
+# ============================================================================
+# MAIN CONTENT
+# ============================================================================
 
-with col1:
-  min_duration = st.slider("Min episode\nduration (min)", 10, 120, 30, step=5)
+st.markdown(f"<h1 style='color: #1a202c; margin-bottom: 0.5rem;'>🌡️  Rogers HVAC Filter RUL Dashboard</h1>", unsafe_allow_html=True)
 
-with col2:
-  fan_threshold = st.slider("Min fan\nspeed (%)", 80, 100, 95, step=1)
+# Main Dashboard Descriptive Blurb
+st.markdown("""
+<div style="background-color: #f8fafc; padding: 18px 24px; border-radius: 8px; border-left: 4px solid #4f7cff; margin-bottom: 24px; color: #374151; font-size: 0.95rem; line-height: 1.6; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <strong style="color: #1a202c; font-size: 1.05rem;">About This Dashboard</strong><br>
+    This tool predicts the Remaining Useful Life (RUL) of HVAC filters across 1020+ sites. It tracks the maximum temperature differential (ΔT) during free cooling events (when fans run at ≥95% speed for at least 30 minutes). Because air resistance scales with fan speed squared, operating hours are adjusted proportionately to model how the filter degrades over time. 
+    <br><br>
+    The system fits a linear degradation trend to predict when a filter's ΔT will exceed a critical failure threshold (default 10°C). For sites with local air quality data (PM2.5/PM10), the model analyzes if local pollution levels are speeding up or slowing down the filter degradation relative to the network average.
+</div>
+""", unsafe_allow_html=True)
 
-with col3:
-  rolling_window = st.slider("Rolling median\nwindow (episodes)", 3, 10, 5, step=1)
-
-with col4:
-  failure_dt = st.slider("ΔT at filter\nfailure (°C)", 5.0, 20.0, 10.0, step=0.5)
-
-# FILTER CONTROLS - ALSO IN MAIN CONTENT
-with st.expander("🔍 **Filter & Sort Options**", expanded=False):
-  col_f1, col_f2, col_f3 = st.columns(3)
-
-  with col_f1:
-    urgency_filter = st.multiselect(
-        "Urgency Level",
-        ['URGENT', 'WARNING', 'OK', 'UNKNOWN'],
-        default=['URGENT', 'WARNING', 'OK'],
-        label_visibility='visible'
-    )
-
-  with col_f2:
-    search_term = st.text_input("Search site name/ID", "", label_visibility='visible')
-
-  with col_f3:
-    sort_by = st.radio(
-        "Sort by",
-        ['RUL (ascending)', 'Site Name (A-Z)', 'Urgency + RUL'],
-        label_visibility='visible'
-    )
-
-st.markdown("---")
 
 # ============================================================================
 # RECALCULATE WITH NEW PARAMETERS
@@ -866,7 +864,7 @@ style="color: #6b7280;">({('Excellent' if float(result.get('r2', 0)) > 0.7 else 
 
 <div style="background: #fef2f2; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid
 #dc2626;">
-<strong style="font-size: 0.9rem; color: #991b1b; text-transform: uppercase; letter-spacing: 0.05em;">⏱️   RUL
+<strong style="font-size: 0.9rem; color: #991b1b; text-transform: uppercase; letter-spacing: 0.05em;">⏱️  RUL
 Estimate</strong><br>
 <div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
 <div>Days Until Replacement: <strong style="font-size: 1.2em; color: #dc2626;">{rul_str}</strong></div>
@@ -877,7 +875,7 @@ Estimate</strong><br>
 </div>
 
 <div style="background: #f0f9ff; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #0284c7;">
-<strong style="font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;">🌡️   Temperature
+<strong style="font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;">🌡️  Temperature
 Readings</strong><br>
 <div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
 <div>Current ΔT: <strong style="font-size: 1.1em; color: #1a202c;">{current_dt_val}°C</strong></div>
