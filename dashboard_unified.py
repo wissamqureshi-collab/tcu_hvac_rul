@@ -651,7 +651,6 @@ Polluted air (high PM10 and PM2.5) causes filters to clog faster than clean air.
 | **Weatherbit API** | Hourly records | Air quality (PM10, PM2.5) — 90-day average |
 | **Freecooling Episodes** | 30 min–hours | Periods where filter experiences load |
 | **Regression Analysis** | Batch fit (one-time) | Pollution coefficients from population data |
-
 ---
 
 </div>
