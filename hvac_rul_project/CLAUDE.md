@@ -113,6 +113,25 @@ __pycache__/
   - Regression coefficients used only for impact prediction, not RUL modification
 - ✅ **Pipeline fully functional**: Query → Regression → Dashboard Display (no RUL adjustment step)
 
+**August 7 (Session 3) Updates — Episode Timestamp Capture**:
+- ✅ **Modified query_sites.py to capture exact episode timestamps**:
+  - `episode_start_times`: List of ISO datetime strings for each freecooling episode
+  - `query_start_date`: Date of first episode (YYYY-MM-DD format)
+  - `query_end_date`: Date of last episode (YYYY-MM-DD format)
+- ✅ **Enables precise post-filter day calculation on dashboard**:
+  - Dashboard can now interpolate exact date when filter change occurred
+  - When user enters filter change at cumulative_adjusted_hours = X:
+    - Find episode indices where X falls
+    - Linear interpolate between episode timestamps to get exact change date
+    - Calculate exact post-filter days: query_end_date - filter_change_date
+    - Recalculate avg_adjusted_hours_per_day from post-filter segment only
+  - No more estimation needed — uses actual episode timing data
+- ✅ **Benefits for avg_adjusted_hours_per_day recalculation**:
+  - Clogged filters cause extended fan runtime (higher avg hours/day)
+  - After filter change, avg_adjusted_hours_per_day should decrease
+  - Dashboard can now calculate exact post-filter average from interpolated dates
+  - More accurate RUL projections after manual filter change entry
+
 **August 7 (Session 2) Updates — Negative Slope Handling**:
 - ✅ **Filtered negative slopes from regression analysis**: query_sites.py now excludes sites with slope ≤ 0 from air quality regression (insufficient data)
 - ✅ **Dashboard displays "Data Insufficient" for negative slopes**:
@@ -120,7 +139,7 @@ __pycache__/
   - Still display IP address and air quality data (if available)
   - Skip pollution impact blurb for these sites
   - Don't show model configuration, trend analysis, RUL estimate sections
-  - Trend plot replaced with informational message
+  - Trend plot shown for all sites (including negative slopes) to enable manual filter change entry
 - ✅ **Filter change can "rescue" negative-slope sites**: If user confirms filter change and post-change slope becomes positive:
   - Show full analysis using post-change regression
   - Display pollution impact blurb if air quality data available
@@ -208,6 +227,20 @@ __pycache__/
 - **If no detection**: Dashboard provides option to manually input filter change time
 - **Rolling median reset**: When a filter change is entered, rolling median smoothing is applied separately to pre-change and post-change segments (no carryover between segments)
 - **RUL recalculation**: Always uses post-filter-change regression for current RUL projection (most relevant for remaining life)
+
+**Exact Post-Filter Day Calculation (NEW)**:
+- When user enters filter change at cumulative_adjusted_hours = X:
+  1. Find episodes where X falls between cumulative_hours[i] and cumulative_hours[i+1]
+  2. Linear interpolate between episode_start_times[i] and episode_start_times[i+1]:
+     - Fraction: f = (X - cumul_hours[i]) / (cumul_hours[i+1] - cumul_hours[i])
+     - filter_change_date = episode_start_times[i] + f × (episode_start_times[i+1] - episode_start_times[i])
+  3. Calculate post-filter days: 
+     - post_filter_days = (query_end_date - filter_change_date).days
+  4. Calculate post-filter adjusted hours:
+     - post_filter_adjusted_hours = cumulative_adjusted_hours[-1] - X
+  5. New average adjusted hours per day:
+     - new_avg_adjusted_hours_per_day = post_filter_adjusted_hours / post_filter_days
+- **Why this matters**: Clogged filters force extended fan runtime, inflating the overall avg_adjusted_hours_per_day. After filter replacement, the new average is lower, so RUL projections become more conservative and accurate.
 
 ## Physics Model: Percentage-Adjusted Hours
 
@@ -327,28 +360,46 @@ adjusted_hours = duration_min × (fan_speed_pct)² / 60
   "sites": {
     "SITE-001": {
       "site_id": "SITE-001",
+      "ip": "192.168.1.50",
       "success": true,
       "slope": 0.08,
       "rul_days": 18.5,
       "urgency": "WARNING",
+      "max_deltas": [2.1, 2.3, 2.5, 2.8, 3.0, 3.2],
+      "cumulative_adjusted_hours": [1.5, 3.2, 5.8, 8.2, 11.5, 15.3],
+      "episode_start_times": ["2026-07-08T14:30:00", "2026-07-09T10:15:00", "2026-07-10T09:45:00", ...],
+      "query_start_date": "2026-07-08",
+      "query_end_date": "2026-08-07",
+      "episodes_count": 28,
+      "r2": 0.87,
+      "intercept": 1.8,
+      "avg_adjusted_hours_per_day": 0.52,
+      "total_adjusted_hours": 45.8,
       "air_quality": {"pm10": 45.2, "pm25": 12.8},
-      "pollution_impact_days": 2.3,
       "latitude": 40.123,
       "longitude": -75.456,
-      "has_air_quality_data": true,
       ...
     },
     "SITE-002": {
       "site_id": "SITE-002",
+      "ip": "192.168.1.51",
       "success": true,
-      "slope": 0.06,
-      "rul_days": 24.8,
-      "urgency": "OK",
+      "slope": -0.02,
+      "rul_days": null,
+      "urgency": "UNKNOWN",
+      "max_deltas": [2.1, 1.9, 2.0],
+      "cumulative_adjusted_hours": [1.5, 3.2, 5.8],
+      "episode_start_times": ["2026-07-15T14:30:00", "2026-07-16T10:15:00", "2026-07-17T09:45:00"],
+      "query_start_date": "2026-07-15",
+      "query_end_date": "2026-08-07",
+      "episodes_count": 8,
+      "r2": 0.12,
+      "intercept": 2.3,
+      "avg_adjusted_hours_per_day": 0.35,
+      "total_adjusted_hours": 18.2,
       "air_quality": null,
-      "pollution_impact_days": null,
       "latitude": null,
       "longitude": null,
-      "has_air_quality_data": false,
       ...
     }
   }
@@ -405,24 +456,32 @@ adjusted_hours = duration_min × (fan_speed_pct)² / 60
 
 ## Next Steps (Priority Order)
 
-1. **Validate pollution impact analysis** (ongoing):
+1. **Implement episode timestamp interpolation in dashboard** (IMMEDIATE after script completes):
+   - When user enters filter change at cumulative_adjusted_hours = X:
+     - Find episodes bracketing X, interpolate exact date from episode_start_times
+     - Calculate exact post-filter days from filter_change_date to query_end_date
+     - Recalculate avg_adjusted_hours_per_day using post-filter segment only
+   - Update RUL projection with new average (will be more conservative after filter replacement)
+   - This enables accurate degradation forecasting for sites after manual filter change entry
+
+2. **Validate pollution impact analysis** (ongoing):
    - Inspect which pollutants drive filter degradation (β_PM2.5 > 0 suggests pollution accelerates clogging)
    - β_PM10 < 0 is counterintuitive; possible confounding factors (e.g., sites in polluted areas run cooler)
    - Verify predicted impact values align with observed degradation differences between clean vs polluted sites
    - Monitor: Check if R² improves as more sites accumulate air quality data
    - Consider: add humidity/temperature normalization in future iterations to improve correlation
 
-2. **Dashboard monitoring** (ongoing):
+3. **Dashboard monitoring** (ongoing):
    - Verify RUL values make physical sense based on max delta degradation trends
    - Correlate urgency categories with air quality data: sites in clean air should show slower degradation than polluted sites
    - Watch for outliers: Sites with unexpected degradation rates that don't align with observed pollution levels
 
-3. **Operational** (after current test confirmed stable):
+4. **Operational** (after current test confirmed stable):
    - Schedule daily runs: `0 */6 * * * cd /home/aillm/hvac_rul_project && python query_sites.py && cd /home/aillm && git add sites_data.json && git commit -m "Auto-update RUL data" && git push`
    - Network expansion: Test running from internal server to reach blocked sites (currently 66% unreachable)
    - Monitor Weatherbit API quota: Track cumulative requests vs 1500/day limit
 
-4. **Future enhancements** (after pipeline stable):
+5. **Future enhancements** (after pipeline stable):
    - Refactor regression: Add temperature/humidity normalization (may improve R²)
    - Regional analysis: Geographic heatmap of pollution effect strength
    - Predictive alerts: Notify when sites entering URGENT or WARNING thresholds
