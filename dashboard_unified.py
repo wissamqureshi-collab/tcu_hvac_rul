@@ -400,6 +400,7 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
         max_deltas = max_deltas_smoothed
 
     # Refit trend line with smoothed data (or split if filter change confirmed)
+    intercept = None
     if filter_change_hours is not None and len(max_deltas) >= 2 and len(cumul_hours) == len(max_deltas):
         # Split at confirmed filter change point
         split_idx = next((i for i, h in enumerate(cumul_hours) if h >= filter_change_hours), None)
@@ -425,12 +426,16 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
         baseline_dt = max_deltas[0]
     else:
         slope = site_result.get('slope', 0)
+        intercept = site_result.get('intercept', 0)
         baseline_dt = site_result.get('baseline_dt', 0)
 
     current_hours = site_result.get('total_adjusted_hours', 0)
 
-    # Calculate current_dt from trend line: baseline_dt + slope * hours
-    current_dt = baseline_dt + slope * current_hours if current_hours >= 0 else baseline_dt
+    # Calculate current_dt from trend line: intercept + slope * hours
+    current_dt = intercept + slope * current_hours if current_hours >= 0 else intercept
+
+    # Store intercept for graph plotting
+    site_copy['intercept_recalc'] = float(intercept) if intercept else site_result.get('intercept', 0)
 
     if slope <= 0:
         site_copy['rul_days'] = 999
@@ -447,14 +452,14 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
 
     # Convert to days using avg hours per day
     avg_hours_per_day = site_result.get('avg_adjusted_hours_per_day', 1.0)
-    hours_to_failure = (new_failure_dt - baseline_dt) / slope if slope > 0 else 999
+    hours_to_failure = (new_failure_dt - intercept) / slope if slope > 0 else 999
     remaining_hours = hours_to_failure - current_hours
     rul_days = remaining_hours / avg_hours_per_day if avg_hours_per_day > 0 else 999
     site_copy['rul_days'] = max(0, rul_days)
 
     # Calculate % filter life based on trend line values
-    dt_range = new_failure_dt - baseline_dt
-    dt_consumed = current_dt - baseline_dt
+    dt_range = new_failure_dt - intercept
+    dt_consumed = current_dt - intercept
     pct_life = max(0, min(100, (dt_consumed / dt_range * 100))) if dt_range > 0 else 0
     site_copy['pct_life'] = pct_life
 
@@ -1015,7 +1020,11 @@ Readings</strong><br>
                     if len(cumul_hours) >= 2:
                         r2 = result.get('r2', 0)
                         slope = result.get('slope', 0)
-                        baseline_dt = result.get('baseline_dt', max_deltas[0] if max_deltas else 0)
+                        intercept = result.get('intercept_recalc', result.get('intercept', 0))
+
+                        # X-axis from 0 to max hours
+                        max_hours = max(cumul_hours) if cumul_hours else 100
+                        x_axis = np.linspace(0, max_hours, 100)
 
                         # Check if dual trend (filter change split) should be shown
                         if result.get('dual_trend'):
@@ -1025,11 +1034,11 @@ Readings</strong><br>
                             # Pre-change trend line
                             if dual['pre_split_coeffs']:
                                 pre_coeffs = dual['pre_split_coeffs']
-                                pre_hours = [h for h in cumul_hours if h < split_h]
-                                if len(pre_hours) >= 2:
-                                    pre_trend = [pre_coeffs[1] + pre_coeffs[0] * h for h in pre_hours]
+                                pre_x = [x for x in x_axis if x < split_h]
+                                if len(pre_x) >= 2:
+                                    pre_trend = [pre_coeffs[1] + pre_coeffs[0] * x for x in pre_x]
                                     fig.add_trace(go.Scatter(
-                                        x=pre_hours, y=pre_trend,
+                                        x=pre_x, y=pre_trend,
                                         mode='lines',
                                         line=dict(color='#f59e0b', width=2, dash='dash'),
                                         name='Pre-change trend',
@@ -1037,11 +1046,12 @@ Readings</strong><br>
                                     ))
 
                             # Post-change trend line
-                            post_hours = [h for h in cumul_hours if h >= split_h]
-                            if len(post_hours) >= 2:
-                                post_trend = [baseline_dt + slope * h for h in post_hours]
+                            post_coeffs = dual['post_split_coeffs']
+                            post_x = [x for x in x_axis if x >= split_h]
+                            if len(post_x) >= 2:
+                                post_trend = [post_coeffs[1] + post_coeffs[0] * x for x in post_x]
                                 fig.add_trace(go.Scatter(
-                                    x=post_hours, y=post_trend,
+                                    x=post_x, y=post_trend,
                                     mode='lines',
                                     line=dict(color='#10b981', width=2.5, dash='dash'),
                                     name=f'Post-change trend (R²={r2:.3f})',
@@ -1051,10 +1061,10 @@ Readings</strong><br>
                             # Add vertical line at filter change
                             fig.add_vline(x=split_h, line_dash="dot", line_color="#666", annotation_text="Filter changed", annotation_position="bottom")
                         else:
-                            # Single trend line
-                            trend_line = [baseline_dt + slope * h for h in cumul_hours]
+                            # Single trend line from x=0
+                            trend_line = [intercept + slope * x for x in x_axis]
                             fig.add_trace(go.Scatter(
-                                x=cumul_hours, y=trend_line,
+                                x=x_axis, y=trend_line,
                                 mode='lines',
                                 line=dict(color='#4f7cff', width=2, dash='dash'),
                                 name=f'Trend (R²={r2:.3f})',
