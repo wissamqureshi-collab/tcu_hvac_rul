@@ -443,9 +443,10 @@ def compute_rul_mode3(episodes, pollution_effect=None):
     else:
         avg_hours_per_day = adjusted_runtime_hours[0] if adjusted_runtime_hours else 1.0
 
-    current_dt = max_deltas[-1]
-    baseline_dt = max_deltas[0]
+    # Use trend line to determine current ΔT (not noisy last reading)
     current_hours = cumulative_hours[-1]
+    current_dt = intercept + slope * current_hours
+    baseline_dt = intercept  # Trend line at zero hours
 
     # RUL calculation using adjusted slope
     rul_days = None

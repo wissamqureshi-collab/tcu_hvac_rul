@@ -334,7 +334,7 @@ def load_sites_data(json_file='sites_data.json'):
 def recalculate_rul(site_result, new_failure_dt):
   """
   Recalculate RUL for a site using a custom failure ΔT threshold.
-  Uses raw slope only (1-factor model). Pollution effect shown as informational impact only.
+  Uses trend line (intercept + slope * hours) to determine current ΔT state.
   Returns updated site_result with new rul_days and urgency.
   """
   site_copy = site_result.copy()
@@ -342,16 +342,18 @@ def recalculate_rul(site_result, new_failure_dt):
   if not site_result.get('success'):
       return site_copy
 
-  current_dt = site_result.get('current_dt', 0)
-  # Always use raw slope (1-factor model)
+  # Use trend line to get current ΔT (not noisy last episode)
   slope = site_result.get('slope', 0)
   r2 = site_result.get('r2', 0)
-  baseline_dt = site_result.get('baseline_dt', 0)
   intercept = site_result.get('intercept', 0)
+  current_hours = site_result.get('total_adjusted_hours', 0)
 
-  if current_dt <= 0 or slope <= 0:
-      site_copy['rul_days'] = None
-      site_copy['urgency'] = site_result.get('urgency', 'UNKNOWN')
+  # Calculate current_dt from trend line
+  current_dt = intercept + slope * current_hours if current_hours >= 0 else intercept
+
+  if slope <= 0:
+      site_copy['rul_days'] = 999
+      site_copy['urgency'] = 'OK'
       return site_copy
 
   site_copy['failure_dt'] = new_failure_dt
@@ -360,25 +362,29 @@ def recalculate_rul(site_result, new_failure_dt):
       site_copy['rul_days'] = 0
       site_copy['urgency'] = 'URGENT'
       site_copy['pct_life'] = 100
+      site_copy['current_dt'] = current_dt
       return site_copy
 
   if r2 < 0.25:
       site_copy['rul_days'] = 999
       site_copy['urgency'] = 'OK'
       site_copy['pct_life'] = 0
+      site_copy['current_dt'] = current_dt
       return site_copy
 
   # Convert to days using avg hours per day
   avg_hours_per_day = site_result.get('avg_adjusted_hours_per_day', 1.0)
   hours_to_failure = (new_failure_dt - intercept) / slope if slope > 0 else 999
-  current_hours = site_result.get('total_adjusted_hours', 0)
   remaining_hours = hours_to_failure - current_hours
   rul_days = remaining_hours / avg_hours_per_day if avg_hours_per_day > 0 else 999
   site_copy['rul_days'] = max(0, rul_days)
+  site_copy['current_dt'] = current_dt
 
-  if baseline_dt > 0:
-      pct_life = (current_dt - baseline_dt) / (new_failure_dt - baseline_dt) * 100
-      site_copy['pct_life'] = max(0, min(100, pct_life))
+  # Calculate % filter life based on trend line values
+  dt_range = new_failure_dt - intercept
+  dt_consumed = current_dt - intercept
+  pct_life = max(0, min(100, (dt_consumed / dt_range * 100))) if dt_range > 0 else 0
+  site_copy['pct_life'] = pct_life
 
   if rul_days < 14:
       site_copy['urgency'] = 'URGENT'
