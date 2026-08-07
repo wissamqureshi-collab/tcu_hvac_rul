@@ -1041,6 +1041,49 @@ Readings</strong><br>
                         st.session_state[hours_key] = adjusted_hours
                         st.caption(f"Filter changed at {adjusted_hours:.0f} hours")
 
+            else:
+                # Manual filter change option (no detected change)
+                st.markdown("---")
+                st.markdown("**Was the filter changed at this site?**")
+
+                col_fc1, col_fc2 = st.columns([1, 1])
+                with col_fc1:
+                    session_key = f"fc_confirm_{site_id}"
+                    expand_key = f"expand_{site_id}"
+                    hours_key = f"fc_hours_{site_id}"
+
+                    def on_manual_checkbox_change(ek=expand_key):
+                        st.session_state[ek] = True  # Keep expander open
+
+                    manual_confirm = st.checkbox(
+                        f"Yes, filter was changed",
+                        value=st.session_state.get(session_key, False),
+                        key=session_key,
+                        on_change=on_manual_checkbox_change
+                    )
+
+                with col_fc2:
+                    if st.session_state.get(session_key, False):
+                        adjust_key = f"fc_adjust_{site_id}"
+                        expand_key = f"expand_{site_id}"
+
+                        def on_manual_hours_change(hk=hours_key, ek=expand_key):
+                            st.session_state[ek] = True  # Keep expander open
+
+                        manual_hours = st.number_input(
+                            f"Filter changed at (hours)",
+                            value=st.session_state.get(hours_key, 0.0),
+                            step=10.0,
+                            key=adjust_key,
+                            on_change=on_manual_hours_change
+                        )
+                        # Only set hours if value > 0 (user actually entered something)
+                        if manual_hours > 0:
+                            st.session_state[hours_key] = manual_hours
+                            st.caption(f"Filter changed at {manual_hours:.0f} hours")
+                        else:
+                            st.caption("Enter the hours when filter was changed")
+
             with col2:
                 max_deltas = result.get('max_deltas', [])
                 cumul_hours = result.get('cumulative_adjusted_hours', [])
