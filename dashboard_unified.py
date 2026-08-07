@@ -585,7 +585,10 @@ st.markdown("""
 
 sites_recalc = {}
 for site_id, site_result in sites.items():
-    sites_recalc[site_id] = recalculate_rul(site_result, failure_dt, rolling_window)
+    # Check if user confirmed filter change for this site
+    fc_confirmed = st.session_state.get(f"fc_confirm_{site_id}", False)
+    fc_hours = st.session_state.get(f"fc_hours_{site_id}", None) if fc_confirmed else None
+    sites_recalc[site_id] = recalculate_rul(site_result, failure_dt, rolling_window, filter_change_hours=fc_hours)
 
 success_count = len([s for s in sites_recalc.values() if s.get('success')])
 st.markdown(f"<h2 style='color: #1a202c; margin-bottom: 1.5rem;'>Status — {success_count} Sites Analyzed</h2>", unsafe_allow_html=True)
@@ -933,6 +936,25 @@ Readings</strong><br>
 </div>
 """, unsafe_allow_html=True)
 
+            # Filter change detection UI
+            if result.get('filter_change_detected'):
+                st.markdown("---")
+                fc = result['filter_change_detected']
+                st.info(f"⚠️ **Possible filter change detected** at {fc['hours']:.0f} hours (drop: {fc['drop']:.1f}°C from {fc['before_dt']:.1f}°C to {fc['after_dt']:.1f}°C)")
+
+                col_fc1, col_fc2 = st.columns([1, 1])
+                with col_fc1:
+                    session_key = f"fc_confirm_{site_id}"
+                    confirmed = st.checkbox(f"Confirm filter change at this site", value=st.session_state.get(session_key, False), key=session_key)
+
+                with col_fc2:
+                    if st.session_state.get(session_key, False):
+                        adjust_key = f"fc_adjust_{site_id}"
+                        adjusted_hours = st.number_input(f"Adjust hours", value=fc['hours'], step=10.0, key=adjust_key)
+                        if adjusted_hours != fc['hours']:
+                            st.session_state[f"fc_hours_{site_id}"] = adjusted_hours
+                        st.caption(f"Filter changed at {st.session_state.get(f'fc_hours_{site_id}', adjusted_hours):.0f} hours")
+
             with col2:
                 max_deltas = result.get('max_deltas', [])
                 cumul_hours = result.get('cumulative_adjusted_hours', [])
@@ -960,14 +982,50 @@ Readings</strong><br>
                         r2 = result.get('r2', 0)
                         slope = result.get('slope', 0)
                         baseline_dt = result.get('baseline_dt', max_deltas[0] if max_deltas else 0)
-                        trend_line = [baseline_dt + slope * h for h in cumul_hours]
-                        fig.add_trace(go.Scatter(
-                            x=cumul_hours, y=trend_line,
-                            mode='lines',
-                            line=dict(color='#4f7cff', width=2, dash='dash'),
-                            name=f'Trend (R²={r2:.3f})',
-                            hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Trend: %{y:.2f}°C<extra></extra>'
-                        ))
+
+                        # Check if dual trend (filter change split) should be shown
+                        if result.get('dual_trend'):
+                            dual = result['dual_trend']
+                            split_h = dual['split_hours']
+
+                            # Pre-change trend line
+                            if dual['pre_split_coeffs']:
+                                pre_coeffs = dual['pre_split_coeffs']
+                                pre_hours = [h for h in cumul_hours if h < split_h]
+                                if len(pre_hours) >= 2:
+                                    pre_trend = [pre_coeffs[1] + pre_coeffs[0] * h for h in pre_hours]
+                                    fig.add_trace(go.Scatter(
+                                        x=pre_hours, y=pre_trend,
+                                        mode='lines',
+                                        line=dict(color='#f59e0b', width=2, dash='dash'),
+                                        name='Pre-change trend',
+                                        hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Trend: %{y:.2f}°C<extra></extra>'
+                                    ))
+
+                            # Post-change trend line
+                            post_hours = [h for h in cumul_hours if h >= split_h]
+                            if len(post_hours) >= 2:
+                                post_trend = [baseline_dt + slope * h for h in post_hours]
+                                fig.add_trace(go.Scatter(
+                                    x=post_hours, y=post_trend,
+                                    mode='lines',
+                                    line=dict(color='#10b981', width=2.5, dash='dash'),
+                                    name=f'Post-change trend (R²={r2:.3f})',
+                                    hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Trend: %{y:.2f}°C<extra></extra>'
+                                ))
+
+                            # Add vertical line at filter change
+                            fig.add_vline(x=split_h, line_dash="dot", line_color="#666", annotation_text="Filter changed", annotation_position="bottom")
+                        else:
+                            # Single trend line
+                            trend_line = [baseline_dt + slope * h for h in cumul_hours]
+                            fig.add_trace(go.Scatter(
+                                x=cumul_hours, y=trend_line,
+                                mode='lines',
+                                line=dict(color='#4f7cff', width=2, dash='dash'),
+                                name=f'Trend (R²={r2:.3f})',
+                                hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Trend: %{y:.2f}°C<extra></extra>'
+                            ))
 
                     fig.update_layout(
                         title=dict(
