@@ -1067,7 +1067,11 @@ Readings</strong><br>
                         adjust_key = f"fc_adjust_{site_id}"
                         expand_key = f"expand_{site_id}"
 
-                        def on_manual_hours_change(hk=hours_key, ek=expand_key):
+                        def on_manual_hours_change(hk=hours_key, ek=expand_key, ak=adjust_key):
+                            # Set hours from the input value and keep expander open
+                            manual_val = st.session_state.get(ak, 0.0)
+                            if manual_val > 0:
+                                st.session_state[hk] = manual_val
                             st.session_state[ek] = True  # Keep expander open
 
                         manual_hours = st.number_input(
@@ -1077,9 +1081,8 @@ Readings</strong><br>
                             key=adjust_key,
                             on_change=on_manual_hours_change
                         )
-                        # Only set hours if value > 0 (user actually entered something)
+                        # Display confirmation
                         if manual_hours > 0:
-                            st.session_state[hours_key] = manual_hours
                             st.caption(f"Filter changed at {manual_hours:.0f} hours")
                         else:
                             st.caption("Enter the hours when filter was changed")
