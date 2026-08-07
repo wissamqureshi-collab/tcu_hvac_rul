@@ -1126,117 +1126,117 @@ Readings</strong><br>
                     cumul_hours = result.get('cumulative_adjusted_hours', [])
 
                     if len(max_deltas) > 2 and len(cumul_hours) == len(max_deltas):
-                    fig = go.Figure()
+                        fig = go.Figure()
 
-                    fig.add_trace(go.Scatter(
-                        x=cumul_hours, y=max_deltas,
-                        mode='markers',
-                        marker=dict(size=6, color='#a5b4fc', opacity=0.7),
-                        name='Max ΔT per episode',
-                        hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Max ΔT: %{y:.2f}°C<extra></extra>'
-                    ))
+                        fig.add_trace(go.Scatter(
+                            x=cumul_hours, y=max_deltas,
+                            mode='markers',
+                            marker=dict(size=6, color='#a5b4fc', opacity=0.7),
+                            name='Max ΔT per episode',
+                            hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Max ΔT: %{y:.2f}°C<extra></extra>'
+                        ))
 
-                    fig.add_hline(
-                        y=result.get('failure_dt', 10.0),
-                        line_dash='dot',
-                        line_color='#ef4444',
-                        annotation_text=f"Failure: {result.get('failure_dt', 10.0):.1f}°C",
-                        annotation_position='right'
-                    )
+                        fig.add_hline(
+                            y=result.get('failure_dt', 10.0),
+                            line_dash='dot',
+                            line_color='#ef4444',
+                            annotation_text=f"Failure: {result.get('failure_dt', 10.0):.1f}°C",
+                            annotation_position='right'
+                        )
 
-                    if len(cumul_hours) >= 2:
-                        r2 = result.get('r2', 0)
-                        slope = result.get('slope', 0)
-                        intercept = result.get('intercept_recalc', result.get('intercept', 0))
+                        if len(cumul_hours) >= 2:
+                            r2 = result.get('r2', 0)
+                            slope = result.get('slope', 0)
+                            intercept = result.get('intercept_recalc', result.get('intercept', 0))
 
-                        # X-axis from 0 to max hours
-                        max_hours = max(cumul_hours) if cumul_hours else 100
-                        x_axis = np.linspace(0, max_hours, 100)
+                            # X-axis from 0 to max hours
+                            max_hours = max(cumul_hours) if cumul_hours else 100
+                            x_axis = np.linspace(0, max_hours, 100)
 
-                        # Check if dual trend (filter change split) should be shown
-                        if result.get('dual_trend'):
-                            dual = result['dual_trend']
-                            split_h = dual['split_hours']
+                            # Check if dual trend (filter change split) should be shown
+                            if result.get('dual_trend'):
+                                dual = result['dual_trend']
+                                split_h = dual['split_hours']
 
-                            # Pre-change trend line
-                            if dual['pre_split_coeffs']:
-                                pre_coeffs = dual['pre_split_coeffs']
-                                pre_x = [x for x in x_axis if x < split_h]
-                                if len(pre_x) >= 2:
-                                    pre_trend = [pre_coeffs[1] + pre_coeffs[0] * x for x in pre_x]
+                                # Pre-change trend line
+                                if dual['pre_split_coeffs']:
+                                    pre_coeffs = dual['pre_split_coeffs']
+                                    pre_x = [x for x in x_axis if x < split_h]
+                                    if len(pre_x) >= 2:
+                                        pre_trend = [pre_coeffs[1] + pre_coeffs[0] * x for x in pre_x]
+                                        fig.add_trace(go.Scatter(
+                                            x=pre_x, y=pre_trend,
+                                            mode='lines',
+                                            line=dict(color='#f59e0b', width=2, dash='dash'),
+                                            name='Pre-change trend',
+                                            hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Trend: %{y:.2f}°C<extra></extra>'
+                                        ))
+
+                                # Post-change trend line
+                                post_coeffs = dual['post_split_coeffs']
+                                post_x = [x for x in x_axis if x >= split_h]
+                                if len(post_x) >= 2:
+                                    post_trend = [post_coeffs[1] + post_coeffs[0] * x for x in post_x]
                                     fig.add_trace(go.Scatter(
-                                        x=pre_x, y=pre_trend,
+                                        x=post_x, y=post_trend,
                                         mode='lines',
-                                        line=dict(color='#f59e0b', width=2, dash='dash'),
-                                        name='Pre-change trend',
+                                        line=dict(color='#10b981', width=2.5, dash='dash'),
+                                        name=f'Post-change trend (R²={r2:.3f})',
                                         hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Trend: %{y:.2f}°C<extra></extra>'
                                     ))
 
-                            # Post-change trend line
-                            post_coeffs = dual['post_split_coeffs']
-                            post_x = [x for x in x_axis if x >= split_h]
-                            if len(post_x) >= 2:
-                                post_trend = [post_coeffs[1] + post_coeffs[0] * x for x in post_x]
+                                # Add vertical line at filter change
+                                fig.add_vline(x=split_h, line_dash="dot", line_color="#666", annotation_text="Filter changed", annotation_position="bottom")
+                            else:
+                                # Single trend line from x=0
+                                trend_line = [intercept + slope * x for x in x_axis]
                                 fig.add_trace(go.Scatter(
-                                    x=post_x, y=post_trend,
+                                    x=x_axis, y=trend_line,
                                     mode='lines',
-                                    line=dict(color='#10b981', width=2.5, dash='dash'),
-                                    name=f'Post-change trend (R²={r2:.3f})',
+                                    line=dict(color='#4f7cff', width=2, dash='dash'),
+                                    name=f'Trend (R²={r2:.3f})',
                                     hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Trend: %{y:.2f}°C<extra></extra>'
                                 ))
 
-                            # Add vertical line at filter change
-                            fig.add_vline(x=split_h, line_dash="dot", line_color="#666", annotation_text="Filter changed", annotation_position="bottom")
-                        else:
-                            # Single trend line from x=0
-                            trend_line = [intercept + slope * x for x in x_axis]
-                            fig.add_trace(go.Scatter(
-                                x=x_axis, y=trend_line,
-                                mode='lines',
-                                line=dict(color='#4f7cff', width=2, dash='dash'),
-                                name=f'Trend (R²={r2:.3f})',
-                                hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Trend: %{y:.2f}°C<extra></extra>'
-                            ))
-
-                    fig.update_layout(
-                        title=dict(
-                            text=f"ΔT Trend — {site_id}",
-                            font=dict(size=14, color='#1a202c', family='Arial, sans-serif'),
-                            x=0.5,
-                            xanchor='center'
-                        ),
-                        xaxis=dict(
-                            title='Cumulative Adjusted Fan Hours',
-                            title_font=dict(size=12, color='#1a202c'),
-                            tickfont=dict(size=10, color='#1a202c'),
-                            showgrid=True,
-                            gridwidth=1,
-                            gridcolor='#e5e7eb',
-                        ),
-                        yaxis=dict(
-                            title='ΔT (°C)',
-                            title_font=dict(size=12, color='#1a202c'),
-                            tickfont=dict(size=10, color='#1a202c'),
-                            showgrid=True,
-                            gridwidth=1,
-                            gridcolor='#e5e7eb',
-                        ),
-                        height=380,
-                        hovermode='x unified',
-                        paper_bgcolor='#ffffff',
-                        plot_bgcolor='#fafbfc',
-                        margin=dict(l=70, r=70, t=60, b=60),
-                        font=dict(family='Arial, sans-serif', size=10, color='#1a202c'),
-                        showlegend=True,
-                        legend=dict(
-                            x=0.02,
-                            y=0.98,
-                            bgcolor='rgba(255,255,255,0.9)',
-                            bordercolor='#cbd5e1',
-                            borderwidth=1,
-                            font=dict(size=10, color='#1a202c')
-                        ),
-                    )
+                        fig.update_layout(
+                            title=dict(
+                                text=f"ΔT Trend — {site_id}",
+                                font=dict(size=14, color='#1a202c', family='Arial, sans-serif'),
+                                x=0.5,
+                                xanchor='center'
+                            ),
+                            xaxis=dict(
+                                title='Cumulative Adjusted Fan Hours',
+                                title_font=dict(size=12, color='#1a202c'),
+                                tickfont=dict(size=10, color='#1a202c'),
+                                showgrid=True,
+                                gridwidth=1,
+                                gridcolor='#e5e7eb',
+                            ),
+                            yaxis=dict(
+                                title='ΔT (°C)',
+                                title_font=dict(size=12, color='#1a202c'),
+                                tickfont=dict(size=10, color='#1a202c'),
+                                showgrid=True,
+                                gridwidth=1,
+                                gridcolor='#e5e7eb',
+                            ),
+                            height=380,
+                            hovermode='x unified',
+                            paper_bgcolor='#ffffff',
+                            plot_bgcolor='#fafbfc',
+                            margin=dict(l=70, r=70, t=60, b=60),
+                            font=dict(family='Arial, sans-serif', size=10, color='#1a202c'),
+                            showlegend=True,
+                            legend=dict(
+                                x=0.02,
+                                y=0.98,
+                                bgcolor='rgba(255,255,255,0.9)',
+                                bordercolor='#cbd5e1',
+                                borderwidth=1,
+                                font=dict(size=10, color='#1a202c')
+                            ),
+                        )
 
                         st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
                     else:
