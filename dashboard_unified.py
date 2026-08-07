@@ -876,7 +876,11 @@ else:
             blurb_html = f"<div style='margin-top: 12px; padding: 10px; background: #f0fdf4; border-radius: 4px; font-size: 0.85rem; color: #374151; line-height: 1.6;'>{pollution_blurb.replace(chr(10), '<br>')}</div>" if pollution_blurb else ""
             air_quality_html = f"""<div style='background: #ecfdf5; padding: 14px; border-radius: 8px; border-left: 4px solid #059669;'><strong style='font-size: 0.9rem; color: #1a202c; text-transform: uppercase; letter-spacing: 0.05em;'>🌍 Air Quality (90-day avg)</strong><br><div style='margin-top: 8px; font-size: 0.85rem; color: #374151;'><div>PM2.5: <strong style='font-size: 1.1em; color: #1a202c;'>{pm25_val} μg/m³</strong></div><div>PM10: <strong style='font-size: 1.1em; color: #1a202c;'>{pm10_val} μg/m³</strong></div>{blurb_html}</div></div>"""
 
-        with st.expander(expander_label):
+        # Track expander state in session
+        expand_key = f"expand_{site_id}"
+        is_expanded = st.session_state.get(expand_key, False)
+
+        with st.expander(expander_label, expanded=is_expanded):
             col1, col2 = st.columns([1, 2])
 
             with col1:
@@ -958,8 +962,10 @@ Readings</strong><br>
                 col_fc1, col_fc2 = st.columns([1, 1])
                 with col_fc1:
                     session_key = f"fc_confirm_{site_id}"
+                    expand_key = f"expand_{site_id}"
                     def on_checkbox_change():
                         st.session_state[f"fc_hours_{site_id}"] = fc['hours']
+                        st.session_state[expand_key] = True  # Keep expander open
                     confirmed = st.checkbox(
                         f"Confirm filter change at this site",
                         value=st.session_state.get(session_key, False),
@@ -970,8 +976,9 @@ Readings</strong><br>
                 with col_fc2:
                     if st.session_state.get(session_key, False):
                         adjust_key = f"fc_adjust_{site_id}"
+                        expand_key = f"expand_{site_id}"
                         def on_hours_change():
-                            pass  # Session state is automatically updated by Streamlit
+                            st.session_state[expand_key] = True  # Keep expander open
                         adjusted_hours = st.number_input(
                             f"Adjust hours",
                             value=st.session_state.get(f"fc_hours_{site_id}", fc['hours']),
