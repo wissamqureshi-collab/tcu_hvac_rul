@@ -344,7 +344,7 @@ def load_sites_data(json_file='sites_data.json'):
     return data
 
 
-def recalculate_rul(site_result, new_failure_dt, rolling_window=1):
+def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change_hours=None):
     """
     Recalculate RUL for a site using a custom failure ΔT threshold.
     Uses trend line to determine current ΔT state.
@@ -360,6 +360,23 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1):
     max_deltas = site_result.get('max_deltas', [])
     cumul_hours = site_result.get('cumulative_adjusted_hours', [])
 
+    # Detect sudden drops in max_deltas (indicative of filter change)
+    filter_change_detected = None
+    if len(max_deltas) >= 2:
+        for i in range(1, len(max_deltas)):
+            drop = max_deltas[i - 1] - max_deltas[i]
+            if drop >= 5.0:  # 5°C drop threshold
+                filter_change_detected = {
+                    'episode_idx': i,
+                    'hours': float(cumul_hours[i]),
+                    'drop': float(drop),
+                    'before_dt': float(max_deltas[i - 1]),
+                    'after_dt': float(max_deltas[i])
+                }
+                break  # Use first detected change
+
+    site_copy['filter_change_detected'] = filter_change_detected
+
     if rolling_window > 1 and len(max_deltas) >= rolling_window:
         max_deltas_smoothed = []
         for i in range(len(max_deltas)):
@@ -369,8 +386,27 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1):
             max_deltas_smoothed.append(median_val)
         max_deltas = max_deltas_smoothed
 
-    # Refit trend line with smoothed data
-    if len(max_deltas) >= 2 and len(cumul_hours) == len(max_deltas):
+    # Refit trend line with smoothed data (or split if filter change confirmed)
+    if filter_change_hours is not None and len(max_deltas) >= 2 and len(cumul_hours) == len(max_deltas):
+        # Split at confirmed filter change point
+        split_idx = next((i for i, h in enumerate(cumul_hours) if h >= filter_change_hours), None)
+        if split_idx and split_idx > 0 and split_idx < len(max_deltas) - 1:
+            # Fit to post-filter-change data (more relevant for current RUL)
+            coeffs = np.polyfit(cumul_hours[split_idx:], max_deltas[split_idx:], 1)
+            slope, intercept = coeffs[0], coeffs[1]
+            baseline_dt = max_deltas[split_idx]
+            site_copy['filter_change_hours'] = float(filter_change_hours)
+            site_copy['dual_trend'] = {
+                'split_hours': float(filter_change_hours),
+                'pre_split_coeffs': np.polyfit(cumul_hours[:split_idx], max_deltas[:split_idx], 1).tolist() if split_idx > 1 else None,
+                'post_split_coeffs': [float(slope), float(intercept)]
+            }
+        else:
+            # Can't split, use whole dataset
+            coeffs = np.polyfit(cumul_hours, max_deltas, 1)
+            slope, intercept = coeffs[0], coeffs[1]
+            baseline_dt = max_deltas[0]
+    elif len(max_deltas) >= 2 and len(cumul_hours) == len(max_deltas):
         coeffs = np.polyfit(cumul_hours, max_deltas, 1)
         slope, intercept = coeffs[0], coeffs[1]
         baseline_dt = max_deltas[0]
