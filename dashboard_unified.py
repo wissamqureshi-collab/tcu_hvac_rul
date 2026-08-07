@@ -1039,7 +1039,7 @@ Readings</strong><br>
                             on_change=on_hours_change
                         )
                         st.session_state[hours_key] = adjusted_hours
-                        st.caption(f"Filter changed at {adjusted_hours:.0f} hours")
+                        st.caption(f"Edit the time to specify when the filter was changed and click Enter — Current: {adjusted_hours:.0f} hours")
 
             else:
                 # Manual filter change option (no detected change)
@@ -1083,9 +1083,9 @@ Readings</strong><br>
                         )
                         # Display confirmation
                         if manual_hours > 0:
-                            st.caption(f"Filter changed at {manual_hours:.0f} hours")
+                            st.caption(f"Enter the hours when filter was changed and click Enter — Current: {manual_hours:.0f} hours")
                         else:
-                            st.caption("Enter the hours when filter was changed")
+                            st.caption("Enter the hours when filter was changed and click Enter")
 
             with col2:
                 max_deltas = result.get('max_deltas', [])
