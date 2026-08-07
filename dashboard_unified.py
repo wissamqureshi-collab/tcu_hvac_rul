@@ -515,8 +515,13 @@ def calculate_pollution_impact_blurb(site_result, all_sites_data):
     """
     Calculate how this site's pollution compares to the site average.
     Returns a blurb explaining the impact on filter degradation.
+    Only show if slope is positive (sufficient data).
     """
     if not site_result.get('air_quality'):
+        return None
+
+    # Skip if slope is negative (insufficient data)
+    if site_result.get('slope', 0) <= 0:
         return None
 
     # Get regression coefficients
@@ -927,6 +932,9 @@ else:
             col1, col2 = st.columns([1, 2])
 
             with col1:
+                # Check if site has insufficient data (negative slope)
+                has_insufficient_data = result.get('slope', 0) <= 0
+
                 st.markdown(f"""
 <div style="color: #1a202c; line-height: 2.0; white-space: normal; word-wrap: break-word; font-size: 0.95rem;">
 
@@ -937,9 +945,31 @@ Info</strong><br>
 <div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
 <div>IP Address: <code style="background: #ffffff; padding: 2px 6px; border-radius: 4px; color:
 #4f7cff;">{result.get('ip')}</code></div>
+<div>Episodes Counted: <strong>{result.get('episodes_count')}</strong></div>
+</div>
+</div>"""
+                , unsafe_allow_html=True)
+
+                if has_insufficient_data:
+                    st.markdown(f"""
+<div style="background: #fef2f2; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #dc2626;">
+<strong style="font-size: 0.9rem; color: #991b1b; text-transform: uppercase; letter-spacing: 0.05em;">⚠️ Data Insufficient for Analysis</strong><br>
+<div style="margin-top: 8px; font-size: 0.85rem; color: #374151;">
+<div>No clear degradation trend detected. Filter may be new, recently replaced, or experiencing variable conditions. Unable to project RUL or trend analysis.</div>
+</div>
+</div>
+
+{air_quality_html}
+
+</div>
+""", unsafe_allow_html=True)
+                else:
+                    st.markdown(f"""
+<div style="background: #f8fafc; padding: 14px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid
+#4f7cff;">
+<div style="font-size: 0.85rem; color: #374151;">
 <div>Urgency: <strong style="color: {'#ef4444' if urgency == 'URGENT' else '#f59e0b' if urgency == 'WARNING' else
 '#10b981' if urgency == 'OK' else '#6b7280'};">{urgency}</strong></div>
-<div>Episodes Counted: <strong>{result.get('episodes_count')}</strong></div>
 </div>
 </div>
 
@@ -1088,10 +1118,14 @@ Readings</strong><br>
                             st.caption("Enter the hours when filter was changed and click Enter")
 
             with col2:
-                max_deltas = result.get('max_deltas', [])
-                cumul_hours = result.get('cumulative_adjusted_hours', [])
+                # Only show trend plot if slope is positive (sufficient data)
+                if has_insufficient_data:
+                    st.info("No trend plot available: insufficient data for regression analysis.")
+                else:
+                    max_deltas = result.get('max_deltas', [])
+                    cumul_hours = result.get('cumulative_adjusted_hours', [])
 
-                if len(max_deltas) > 2 and len(cumul_hours) == len(max_deltas):
+                    if len(max_deltas) > 2 and len(cumul_hours) == len(max_deltas):
                     fig = go.Figure()
 
                     fig.add_trace(go.Scatter(
@@ -1204,9 +1238,9 @@ Readings</strong><br>
                         ),
                     )
 
-                    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-                else:
-                    st.info("Not enough episodes for trend plot.")
+                        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+                    else:
+                        st.info("Not enough episodes for trend plot.")
 
 st.markdown("---")
 st.markdown(f"""

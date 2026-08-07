@@ -113,7 +113,51 @@ __pycache__/
   - Regression coefficients used only for impact prediction, not RUL modification
 - ✅ **Pipeline fully functional**: Query → Regression → Dashboard Display (no RUL adjustment step)
 
-**Model Architecture (1-Factor Only)**:
+**August 7 (Session 2) Updates — Negative Slope Handling**:
+- ✅ **Filtered negative slopes from regression analysis**: query_sites.py now excludes sites with slope ≤ 0 from air quality regression (insufficient data)
+- ✅ **Dashboard displays "Data Insufficient" for negative slopes**:
+  - Sites with slope ≤ 0 show warning message instead of analysis
+  - Still display IP address and air quality data (if available)
+  - Skip pollution impact blurb for these sites
+  - Don't show model configuration, trend analysis, RUL estimate sections
+  - Trend plot replaced with informational message
+- ✅ **Filter change can "rescue" negative-slope sites**: If user confirms filter change and post-change slope becomes positive:
+  - Show full analysis using post-change regression
+  - Display pollution impact blurb if air quality data available
+  - Include in regression analysis for future query runs
+
+**August 7 (Session 1) Updates — Dashboard Enhancements**:
+- ✅ **Linear regression-based urgency**: Urgency status now derived from trend line projection
+  - Current ΔT calculated from linear fit: `current_dt = intercept + slope × current_hours`
+  - When ΔT reaches failure threshold (10°C default) determines RUL days
+  - Offers clearer predictive warning: "filter will fail in X days based on degradation trend"
+- ✅ **Automatic filter change detection**:
+  - Scans max_deltas for sudden drops ≥5°C (symptom of filter replacement)
+  - If detected, presents confirmation UI with estimated filter change time in hours
+  - Allows user to manually adjust the detected time via number input
+- ✅ **Dual regression model for confirmed filter changes**:
+  - Splits data at filter change point into pre-change and post-change segments
+  - Fits separate linear regression to each segment
+  - Displays both trend lines on graph (orange dashed for pre-change, green dashed for post-change)
+  - RUL calculation uses post-change regression (more relevant for current condition)
+- ✅ **Manual filter change input** (for sites without detected changes):
+  - Checkbox to confirm "Yes, filter was changed at this site"
+  - Number input to specify when (in cumulative adjusted hours)
+  - Creates dual regression model with user-specified change time
+- ✅ **Rolling median window reset**:
+  - When filter change is entered, rolling median smoothing applied separately to each segment
+  - Pre-segment: smoothed independently with rolling window
+  - Post-segment: smoothed independently with rolling window (fresh start, no carryover)
+  - Prevents smoothing artifacts across the filter change boundary
+- ✅ **Cleaner layout**:
+  - Model architecture explanation moved to expandable section (default closed)
+  - Control sliders in sidebar: Duration, Fan Speed, Rolling Window, Failure ΔT
+  - Metrics cards show URGENT/WARNING/OK/FAILED counts and average RUL
+  - Sites table displays all key metrics with sortable columns
+  - Individual site expandable cards with dual-regression trend plot
+  - Better visual hierarchy and reduced clutter
+
+**Model Architecture (1-Factor Only with Dual Regression)**:
 
 **Core Methodology**:
 - **Filter degradation tracking**: Analyze max ΔT recorded at each freecooling event to measure filter clogging progression over time
@@ -123,11 +167,17 @@ __pycache__/
   - **Sites WITH air quality data** (full or partial): Display pollution impact context showing how this site's PM2.5/PM10 deviates from population average
   - **Sites WITHOUT air quality data**: Use only max delta values; no pollution context available
 
-**RUL Calculation** (all sites identical):
-- Base equation: ΔT = β₀ + β₁ × (adj_hours)
-- Fitted from max_ΔT values across all freecooling events
+**RUL Calculation** (all sites identical, single or dual model):
+- **Base equation**: ΔT = β₀ + β₁ × (cumulative_adjusted_hours)
+- **Fitted from**: max_ΔT values across all freecooling episodes
+- **For single regression** (no filter change): Uses all data points
+- **For dual regression** (filter change confirmed): Uses only post-filter-change data for RUL calculation
+- **Current ΔT state**: Calculated from trend line at current cumulative hours
+- **RUL projection**: Calculates when trend line will cross failure threshold (10°C default):
+  - hours_to_failure = (failure_ΔT - intercept) / slope
+  - remaining_hours = hours_to_failure - current_hours
+  - rul_days = remaining_hours / avg_adjusted_hours_per_day
 - Uses raw slope (no pollution adjustment multiplier on RUL itself)
-- Linear projection: When ΔT reaches 10°C → RUL in days
 
 **Pollution Impact Context** (informational, sites with air quality data only):
 - Air quality is already baked into the ΔT measurements (polluted air naturally increases ΔT faster at that site)
@@ -139,11 +189,25 @@ __pycache__/
 
 **Key insight**: Pollution effect is already in each site's observed slope; regression contextualizes how this site's pollution compares to the population average.
 
-**Urgency Logic** (based on 1-factor RUL):
-- 🔴 URGENT: RUL < 14 days
-- 🟡 WARNING: RUL 14–30 days
-- 🟢 OK: RUL ≥ 30 days
+**Urgency Logic** (based on linear trend projection):
+- Uses fitted linear regression line: ΔT = intercept + slope × (cumulative_adjusted_hours)
+- **Current ΔT state** = intercept + slope × (current_hours) from trend line
+- **Urgency determined by when ΔT will reach failure threshold** (default 10°C):
+  - 🔴 URGENT: RUL < 14 days (projected to hit threshold within 2 weeks)
+  - 🟡 WARNING: RUL 14–30 days (threshold within 2–4 weeks)
+  - 🟢 OK: RUL ≥ 30 days (at least 30 days until failure)
 - ⚪ Context: Air quality blurb shows if site's pollution would add/subtract days vs typical site
+
+**Filter Change Detection & Dual Regression**:
+- **Automatic detection**: System identifies sudden ≥5°C drops in max ΔT values
+- **If detected**: Dashboard asks for confirmation and estimates the filter change time (in cumulative adjusted hours)
+- **If confirmed**: Fits two separate linear regressions:
+  - Pre-filter-change segment: Trend line before the drop (shown as dashed orange line)
+  - Post-filter-change segment: Trend line after the drop (shown as dashed green line, used for RUL calculation)
+- **Manual override**: User can adjust the filter change time via a number input that updates in real-time
+- **If no detection**: Dashboard provides option to manually input filter change time
+- **Rolling median reset**: When a filter change is entered, rolling median smoothing is applied separately to pre-change and post-change segments (no carryover between segments)
+- **RUL recalculation**: Always uses post-filter-change regression for current RUL projection (most relevant for remaining life)
 
 ## Physics Model: Percentage-Adjusted Hours
 
@@ -158,6 +222,58 @@ adjusted_hours = duration_min × (fan_speed_pct)² / 60
 - 1 hour at 100% fan = 1.0 adjusted hours
 - 1 hour at 50% fan = 0.25 adjusted hours
 - 1 hour at 75% fan = 0.5625 adjusted hours
+
+## Dashboard Architecture
+
+**Data Flow**:
+1. Load pre-computed `sites_data.json` (generated by query_sites.py)
+2. For each site, call `recalculate_rul()` function:
+   - Apply rolling median smoothing to max_deltas (user-adjustable window)
+   - Detect filter changes (≥5°C drops)
+   - If filter change confirmed/manual: split data and fit dual regression
+   - If no filter change: fit single regression to all data
+   - Calculate current ΔT from trend line at current cumulative hours
+   - Project RUL as days until trend line hits failure threshold
+   - Assign urgency (URGENT/WARNING/OK) based on projected RUL
+3. All recalculations happen client-side on Streamlit; original JSON unchanged
+4. User interactions (sliders, checkboxes, number inputs) trigger instant recalculation
+
+**Stateful Elements (session_state)**:
+- `fc_confirm_{site_id}`: Boolean for filter change confirmation
+- `fc_hours_{site_id}`: Filter change time (cumulative adjusted hours)
+- `expand_{site_id}`: Track which site cards are expanded
+- `fc_adjust_{site_id}`: Temporary input value for manual filter change time
+
+## Dashboard User Interactions
+
+**Main Controls (Sidebar)**:
+- **Min episode duration** (10–120 min, default 30): Filters out short episodes; higher values use only sustained cooling periods
+- **Min fan speed** (80–100%, default 95%): Only count episodes where fan runs above this threshold
+- **Rolling median window** (3–10 episodes, default 5): Smooths noisy max_ΔT values; resets at filter change boundaries
+- **ΔT at filter failure** (5–20°C, default 10°C): Adjusts failure threshold; updates urgency/RUL dynamically
+
+**Site Display & Filtering**:
+- **Urgency filter**: View by URGENT/WARNING/OK/UNKNOWN (multi-select)
+- **Search**: Filter by site ID or name (partial match)
+- **Sort options**: By RUL (ascending), Site Name (A-Z), or Urgency + RUL
+
+**Per-Site Expandable Cards**:
+- **Filter change detection UI**:
+  - If 5°C+ drop detected: Shows message with episode index, hours, before/after ΔT values
+    - Checkbox: "Confirm filter change at this site" — triggers dual regression
+    - Number input: "Adjust hours" — allows manual correction of detected time
+  - If no drop detected: Offers manual entry via checkbox + number input
+- **Trend plot**:
+  - Blue dashed line: Single regression fit (no filter change)
+  - Orange dashed line: Pre-filter-change regression (if dual model)
+  - Green dashed line: Post-filter-change regression (if dual model)
+  - Red dotted horizontal: Failure ΔT threshold line
+  - Gray dotted vertical: Filter change point (if present)
+
+**Model & Equation Display**:
+- All sites show their linear regression equation: ΔT = β₀ + β₁ × (adjusted_hours)
+- Current ΔT state calculated from this line
+- Model architecture explanation in expandable section (covers full methodology, adjusted hours physics, urgency logic, pollution impact)
 
 ## Deployment
 
@@ -238,6 +354,30 @@ adjusted_hours = duration_min × (fan_speed_pct)² / 60
   }
 }
 ```
+
+## Data Quality & Insufficient Data Handling
+
+**Negative or Flat Slopes (No Clear Degradation Trend)**:
+- **Definition**: Sites with slope ≤ 0 lack clear filter degradation progression
+- **Root causes**: 
+  - Filter recently installed or replaced (baseline data)
+  - Filter degradation data too noisy or inconsistent
+  - Site running under variable conditions (humidity, temperature swings)
+  - Insufficient freecooling episodes for trend fitting
+- **Dashboard treatment**:
+  - Show "Data Insufficient for Analysis" warning message
+  - Display IP address for identification
+  - Show air quality data if available (for reference)
+  - Skip RUL projection, trend analysis, and pollution impact blurb
+  - Offer filter change confirmation option (if post-change slope becomes positive, site becomes analyzable)
+- **Regression analysis exclusion**:
+  - Sites with slope ≤ 0 excluded from air quality regression (query_sites.py)
+  - Prevents negative slopes from biasing pollution coefficient estimates
+  - Only sites with positive slopes used to fit: slope ~ adjusted_hours ± PM10 ± PM2.5
+- **Future monitoring**:
+  - Re-query negative-slope sites in subsequent runs
+  - If degradation trend emerges, site automatically becomes analyzable
+  - Users can manually input filter change to "reset" baseline
 
 ## Known Issues & Mitigations
 

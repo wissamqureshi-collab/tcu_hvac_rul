@@ -629,11 +629,13 @@ def query_all_sites_parallel(sites, password, weatherbit_token=None, max_workers
 def run_air_quality_regression(results):
     """
     Run flexible linear regression: Slope ~ adjusted_fan_hours_per_day + [PM10] + [PM2.5]
+    Excludes sites with negative slopes (insufficient data for analysis).
     Returns regression results dict or None if insufficient data.
     """
     regression_data = []
     for site_id, result in results.items():
         if (result.get('success') and result.get('slope') is not None and
+            result.get('slope') > 0 and  # Exclude negative slopes: insufficient data
             result.get('avg_adjusted_hours_per_day') is not None):
             regression_data.append({
                 'site_id': site_id,
@@ -643,8 +645,13 @@ def run_air_quality_regression(results):
                 'pm25': result.get('air_quality', {}).get('pm25') if result.get('air_quality') else None,
             })
 
+    # Count excluded sites (negative slopes)
+    excluded_count = sum(1 for r in results.values() if r.get('success') and r.get('slope') is not None and r.get('slope') <= 0)
+    if excluded_count > 0:
+        logging.info(f"Excluded {excluded_count} sites with non-positive slopes from regression analysis (insufficient data)")
+
     if len(regression_data) < 2:
-        logging.warning(f"Insufficient sites with slope data for regression ({len(regression_data)} sites)")
+        logging.warning(f"Insufficient sites with positive slope for regression ({len(regression_data)} sites with positive slope out of {len(results)} total)")
         return None
 
     slopes = np.array([d['slope'] for d in regression_data])
