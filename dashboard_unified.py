@@ -84,6 +84,19 @@ st.markdown("""
         color: #a5b4fc !important;
     }
 
+    /* Main content number input styling */
+    .stNumberInput input {
+        color: #ffffff !important;
+        background-color: #2d2d2d !important;
+        border-color: #4f7cff !important;
+    }
+    .stNumberInput input::placeholder {
+        color: #a5a5a5 !important;
+    }
+    .stNumberInput label {
+        color: #1a202c !important;
+    }
+
     /* Main content - explicit dark text */
     body,
     .stApp,
