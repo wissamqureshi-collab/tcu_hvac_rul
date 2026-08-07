@@ -344,10 +344,11 @@ def load_sites_data(json_file='sites_data.json'):
     return data
 
 
-def recalculate_rul(site_result, new_failure_dt):
+def recalculate_rul(site_result, new_failure_dt, rolling_window=1):
     """
     Recalculate RUL for a site using a custom failure ΔT threshold.
     Uses trend line to determine current ΔT state.
+    Applies rolling median filter to smooth noisy max_deltas.
     Returns updated site_result with new rul_days and urgency.
     """
     site_copy = site_result.copy()
@@ -355,10 +356,28 @@ def recalculate_rul(site_result, new_failure_dt):
     if not site_result.get('success'):
         return site_copy
 
-    # Use trend line to get current ΔT (not noisy last episode)
-    slope = site_result.get('slope', 0)
-    r2 = site_result.get('r2', 0)
-    baseline_dt = site_result.get('baseline_dt', 0)
+    # Apply rolling median filter to smooth max_deltas
+    max_deltas = site_result.get('max_deltas', [])
+    cumul_hours = site_result.get('cumulative_adjusted_hours', [])
+
+    if rolling_window > 1 and len(max_deltas) >= rolling_window:
+        max_deltas_smoothed = []
+        for i in range(len(max_deltas)):
+            start = max(0, i - rolling_window // 2)
+            end = min(len(max_deltas), i + rolling_window // 2 + 1)
+            median_val = float(np.median(max_deltas[start:end]))
+            max_deltas_smoothed.append(median_val)
+        max_deltas = max_deltas_smoothed
+
+    # Refit trend line with smoothed data
+    if len(max_deltas) >= 2 and len(cumul_hours) == len(max_deltas):
+        coeffs = np.polyfit(cumul_hours, max_deltas, 1)
+        slope, intercept = coeffs[0], coeffs[1]
+        baseline_dt = max_deltas[0]
+    else:
+        slope = site_result.get('slope', 0)
+        baseline_dt = site_result.get('baseline_dt', 0)
+
     current_hours = site_result.get('total_adjusted_hours', 0)
 
     # Calculate current_dt from trend line: baseline_dt + slope * hours
@@ -530,7 +549,7 @@ st.markdown("""
 
 sites_recalc = {}
 for site_id, site_result in sites.items():
-    sites_recalc[site_id] = recalculate_rul(site_result, failure_dt)
+    sites_recalc[site_id] = recalculate_rul(site_result, failure_dt, rolling_window)
 
 success_count = len([s for s in sites_recalc.values() if s.get('success')])
 st.markdown(f"<h2 style='color: #1a202c; margin-bottom: 1.5rem;'>Status — {success_count} Sites Analyzed</h2>", unsafe_allow_html=True)
