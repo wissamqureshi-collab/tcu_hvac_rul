@@ -968,9 +968,14 @@ Readings</strong><br>
                 with col_fc1:
                     session_key = f"fc_confirm_{site_id}"
                     expand_key = f"expand_{site_id}"
-                    def on_checkbox_change():
-                        st.session_state[f"fc_hours_{site_id}"] = fc['hours']
-                        st.session_state[expand_key] = True  # Keep expander open
+                    hours_key = f"fc_hours_{site_id}"
+                    fc_hours_value = fc['hours']
+
+                    # Use default params to capture variables properly in closure
+                    def on_checkbox_change(sid=site_id, hk=hours_key, fh=fc_hours_value, ek=expand_key):
+                        st.session_state[hk] = fh
+                        st.session_state[ek] = True  # Keep expander open
+
                     confirmed = st.checkbox(
                         f"Confirm filter change at this site",
                         value=st.session_state.get(session_key, False),
@@ -982,16 +987,20 @@ Readings</strong><br>
                     if st.session_state.get(session_key, False):
                         adjust_key = f"fc_adjust_{site_id}"
                         expand_key = f"expand_{site_id}"
-                        def on_hours_change():
-                            st.session_state[expand_key] = True  # Keep expander open
+                        hours_key = f"fc_hours_{site_id}"
+
+                        # Use default params to capture variables properly in closure
+                        def on_hours_change(ek=expand_key):
+                            st.session_state[ek] = True  # Keep expander open
+
                         adjusted_hours = st.number_input(
                             f"Adjust hours",
-                            value=st.session_state.get(f"fc_hours_{site_id}", fc['hours']),
+                            value=st.session_state.get(hours_key, fc['hours']),
                             step=10.0,
                             key=adjust_key,
                             on_change=on_hours_change
                         )
-                        st.session_state[f"fc_hours_{site_id}"] = adjusted_hours
+                        st.session_state[hours_key] = adjusted_hours
                         st.caption(f"Filter changed at {adjusted_hours:.0f} hours")
 
             with col2:
