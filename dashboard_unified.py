@@ -377,14 +377,6 @@ def recalculate_rul(site_result, new_failure_dt):
         site_copy['pct_life'] = 100
         return site_copy
 
-    # Check if filter has ever exceeded threshold (max observed ΔT)
-    max_deltas = site_result.get('max_deltas', [])
-    if max_deltas and max(max_deltas) >= new_failure_dt:
-        site_copy['rul_days'] = 0
-        site_copy['urgency'] = 'URGENT'
-        site_copy['pct_life'] = 100
-        return site_copy
-
     if r2 < 0.25:
         site_copy['rul_days'] = 999
         site_copy['urgency'] = 'OK'
