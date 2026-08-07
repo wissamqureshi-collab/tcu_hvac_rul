@@ -377,12 +377,6 @@ def recalculate_rul(site_result, new_failure_dt):
         site_copy['pct_life'] = 100
         return site_copy
 
-    if r2 < 0.25:
-        site_copy['rul_days'] = 999
-        site_copy['urgency'] = 'OK'
-        site_copy['pct_life'] = 0
-        return site_copy
-
     # Convert to days using avg hours per day
     avg_hours_per_day = site_result.get('avg_adjusted_hours_per_day', 1.0)
     hours_to_failure = (new_failure_dt - intercept) / slope if slope > 0 else 999
