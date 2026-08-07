@@ -958,15 +958,29 @@ Readings</strong><br>
                 col_fc1, col_fc2 = st.columns([1, 1])
                 with col_fc1:
                     session_key = f"fc_confirm_{site_id}"
-                    confirmed = st.checkbox(f"Confirm filter change at this site", value=st.session_state.get(session_key, False), key=session_key)
+                    def on_checkbox_change():
+                        st.session_state[f"fc_hours_{site_id}"] = fc['hours']
+                    confirmed = st.checkbox(
+                        f"Confirm filter change at this site",
+                        value=st.session_state.get(session_key, False),
+                        key=session_key,
+                        on_change=on_checkbox_change
+                    )
 
                 with col_fc2:
                     if st.session_state.get(session_key, False):
                         adjust_key = f"fc_adjust_{site_id}"
-                        adjusted_hours = st.number_input(f"Adjust hours", value=fc['hours'], step=10.0, key=adjust_key)
-                        if adjusted_hours != fc['hours']:
-                            st.session_state[f"fc_hours_{site_id}"] = adjusted_hours
-                        st.caption(f"Filter changed at {st.session_state.get(f'fc_hours_{site_id}', adjusted_hours):.0f} hours")
+                        def on_hours_change():
+                            pass  # Session state is automatically updated by Streamlit
+                        adjusted_hours = st.number_input(
+                            f"Adjust hours",
+                            value=st.session_state.get(f"fc_hours_{site_id}", fc['hours']),
+                            step=10.0,
+                            key=adjust_key,
+                            on_change=on_hours_change
+                        )
+                        st.session_state[f"fc_hours_{site_id}"] = adjusted_hours
+                        st.caption(f"Filter changed at {adjusted_hours:.0f} hours")
 
             with col2:
                 max_deltas = result.get('max_deltas', [])
