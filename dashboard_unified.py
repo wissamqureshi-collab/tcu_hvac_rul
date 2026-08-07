@@ -358,11 +358,11 @@ def recalculate_rul(site_result, new_failure_dt):
     # Use trend line to get current ΔT (not noisy last episode)
     slope = site_result.get('slope', 0)
     r2 = site_result.get('r2', 0)
-    intercept = site_result.get('intercept', 0)
+    baseline_dt = site_result.get('baseline_dt', 0)
     current_hours = site_result.get('total_adjusted_hours', 0)
 
-    # Calculate current_dt from trend line
-    current_dt = intercept + slope * current_hours if current_hours >= 0 else intercept
+    # Calculate current_dt from trend line: baseline_dt + slope * hours
+    current_dt = baseline_dt + slope * current_hours if current_hours >= 0 else baseline_dt
 
     if slope <= 0:
         site_copy['rul_days'] = 999
@@ -379,14 +379,14 @@ def recalculate_rul(site_result, new_failure_dt):
 
     # Convert to days using avg hours per day
     avg_hours_per_day = site_result.get('avg_adjusted_hours_per_day', 1.0)
-    hours_to_failure = (new_failure_dt - intercept) / slope if slope > 0 else 999
+    hours_to_failure = (new_failure_dt - baseline_dt) / slope if slope > 0 else 999
     remaining_hours = hours_to_failure - current_hours
     rul_days = remaining_hours / avg_hours_per_day if avg_hours_per_day > 0 else 999
     site_copy['rul_days'] = max(0, rul_days)
 
     # Calculate % filter life based on trend line values
-    dt_range = new_failure_dt - intercept
-    dt_consumed = current_dt - intercept
+    dt_range = new_failure_dt - baseline_dt
+    dt_consumed = current_dt - baseline_dt
     pct_life = max(0, min(100, (dt_consumed / dt_range * 100))) if dt_range > 0 else 0
     site_copy['pct_life'] = pct_life
 
