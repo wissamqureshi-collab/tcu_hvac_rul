@@ -390,40 +390,70 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
 
     site_copy['filter_change_detected'] = filter_change_detected
 
-    if rolling_window > 1 and len(max_deltas) >= rolling_window:
-        max_deltas_smoothed = []
-        for i in range(len(max_deltas)):
-            start = max(0, i - rolling_window // 2)
-            end = min(len(max_deltas), i + rolling_window // 2 + 1)
-            median_val = float(np.median(max_deltas[start:end]))
-            max_deltas_smoothed.append(median_val)
-        max_deltas = max_deltas_smoothed
-
     # Refit trend line with smoothed data (or split if filter change confirmed)
     intercept = None
     if filter_change_hours is not None and len(max_deltas) >= 2 and len(cumul_hours) == len(max_deltas):
         # Split at confirmed filter change point
         split_idx = next((i for i, h in enumerate(cumul_hours) if h >= filter_change_hours), None)
         if split_idx and split_idx > 0 and split_idx < len(max_deltas) - 1:
+            # Apply rolling median separately to each segment (don't carry over)
+            pre_max_deltas = max_deltas[:split_idx]
+            post_max_deltas = max_deltas[split_idx:]
+
+            if rolling_window > 1 and len(pre_max_deltas) >= rolling_window:
+                pre_smoothed = []
+                for i in range(len(pre_max_deltas)):
+                    start = max(0, i - rolling_window // 2)
+                    end = min(len(pre_max_deltas), i + rolling_window // 2 + 1)
+                    median_val = float(np.median(pre_max_deltas[start:end]))
+                    pre_smoothed.append(median_val)
+                pre_max_deltas = pre_smoothed
+
+            if rolling_window > 1 and len(post_max_deltas) >= rolling_window:
+                post_smoothed = []
+                for i in range(len(post_max_deltas)):
+                    start = max(0, i - rolling_window // 2)
+                    end = min(len(post_max_deltas), i + rolling_window // 2 + 1)
+                    median_val = float(np.median(post_max_deltas[start:end]))
+                    post_smoothed.append(median_val)
+                post_max_deltas = post_smoothed
+
             # Fit to post-filter-change data (more relevant for current RUL)
-            coeffs = np.polyfit(cumul_hours[split_idx:], max_deltas[split_idx:], 1)
+            coeffs = np.polyfit(cumul_hours[split_idx:], post_max_deltas, 1)
             slope, intercept = coeffs[0], coeffs[1]
-            baseline_dt = max_deltas[split_idx]
+            baseline_dt = post_max_deltas[0]
             site_copy['filter_change_hours'] = float(filter_change_hours)
             site_copy['dual_trend'] = {
                 'split_hours': float(filter_change_hours),
-                'pre_split_coeffs': np.polyfit(cumul_hours[:split_idx], max_deltas[:split_idx], 1).tolist() if split_idx > 1 else None,
+                'pre_split_coeffs': np.polyfit(cumul_hours[:split_idx], pre_max_deltas, 1).tolist() if split_idx > 1 else None,
                 'post_split_coeffs': [float(slope), float(intercept)]
             }
         else:
             # Can't split, use whole dataset
-            coeffs = np.polyfit(cumul_hours, max_deltas, 1)
+            smoothed_deltas = max_deltas
+            if rolling_window > 1 and len(max_deltas) >= rolling_window:
+                smoothed_deltas = []
+                for i in range(len(max_deltas)):
+                    start = max(0, i - rolling_window // 2)
+                    end = min(len(max_deltas), i + rolling_window // 2 + 1)
+                    median_val = float(np.median(max_deltas[start:end]))
+                    smoothed_deltas.append(median_val)
+            coeffs = np.polyfit(cumul_hours, smoothed_deltas, 1)
             slope, intercept = coeffs[0], coeffs[1]
-            baseline_dt = max_deltas[0]
+            baseline_dt = smoothed_deltas[0]
     elif len(max_deltas) >= 2 and len(cumul_hours) == len(max_deltas):
-        coeffs = np.polyfit(cumul_hours, max_deltas, 1)
+        # No filter change - apply rolling median to entire dataset
+        smoothed_deltas = max_deltas
+        if rolling_window > 1 and len(max_deltas) >= rolling_window:
+            smoothed_deltas = []
+            for i in range(len(max_deltas)):
+                start = max(0, i - rolling_window // 2)
+                end = min(len(max_deltas), i + rolling_window // 2 + 1)
+                median_val = float(np.median(max_deltas[start:end]))
+                smoothed_deltas.append(median_val)
+        coeffs = np.polyfit(cumul_hours, smoothed_deltas, 1)
         slope, intercept = coeffs[0], coeffs[1]
-        baseline_dt = max_deltas[0]
+        baseline_dt = smoothed_deltas[0]
     else:
         slope = site_result.get('slope', 0)
         intercept = site_result.get('intercept', 0)
