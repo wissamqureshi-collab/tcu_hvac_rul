@@ -423,6 +423,10 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
             slope, intercept = coeffs[0], coeffs[1]
             baseline_dt = post_max_deltas[0]
             site_copy['filter_change_hours'] = float(filter_change_hours)
+            # Update site_copy with post-filter regression values for display
+            site_copy['slope'] = float(slope)
+            site_copy['intercept_recalc'] = float(intercept)
+            site_copy['baseline_dt'] = float(baseline_dt)
             site_copy['dual_trend'] = {
                 'split_hours': float(filter_change_hours),
                 'pre_split_coeffs': np.polyfit(cumul_hours[:split_idx], pre_max_deltas, 1).tolist() if split_idx > 1 else None,
@@ -441,6 +445,10 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
             coeffs = np.polyfit(cumul_hours, smoothed_deltas, 1)
             slope, intercept = coeffs[0], coeffs[1]
             baseline_dt = smoothed_deltas[0]
+            # Update site_copy with recalculated values for display
+            site_copy['slope'] = float(slope)
+            site_copy['intercept_recalc'] = float(intercept)
+            site_copy['baseline_dt'] = float(baseline_dt)
     elif len(max_deltas) >= 2 and len(cumul_hours) == len(max_deltas):
         # No filter change - apply rolling median to entire dataset
         smoothed_deltas = max_deltas
