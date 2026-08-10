@@ -345,7 +345,7 @@ st.markdown("""
 
 @st.cache_data(ttl=300)
 def load_sites_data(json_file='sites_data.json'):
-    """Load aggregated site data from JSON."""
+    """Load aggregated site data from JSON, with preprocessing for CSV-based sites."""
     if not Path(json_file).exists():
         st.error(f"Data file not found: {json_file}")
         st.info("Run `python3 query_sites.py` on the Bell laptop to generate this file.")
@@ -353,6 +353,26 @@ def load_sites_data(json_file='sites_data.json'):
 
     with open(json_file) as f:
         data = json.load(f)
+
+    # Preprocess CSV-based sites (W2567, etc.)
+    for site_id, site_result in data.get('sites', {}).items():
+        # Convert W2567's native filter_change format to dashboard's expected format
+        if site_result.get('data_source') == 'csv' and site_result.get('filter_change'):
+            fc_meta = site_result['filter_change']
+            if fc_meta.get('detected'):
+                # Convert to filter_change_detected format
+                site_result['filter_change_detected'] = {
+                    'episode_idx': fc_meta.get('episode_index'),
+                    'hours': fc_meta.get('cumulative_hours')[fc_meta.get('episode_index')] if fc_meta.get('episode_index') is not None and site_result.get('cumulative_adjusted_hours') else 0,
+                    'drop': (fc_meta.get('pre_change_delta_t') or 0) - (fc_meta.get('post_change_delta_t') or 0),
+                    'before_dt': fc_meta.get('pre_change_delta_t'),
+                    'after_dt': fc_meta.get('post_change_delta_t')
+                }
+                # For CSV sites with insufficient data, still populate filter_change_detected
+                if not site_result.get('success') and site_result.get('cumulative_adjusted_hours'):
+                    fc_detected = site_result['filter_change_detected']
+                    if fc_meta.get('episode_index') and fc_meta.get('episode_index') < len(site_result.get('cumulative_adjusted_hours', [])):
+                        fc_detected['hours'] = float(site_result['cumulative_adjusted_hours'][fc_meta.get('episode_index')])
 
     return data
 
@@ -880,13 +900,20 @@ st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem
 
 detail_sites = []
 for site_id, result in sorted(sites_recalc.items()):
-    if not result.get('success'):
+    # Show successful sites OR CSV sites with filter changes (even if insufficient data)
+    is_successful = result.get('success')
+    has_filter_change = result.get('filter_change_detected') or result.get('data_source') == 'csv'
+
+    if not is_successful and not has_filter_change:
         continue
-    if result.get('urgency') not in urgency_filter:
+
+    if is_successful and result.get('urgency') not in urgency_filter:
         continue
+
     search_str = f"{site_id} {result.get('site_name', '')}".lower()
     if search_term.lower() and search_term.lower() not in search_str:
         continue
+
     detail_sites.append((site_id, result))
 
 detail_sites = detail_sites[:20]
@@ -901,8 +928,18 @@ else:
         color_map = {'URGENT': '🔴', 'WARNING': '🟡', 'OK': '🟢', 'UNKNOWN': '⚪'}
         emoji = color_map.get(urgency, '❓')
 
-        rul_str = f"{rul:.0f}d" if isinstance(rul, float) else str(rul)
-        expander_label = f"{emoji} {site_id} — {result.get('site_name', '?')} (RUL: {rul_str})"
+        # For CSV sites without RUL, show filter change status instead
+        if result.get('data_source') == 'csv' and not result.get('success'):
+            if result.get('filter_change_detected'):
+                rul_str = "📊 Filter Change Detected"
+                emoji = "📊"
+            else:
+                rul_str = "⚠️ Insufficient Data"
+                emoji = "⚠️"
+        else:
+            rul_str = f"{rul:.0f}d" if isinstance(rul, float) else str(rul)
+
+        expander_label = f"{emoji} {site_id} — {result.get('site_name', '?')} ({rul_str})"
 
         # Pre-format values for site details
         slope_val = f"{result.get('slope', 0):.4f}" if isinstance(result.get('slope'), (int, float)) else '?'
