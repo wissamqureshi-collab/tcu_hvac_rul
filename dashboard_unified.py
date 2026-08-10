@@ -360,19 +360,21 @@ def load_sites_data(json_file='sites_data.json'):
         if site_result.get('data_source') == 'csv' and site_result.get('filter_change'):
             fc_meta = site_result['filter_change']
             if fc_meta.get('detected'):
+                # Get the hours from cumulative_adjusted_hours array at the episode index
+                cumul_hours = site_result.get('cumulative_adjusted_hours', [])
+                episode_idx = fc_meta.get('episode_index')
+                hours_at_change = 0.0
+                if episode_idx is not None and isinstance(cumul_hours, list) and episode_idx < len(cumul_hours):
+                    hours_at_change = float(cumul_hours[episode_idx])
+
                 # Convert to filter_change_detected format
                 site_result['filter_change_detected'] = {
-                    'episode_idx': fc_meta.get('episode_index'),
-                    'hours': fc_meta.get('cumulative_hours')[fc_meta.get('episode_index')] if fc_meta.get('episode_index') is not None and site_result.get('cumulative_adjusted_hours') else 0,
+                    'episode_idx': episode_idx,
+                    'hours': hours_at_change,
                     'drop': (fc_meta.get('pre_change_delta_t') or 0) - (fc_meta.get('post_change_delta_t') or 0),
                     'before_dt': fc_meta.get('pre_change_delta_t'),
                     'after_dt': fc_meta.get('post_change_delta_t')
                 }
-                # For CSV sites with insufficient data, still populate filter_change_detected
-                if not site_result.get('success') and site_result.get('cumulative_adjusted_hours'):
-                    fc_detected = site_result['filter_change_detected']
-                    if fc_meta.get('episode_index') and fc_meta.get('episode_index') < len(site_result.get('cumulative_adjusted_hours', [])):
-                        fc_detected['hours'] = float(site_result['cumulative_adjusted_hours'][fc_meta.get('episode_index')])
 
     return data
 
