@@ -19,8 +19,9 @@ pip install -r requirements.txt
 | File | Purpose | Location |
 |------|---------|----------|
 | `query_sites.py` | Parallel SSH + InfluxDB queries (1020 sites); computes RUL with air quality | `/home/aillm/hvac_rul_project/` |
-| `dashboard_unified.py` | Streamlit RUL visualization (max ΔT vs adjusted hours); dynamic threshold slider | **`/home/aillm/` (root, used by Streamlit Cloud)** |
-| `sites_data.json` | Output from latest query run (pre-computed, read by dashboard) | **`/home/aillm/` (root, committed to GitHub)** |
+| `w2567_analysis.py` | CSV-based analysis for sites without SSH access (e.g., W2567 Derry Road Milton) | `/home/aillm/hvac_rul_project/` |
+| `dashboard_unified.py` | Streamlit RUL visualization (max ΔT vs adjusted hours); dynamic threshold slider; supports SSH & CSV sites | **`/home/aillm/` (root, used by Streamlit Cloud)** |
+| `sites_data.json` | Output from latest query run + CSV analyses (pre-computed, read by dashboard) | **`/home/aillm/` (root, committed to GitHub)** |
 | `rul_engine.py` | Archive: per-site RUL service (replaced by unified query approach) | `/home/aillm/hvac_rul_project/` |
 | `requirements.txt` | Dependencies (streamlit, plotly, pandas, paramiko, numpy, scipy, requests) | `/home/aillm/hvac_rul_project/` |
 
@@ -175,6 +176,41 @@ __pycache__/
   - Sites table displays all key metrics with sortable columns
   - Individual site expandable cards with dual-regression trend plot
   - Better visual hierarchy and reduced clutter
+
+**August 10 (Current Session) Updates — W2567 CSV Analysis & Dashboard Support**:
+- ✅ **New CSV-based analysis module** (w2567_analysis.py):
+  - Analyzes minute-level HVAC data without SSH access
+  - Robust episode extraction from dense time-series (129k rows over 3 months)
+  - Auto-detects filter changes as sudden ΔT drops (≥5°C)
+  - Handles noisy/variable fan speed with configurable thresholds
+- ✅ **W2567 (Derry Road Milton, Mississauga) analysis complete**:
+  - **Data span**: May 12 – Aug 10, 2026 (3 months, minute-level CSV)
+  - **Episodes extracted**: 49 sustained freecooling periods (fan ≥95%, free-cool active, ≥30 min)
+  - **Adjusted cooling hours**: 516.9 total, averaging 5.74 hrs/day
+  - **Filter change detected**: Episode 2 (May 19 at 12:10 UTC)
+    - Before: 29.0°C (clogged filter nearing end-of-life)
+    - After: 7.5°C (clean replacement filter)
+    - Drop: 21.5°C (clear maintenance event)
+  - **Post-change data quality**: 47 episodes, ΔT ranging 3.6–9.5°C
+  - **Analysis status**: Insufficient degradation yet (R²=0.0001, slope≈0)
+    - New filter needs 1-2 more months for trend detection
+    - Recommendation: Monitor over next quarterly run
+  - **Coordinates**: 43.541944, -79.826389 (Mississauga, ON)
+  - **Status note**: "Filter change detected. Post-change data insufficient for RUL yet; monitor over next 1-2 months for degradation trend."
+- ✅ **Dashboard support for CSV sites**:
+  - Displays CSV-based sites (data_source='csv') in detail view even without RUL
+  - Shows filter change metadata in expandable cards
+  - Includes all episode data (timestamps, cumulative hours, max deltas) for trend visualization
+  - Converts W2567's native filter_change schema to dashboard's event format
+  - "📊 Filter Change Detected" label in site cards for easy identification
+  - Air quality context available if site has coordinates
+- ✅ **Workflow for adding CSV sites**:
+  1. Upload CSV to GitHub repo with naming: `{SITE_ID}_months_info.csv`
+  2. Create site metadata (IP, lat/lon, address)
+  3. Run w2567_analysis.py locally to generate JSON output
+  4. Merge result into sites_data.json
+  5. Dashboard auto-displays on next page load
+  6. No SSH credentials required
 
 **Model Architecture (1-Factor Only with Dual Regression)**:
 
@@ -405,6 +441,97 @@ adjusted_hours = duration_min × (fan_speed_pct)² / 60
   }
 }
 ```
+
+## w2567_analysis.py — CSV-Based Site Analysis
+
+**Purpose**: Analyze HVAC sites with no SSH access but available minute-level CSV data.
+
+**Usage**:
+```bash
+python3 w2567_analysis.py  # Fetches CSV from GitHub, analyzes, merges into sites_data.json
+```
+
+**Expected CSV Format**:
+```
+System Time,System Current Mode,Indoor Temperature,Outdoor Temperature,Supply Air Temperature,Delta_T,Free-cool Mode,Supply Fan Speed,Damper Position,Damper Status,Compressor Status,Heater Status,Supply Fan 1 Run Time
+2026-05-12 15:27:01,6,36.6,24.8,33.1,11.8,1.0,100.0,...
+2026-05-12 15:28:01,6,36.7,25.4,33.2,11.2,1.0,99.0,...
+```
+
+**Column Requirements**:
+- **System Time**: DateTime (will be parsed with pd.to_datetime)
+- **Delta_T**: Temperature difference (°C) — core metric for filter clogging
+- **Free-cool Mode**: Binary (0/1/True/False) — identifies freecooling operation
+- **Supply Fan Speed**: Percentage (0–100%) — used for percentage-adjusted hours calculation
+- **Optional**: Damper Position, Heater Status (logged but not used for RUL)
+
+**Workflow**:
+1. **Load CSV from GitHub**: Tries GitHub raw content URL, falls back to local path
+2. **Parse & clean**: Handle missing values, normalize column names, drop unused fields
+3. **Extract episodes**: Groups consecutive rows where fan ≥95% AND free-cool=1
+   - Minimum duration: 30 min
+   - Records: start_time, end_time, max_ΔT, avg_fan_speed, adjusted_hours
+4. **Fit regression**: Linear fit of max_ΔT vs cumulative adjusted hours
+   - Detects filter changes as ≥5°C drops in max_ΔT
+   - If post-change data too flat: Falls back to full history with filter_change notation
+   - Flag sites with insufficient trend (slope ≤ 0 or low R²)
+5. **Fetch air quality**: Weatherbit 90-day historical if coordinates available
+   - Chunked into 30-day requests to avoid API "Request too large"
+   - Calculates PM2.5/PM10 averages
+6. **Output JSON**: Merges into sites_data.json with schema:
+   ```json
+   {
+     "site_id": "W2567",
+     "site_name": "DERRY ROAD MILTON",
+     "ip": "10.252.61.101",
+     "data_source": "csv",
+     "success": false,  // If insufficient degradation trend
+     "episodes_count": 49,
+     "max_deltas": [...],
+     "cumulative_adjusted_hours": [...],
+     "episode_start_times": [...],
+     "filter_change": {
+       "detected": true,
+       "episode_index": 2,
+       "change_time": "2026-05-19T12:10:00",
+       "pre_change_delta_t": 29.0,
+       "post_change_delta_t": 7.5,
+       ...
+     },
+     "analysis_error": "...",
+     "analysis_note": "..."
+   }
+   ```
+
+**Configuration** (tunable in script):
+- `FAN_THRESHOLD = 95.0` — Minimum fan % to trigger episode
+- `MIN_EPISODE_MINUTES = 30.0` — Minimum episode duration
+- `R2_THRESHOLD = 0.25` — Minimum R² to estimate RUL
+- `FAILURE_DT = 10.0` — ΔT threshold for filter failure
+- `WEATHERBIT_API_KEY = "..."` — Loaded from env or hardcoded
+
+**Adding New CSV Sites**:
+1. Upload CSV to GitHub repo: `{SITE_ID}_months_info.csv`
+2. Create site metadata in script (or parameterize):
+   ```python
+   SITE_CONFIG = {
+       "site_id": "W9999",
+       "site_name": "Example Site",
+       "ip": "192.168.x.x",
+       "latitude": 45.123,
+       "longitude": -75.456,
+       "address": "123 Main St"
+   }
+   ```
+3. Run: `python3 w2567_analysis.py`
+4. Script auto-merges into sites_data.json
+5. Dashboard displays on next load
+
+**Dashboard Integration**:
+- CSV sites show even with `success=false` if they have filter changes
+- Filter change detected label: "📊 Filter Change Detected"
+- Displays episode data, cumulative hours, max deltas for trend visualization
+- Air quality context available if coordinates provided
 
 ## Data Quality & Insufficient Data Handling
 
