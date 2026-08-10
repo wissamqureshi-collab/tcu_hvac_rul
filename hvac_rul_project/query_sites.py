@@ -416,6 +416,7 @@ def compute_rul_mode3(episodes, pollution_effect=None):
 
     max_deltas = [ep['max_dt'] for ep in episodes]
     adjusted_runtime_hours = [ep['adjusted_runtime_hours'] for ep in episodes]
+    episode_start_times = [ep['start_time'].isoformat() for ep in episodes]
 
     # Cumulative adjusted runtime hours
     cumulative_hours = np.cumsum(adjusted_runtime_hours)
@@ -483,6 +484,7 @@ def compute_rul_mode3(episodes, pollution_effect=None):
     return {
         'max_deltas': [float(x) for x in max_deltas],
         'cumulative_adjusted_hours': [float(x) for x in cumulative_hours],
+        'episode_start_times': episode_start_times,
         'r2': float(r2),
         'intercept': float(intercept),
         'slope': float(slope),
@@ -497,6 +499,8 @@ def compute_rul_mode3(episodes, pollution_effect=None):
         'pct_life': float(pct_life),
         'avg_adjusted_hours_per_day': float(avg_hours_per_day),
         'total_adjusted_hours': float(current_hours),
+        'query_start_date': episodes[0]['start_time'].date().isoformat(),
+        'query_end_date': episodes[-1]['start_time'].date().isoformat(),
         'last_episode_time': episodes[-1]['start_time'].isoformat(),
     }
 
