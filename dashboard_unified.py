@@ -859,8 +859,8 @@ for site_id, result in sites_recalc.items():
     has_pollution_effect = result.get('pollution_effect') is not None
     pollution_indicator = f"({result.get('pollution_effect'):+.3f})" if has_pollution_effect else "—"
 
-    # Air quality info
-    aq = result.get('air_quality', {})
+    # Air quality info (handle None values)
+    aq = result.get('air_quality') or {}
     pm10_str = f"{aq.get('pm10', 0):.1f}" if aq.get('pm10') else "—"
     pm25_str = f"{aq.get('pm25', 0):.1f}" if aq.get('pm25') else "—"
 
@@ -957,8 +957,8 @@ else:
         failure_dt_val = f"{result.get('failure_dt', 0):.1f}" if isinstance(result.get('failure_dt'), (int, float)) else '?'
         baseline_dt_val = f"{result.get('baseline_dt', 0):.1f}" if isinstance(result.get('baseline_dt'), (int, float)) else '?'
 
-        # Pre-format air quality values
-        aq = result.get('air_quality', {})
+        # Pre-format air quality values (handle None values)
+        aq = result.get('air_quality') or {}
         pm25_val = f"{aq.get('pm25', 0):.1f}" if isinstance(aq.get('pm25'), (int, float)) else '?'
         pm10_val = f"{aq.get('pm10', 0):.1f}" if isinstance(aq.get('pm10'), (int, float)) else '?'
         has_air_quality = result.get('air_quality') is not None
