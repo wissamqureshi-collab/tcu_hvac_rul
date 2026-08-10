@@ -388,7 +388,11 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
     """
     site_copy = site_result.copy()
 
-    if not site_result.get('success'):
+    # For CSV sites with filter_change, still calculate RUL even if success=False
+    is_csv_with_filter = (site_result.get('data_source') == 'csv' and
+                         site_result.get('filter_change') is not None)
+
+    if not site_result.get('success') and not is_csv_with_filter:
         return site_copy
 
     # Apply rolling median filter to smooth max_deltas
@@ -494,10 +498,38 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
     # Calculate current_dt from trend line: intercept + slope * hours
     current_dt = intercept + slope * current_hours if current_hours >= 0 else intercept
 
-    # Store intercept for graph plotting
+    # Store for display
+    site_copy['current_dt'] = float(current_dt)
     site_copy['intercept_recalc'] = float(intercept) if intercept else site_result.get('intercept', 0)
 
     if slope <= 0:
+        # For CSV sites with recent filter change, calculate conservative RUL
+        if is_csv_with_filter and site_result.get('filter_change', {}).get('detected'):
+            # Use current ΔT from the last episode
+            max_deltas = site_result.get('max_deltas', [])
+            current_dt = float(max_deltas[-1]) if max_deltas else 5.0
+
+            site_copy['current_dt'] = current_dt
+            site_copy['failure_dt'] = new_failure_dt
+
+            # Conservative estimate: assume 0.01°C degradation per adjusted hour
+            # (new filter degrades slowly)
+            hours_to_failure = (new_failure_dt - current_dt) / 0.01 if (new_failure_dt - current_dt) > 0 else 9999
+            avg_hours_per_day = site_result.get('avg_adjusted_hours_per_day', 1.0)
+            rul_days = hours_to_failure / avg_hours_per_day if avg_hours_per_day > 0 else 9999
+
+            site_copy['rul_days'] = max(0, rul_days)
+            site_copy['pct_life'] = 0  # New filter, just started
+
+            if rul_days < 14:
+                site_copy['urgency'] = 'URGENT'
+            elif rul_days < 30:
+                site_copy['urgency'] = 'WARNING'
+            else:
+                site_copy['urgency'] = 'OK'
+            return site_copy
+
+        # For regular sites with negative slope: no clear degradation
         site_copy['rul_days'] = 999
         site_copy['urgency'] = 'OK'
         return site_copy
