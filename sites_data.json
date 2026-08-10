@@ -1,5 +1,5 @@
 {
-  "query_timestamp": "2026-08-10T22:15:04.942053Z",
+  "query_timestamp": "2026-08-10T22:34:20.842699Z",
   "query_elapsed_seconds": 3083.396508,
   "sites_queried": 60,
   "sites_total": 1020,
@@ -12335,7 +12335,7 @@
       "longitude": -79.826389,
       "success": false,
       "data_source": "csv",
-      "query_timestamp": "2026-08-10T22:15:04.930080Z",
+      "query_timestamp": "2026-08-10T22:34:20.830846Z",
       "episodes_count": 49,
       "query_start_date": "2026-05-12",
       "query_end_date": "2026-08-10",
