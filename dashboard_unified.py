@@ -906,16 +906,26 @@ st.markdown("---")
 st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700;">📈 Site Details & Trend Analysis</h3>', unsafe_allow_html=True)
 
 detail_sites = []
-for site_id, result in sorted(sites_recalc.items()):
-    # Show successful sites OR CSV sites with filter changes (even if insufficient data)
-    is_successful = result.get('success')
-    is_csv_with_filter_change = result.get('data_source') == 'csv' and (result.get('filter_change') or result.get('filter_change_detected'))
+csv_sites = []  # Separate list for CSV sites to ensure they're always shown
 
-    if not is_successful and not is_csv_with_filter_change:
+for site_id, result in sorted(sites_recalc.items()):
+    # Check if it's a CSV site with filter change
+    is_csv_site = result.get('data_source') == 'csv'
+    has_filter_change_metadata = result.get('filter_change') is not None
+
+    if is_csv_site and has_filter_change_metadata:
+        # CSV sites always go to a separate list (ensure they're displayed)
+        search_str = f"{site_id} {result.get('site_name', '')}".lower()
+        if not (search_term.lower() and search_term.lower() not in search_str):
+            csv_sites.append((site_id, result))
         continue
 
-    # For successful sites, check urgency filter; CSV sites show regardless of urgency
-    if is_successful and result.get('urgency') not in urgency_filter:
+    # Show successful sites (check urgency filter)
+    is_successful = result.get('success')
+    if not is_successful:
+        continue
+
+    if result.get('urgency') not in urgency_filter:
         continue
 
     search_str = f"{site_id} {result.get('site_name', '')}".lower()
@@ -923,6 +933,9 @@ for site_id, result in sorted(sites_recalc.items()):
         continue
 
     detail_sites.append((site_id, result))
+
+# Combine CSV sites first, then successful sites
+detail_sites = csv_sites + detail_sites
 
 detail_sites = detail_sites[:20]
 
