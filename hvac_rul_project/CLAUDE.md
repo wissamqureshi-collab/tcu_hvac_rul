@@ -212,6 +212,27 @@ __pycache__/
   5. Dashboard auto-displays on next page load
   6. No SSH credentials required
 
+**August 13 (Current Session) Updates — Episode Dates in Hover & W2567 Fixes**:
+- ✅ **Episode dates now display in hover tooltips**:
+  - Extracts `episode_start_times` from sites_data.json
+  - Formats dates as "MMM DD" (e.g., "May 18") for readability
+  - Shows date in bold at top of hover box for all data points
+  - Enables users to see exact freecooling episode dates
+- ✅ **W2567 data restored with full episode timestamps**:
+  - All 49 episodes now include exact start times (ISO format)
+  - Enables precise filter change date interpolation
+  - Dashboard can calculate exact post-filter days from timestamp data
+- ✅ **Fixed W2567 filter change behavior**:
+  - **Issue 1 - Default preservation**: Filter change date now preserved when adjusting fan speed or other parameters
+  - **Issue 2 - One-step lag**: Fixed session state sync ordering; updates now apply immediately (not delayed by one step)
+    - Moved sync from post-input to callback for immediate effect
+    - Recalculation now uses current value on same rerun
+  - **Issue 3 - Auto-apply removal**: Filter change split only applies after explicit checkbox confirmation
+    - Default value shown in UI for reference
+    - Graph remains unified until user clicks "Confirm filter change"
+    - Prevents accidental dual regression activation
+- ✅ **All fixes apply to CSV and SSH sites**: Filter change improvements benefit all sites with detection/manual entry
+
 **Model Architecture (1-Factor Only with Dual Regression)**:
 
 **Core Methodology**:
