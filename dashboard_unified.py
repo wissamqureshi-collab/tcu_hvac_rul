@@ -704,16 +704,18 @@ for site_id, site_result in sites.items():
     fc_confirmed = st.session_state.get(f"fc_confirm_{site_id}", False)
     fc_hours = None
 
-    # For CSV sites with filter_change metadata, use default unless user modified it
-    is_csv_with_filter = (site_result.get('data_source') == 'csv' and
-                         site_result.get('filter_change') is not None)
-    if is_csv_with_filter and site_result.get('filter_change_detected'):
-        # Use default from CSV metadata
-        fc_hours = site_result['filter_change_detected'].get('hours')
-
-    # If user confirmed/modified the filter change, override with session state
+    # Only apply filter change split if user explicitly confirmed it
     if fc_confirmed:
-        fc_hours = st.session_state.get(f"fc_hours_{site_id}", fc_hours)
+        # For CSV sites with filter_change metadata, provide default value
+        is_csv_with_filter = (site_result.get('data_source') == 'csv' and
+                             site_result.get('filter_change') is not None)
+        if is_csv_with_filter and site_result.get('filter_change_detected'):
+            # Use default from CSV metadata as initial value
+            fc_hours = st.session_state.get(f"fc_hours_{site_id}",
+                                           site_result['filter_change_detected'].get('hours'))
+        else:
+            # For SSH sites, use session state value
+            fc_hours = st.session_state.get(f"fc_hours_{site_id}", None)
 
     sites_recalc[site_id] = recalculate_rul(site_result, failure_dt, rolling_window, filter_change_hours=fc_hours)
 
