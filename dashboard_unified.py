@@ -1211,16 +1211,31 @@ Readings</strong><br>
                 # Show trend plot for all sites (helps users identify filter changes)
                 max_deltas = result.get('max_deltas', [])
                 cumul_hours = result.get('cumulative_adjusted_hours', [])
+                episode_start_times = result.get('episode_start_times', [])
 
                 if len(max_deltas) > 2 and len(cumul_hours) == len(max_deltas):
                     fig = go.Figure()
+
+                    # Extract dates from episode_start_times for display in hover
+                    episode_dates = []
+                    if episode_start_times and len(episode_start_times) == len(max_deltas):
+                        for ts in episode_start_times:
+                            try:
+                                # Parse ISO format timestamp and format as "MMM DD"
+                                dt = datetime.fromisoformat(ts.replace('Z', '+00:00'))
+                                episode_dates.append(dt.strftime('%b %d'))
+                            except:
+                                episode_dates.append('N/A')
+                    else:
+                        episode_dates = ['N/A'] * len(max_deltas)
 
                     fig.add_trace(go.Scatter(
                         x=cumul_hours, y=max_deltas,
                         mode='markers',
                         marker=dict(size=6, color='#a5b4fc', opacity=0.7),
                         name='Max ΔT per episode',
-                        hovertemplate='Cumulative Adjusted Hours: %{x:.1f}<br>Max ΔT: %{y:.2f}°C<extra></extra>'
+                        customdata=episode_dates,
+                        hovertemplate='<b>%{customdata}</b><br>Cumulative Adjusted Hours: %{x:.1f}<br>Max ΔT: %{y:.2f}°C<extra></extra>'
                     ))
 
                     fig.add_hline(
