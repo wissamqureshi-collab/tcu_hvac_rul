@@ -1160,7 +1160,8 @@ Readings</strong><br>
                         hours_key = f"fc_hours_{site_id}"
 
                         # Use default params to capture variables properly in closure
-                        def on_hours_change(ek=expand_key):
+                        def on_hours_change(hk=hours_key, ak=adjust_key, ek=expand_key):
+                            st.session_state[hk] = st.session_state.get(ak, st.session_state.get(hk))
                             st.session_state[ek] = True  # Keep expander open
 
                         adjusted_hours = st.number_input(
@@ -1170,7 +1171,6 @@ Readings</strong><br>
                             key=adjust_key,
                             on_change=on_hours_change
                         )
-                        st.session_state[hours_key] = adjusted_hours
                         st.caption(f"Edit the time to specify when the filter was changed and click Enter — Current: {adjusted_hours:.0f} hours")
 
             else:
