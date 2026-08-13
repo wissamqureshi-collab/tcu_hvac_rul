@@ -702,7 +702,19 @@ sites_recalc = {}
 for site_id, site_result in sites.items():
     # Check if user confirmed filter change for this site
     fc_confirmed = st.session_state.get(f"fc_confirm_{site_id}", False)
-    fc_hours = st.session_state.get(f"fc_hours_{site_id}", None) if fc_confirmed else None
+    fc_hours = None
+
+    # For CSV sites with filter_change metadata, use default unless user modified it
+    is_csv_with_filter = (site_result.get('data_source') == 'csv' and
+                         site_result.get('filter_change') is not None)
+    if is_csv_with_filter and site_result.get('filter_change_detected'):
+        # Use default from CSV metadata
+        fc_hours = site_result['filter_change_detected'].get('hours')
+
+    # If user confirmed/modified the filter change, override with session state
+    if fc_confirmed:
+        fc_hours = st.session_state.get(f"fc_hours_{site_id}", fc_hours)
+
     sites_recalc[site_id] = recalculate_rul(site_result, failure_dt, rolling_window, filter_change_hours=fc_hours)
 
 success_count = len([s for s in sites_recalc.values() if s.get('success')])
