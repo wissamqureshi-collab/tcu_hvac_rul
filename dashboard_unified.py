@@ -494,6 +494,10 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
         coeffs = np.polyfit(cumul_hours, smoothed_deltas, 1)
         slope, intercept = coeffs[0], coeffs[1]
         baseline_dt = smoothed_deltas[0]
+        # Update site_copy with recalculated values for display
+        site_copy['slope'] = float(slope)
+        site_copy['intercept_recalc'] = float(intercept)
+        site_copy['baseline_dt'] = float(baseline_dt)
     else:
         slope = site_result.get('slope', 0)
         intercept = site_result.get('intercept', 0)
