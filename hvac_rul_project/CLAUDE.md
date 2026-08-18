@@ -202,7 +202,7 @@ __pycache__/
   - Shows filter change metadata in expandable cards
   - Includes all episode data (timestamps, cumulative hours, max deltas) for trend visualization
   - Converts W2567's native filter_change schema to dashboard's event format
-  - "📊 Filter Change Detected" label in site cards for easy identification
+  - "Filter Change Detected" label in site cards with urgency-based emoji (🟢/🟡/🔴, not 📊)
   - Air quality context available if site has coordinates
 - ✅ **Workflow for adding CSV sites**:
   1. Upload CSV to GitHub repo with naming: `{SITE_ID}_months_info.csv`
@@ -232,6 +232,46 @@ __pycache__/
     - Graph remains unified until user clicks "Confirm filter change"
     - Prevents accidental dual regression activation
 - ✅ **All fixes apply to CSV and SSH sites**: Filter change improvements benefit all sites with detection/manual entry
+
+**August 18 (Current Session) Updates — Dashboard Data Quality & Display Fixes**:
+- ✅ **Fixed huge RUL display bug** (84 quadrillion days issue):
+  - Added safeguard to cap unrealistic RUL values at 9,999 days
+  - Filters outliers in average RUL calculation
+  - Shows '?' if average is unreliable due to data quality issues
+  - Prevents numerical overflow from extreme values
+- ✅ **Insufficient data now shows "N/A" consistently**:
+  - Sites with negative/zero slope now display "N/A" for RUL (not 999d)
+  - Added `has_sufficient_data` flag to track whether site has valid trend
+  - When filter change confirmed and post-filter data becomes sufficient, RUL displays normally
+  - Average RUL calculation excludes insufficient-data sites
+- ✅ **Fixed slope mismatch in rolling median recalculation**:
+  - Ensures site_copy['slope'] updates whenever slope is recalculated with rolling median
+  - Prevents display mismatch where "Data Insufficient" shown but RUL displayed (e.g., E3007, E3575, F0522)
+  - Smooth noisy data without breaking consistency checks
+- ✅ **CSV sites now show RUL after filter change confirmation**:
+  - W2567 and other CSV sites display calculated RUL after user confirms filter change
+  - Check if rul_days is valid after recalculation
+  - Don't auto-apply conservative RUL until user explicitly confirms via checkbox
+- ✅ **Table & Detail sections now consistent**:
+  - Both show the same 20 sites (or fewer with stricter filters)
+  - No more confusion with sites appearing in table but not in expandable details
+  - Metrics card counts only displayed sites (not all 53)
+- ✅ **Removed 20-site limit — show all sites**:
+  - All sites matching filter criteria now display in full
+  - Table and expandable detail sections show all filtered sites
+  - Metrics dynamically reflect actual count shown
+- ✅ **Unified filter change labeling**:
+  - All sites with `filter_change_detected` now show "Filter Change Detected" (no emoji in text)
+  - Use urgency-based emoji (🟢/🟡/🔴) instead of 📊 graph icon
+  - Apply filter change detection to ALL sites for consistency (not just CSV)
+  - Cleaner UI: E3007, W2567, and others show proper urgency status
+
+**Dashboard UI Improvements (August 18)**:
+- Sites with negative slope show "N/A" in RUL column (insufficient degradation trend)
+- Once user confirms filter change, post-filter RUL calculated and displayed
+- Metrics only count displayed sites (preventing "4 URGENT + 47 OK but only 20 shown" confusion)
+- Filter change label consistent: just text, proper emoji based on urgency
+- Table shows actual site count in header: "📊 Sites Status Table — 53 Sites"
 
 **Model Architecture (1-Factor Only with Dual Regression)**:
 
