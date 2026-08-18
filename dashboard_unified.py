@@ -1022,9 +1022,13 @@ else:
         color_map = {'URGENT': '🔴', 'WARNING': '🟡', 'OK': '🟢', 'UNKNOWN': '⚪'}
         emoji = color_map.get(urgency, '❓')
 
-        # For CSV sites without RUL, show filter change status instead
+        # For CSV sites without success, check if RUL was calculated from filter change
         if result.get('data_source') == 'csv' and not result.get('success'):
-            if result.get('filter_change_detected'):
+            # If RUL was calculated after filter change confirmation, show it
+            if isinstance(rul, float) and rul is not None and rul < 9999:
+                rul_str = f"{rul:.0f}d"
+                emoji = color_map.get(urgency, '❓')  # Use urgency emoji
+            elif result.get('filter_change_detected'):
                 rul_str = "📊 Filter Change Detected"
                 emoji = "📊"
             else:
