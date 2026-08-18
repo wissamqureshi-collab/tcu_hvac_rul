@@ -458,6 +458,9 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
                 'pre_split_coeffs': np.polyfit(cumul_hours[:split_idx], pre_max_deltas, 1).tolist() if split_idx > 1 else None,
                 'post_split_coeffs': [float(slope), float(intercept)]
             }
+            # If post-filter slope is positive, we now have sufficient data for RUL
+            if slope > 0:
+                site_copy['has_sufficient_data'] = True
         else:
             # Can't split, use whole dataset
             smoothed_deltas = max_deltas
@@ -475,6 +478,9 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
             site_copy['slope'] = float(slope)
             site_copy['intercept_recalc'] = float(intercept)
             site_copy['baseline_dt'] = float(baseline_dt)
+            # If recalculated slope is positive, we now have sufficient data for RUL
+            if slope > 0:
+                site_copy['has_sufficient_data'] = True
     elif len(max_deltas) >= 2 and len(cumul_hours) == len(max_deltas):
         # No filter change - apply rolling median to entire dataset
         smoothed_deltas = max_deltas
@@ -511,6 +517,7 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
 
             site_copy['current_dt'] = current_dt
             site_copy['failure_dt'] = new_failure_dt
+            site_copy['has_sufficient_data'] = True  # Post-filter data is being used
 
             # Conservative estimate: assume 0.01°C degradation per adjusted hour
             # (new filter degrades slowly)
@@ -534,11 +541,13 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
             return site_copy
 
         # For regular sites with negative slope: no clear degradation
-        site_copy['rul_days'] = 999
+        site_copy['rul_days'] = None  # Will show as N/A in table
+        site_copy['has_sufficient_data'] = False
         site_copy['urgency'] = 'OK'
         return site_copy
 
     site_copy['failure_dt'] = new_failure_dt
+    site_copy['has_sufficient_data'] = True  # Slope > 0, sufficient data for RUL
 
     if current_dt >= new_failure_dt:
         site_copy['rul_days'] = 0
@@ -879,7 +888,7 @@ with col4:
 
 with col5:
     successful = [s for s in sites_recalc.values() if s.get('success')]
-    rul_values = [s.get('rul_days', 0) for s in successful if s.get('rul_days') is not None and isinstance(s.get('rul_days'), (int, float)) and 0 <= s.get('rul_days', 0) <= 9999]
+    rul_values = [s.get('rul_days', 0) for s in successful if s.get('has_sufficient_data', True) and s.get('rul_days') is not None and isinstance(s.get('rul_days'), (int, float)) and 0 <= s.get('rul_days', 0) <= 9999]
     mean_rul = np.mean(rul_values) if rul_values else 0
     mean_rul_str = f'{mean_rul:.0f}d' if rul_values and not np.isnan(mean_rul) and mean_rul < 10000 else '?'
     st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div class="value">{mean_rul_str}</div><div class="sub">All sites</div></div>', unsafe_allow_html=True)
@@ -910,6 +919,7 @@ for site_id, result in sites_recalc.items():
         continue
 
     rul = result.get('rul_days', None)
+    has_sufficient_data = result.get('has_sufficient_data', True)
 
     # Check if pollution effect was applied
     has_pollution_effect = result.get('pollution_effect') is not None
@@ -920,12 +930,15 @@ for site_id, result in sites_recalc.items():
     pm10_str = f"{aq.get('pm10', 0):.1f}" if aq.get('pm10') else "—"
     pm25_str = f"{aq.get('pm25', 0):.1f}" if aq.get('pm25') else "—"
 
+    # Format RUL: show N/A if insufficient data, otherwise show value
+    rul_str = "N/A" if not has_sufficient_data else (f"{rul:.0f}" if rul is not None else "?")
+
     table_data.append({
         'Site ID': site_id,
         'Site Name': result.get('site_name', '?'),
         'IP Address': result.get('ip', '?'),
         'Urgency': result.get('urgency', '?'),
-        'RUL (days)': f"{rul:.0f}" if rul is not None else "?",
+        'RUL (days)': rul_str,
         'Episodes': result.get('episodes_count', '?'),
         'R²': f"{result.get('r2', 0):.3f}",
         'Current ΔT (°C)': f"{result.get('current_dt', 0):.1f}",
@@ -934,7 +947,7 @@ for site_id, result in sites_recalc.items():
         'PM10 (μg/m³)': pm10_str,
         'PM2.5 (μg/m³)': pm25_str,
         'Pollution Effect': pollution_indicator,
-        '_rul_raw': rul if rul is not None else float('inf'),
+        '_rul_raw': rul if (rul is not None and has_sufficient_data) else float('inf'),
         '_urgency_rank': {'URGENT': 0, 'WARNING': 1, 'OK': 2, 'UNKNOWN': 3}.get(result.get('urgency'), 4),
     })
 
