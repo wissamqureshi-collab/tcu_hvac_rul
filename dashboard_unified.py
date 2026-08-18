@@ -518,6 +518,10 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
             avg_hours_per_day = site_result.get('avg_adjusted_hours_per_day', 1.0)
             rul_days = hours_to_failure / avg_hours_per_day if avg_hours_per_day > 0 else 9999
 
+            # Cap unrealistic RUL values (data bug safeguard)
+            if rul_days > 10000:
+                rul_days = 9999
+
             site_copy['rul_days'] = max(0, rul_days)
             site_copy['pct_life'] = 0  # New filter, just started
 
@@ -554,6 +558,12 @@ def recalculate_rul(site_result, new_failure_dt, rolling_window=1, filter_change
     dt_consumed = current_dt - intercept
     pct_life = max(0, min(100, (dt_consumed / dt_range * 100))) if dt_range > 0 else 0
     site_copy['pct_life'] = pct_life
+
+    # Cap unrealistic RUL values (data bug safeguard)
+    if rul_days > 10000:
+        rul_days = 9999  # Cap at 9999 to prevent huge display values
+
+    site_copy['rul_days'] = max(0, rul_days)
 
     if rul_days < 14:
         site_copy['urgency'] = 'URGENT'
@@ -869,9 +879,9 @@ with col4:
 
 with col5:
     successful = [s for s in sites_recalc.values() if s.get('success')]
-    rul_values = [s.get('rul_days', 0) for s in successful if s.get('rul_days') is not None and isinstance(s.get('rul_days'), (int, float))]
+    rul_values = [s.get('rul_days', 0) for s in successful if s.get('rul_days') is not None and isinstance(s.get('rul_days'), (int, float)) and 0 <= s.get('rul_days', 0) <= 9999]
     mean_rul = np.mean(rul_values) if rul_values else 0
-    mean_rul_str = f'{mean_rul:.0f}d' if not np.isnan(mean_rul) else '?'
+    mean_rul_str = f'{mean_rul:.0f}d' if rul_values and not np.isnan(mean_rul) and mean_rul < 10000 else '?'
     st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div class="value">{mean_rul_str}</div><div class="sub">All sites</div></div>', unsafe_allow_html=True)
 
 st.markdown("---")
