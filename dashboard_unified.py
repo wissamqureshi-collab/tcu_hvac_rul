@@ -848,34 +848,6 @@ if failure_dt != data.get('default_failure_dt', 10.0):
     threshold_info += f" <span style='color: #6b7280;'>(Original: {original_threshold}°C)</span>"
 st.markdown(threshold_info, unsafe_allow_html=True)
 
-# Metrics row
-col1, col2, col3, col4, col5 = st.columns(5)
-
-with col1:
-    urgent_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'URGENT')
-    st.markdown(f'<div class="metric-card danger"><div class="label">🔴 URGENT</div><div class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>', unsafe_allow_html=True)
-
-with col2:
-    warning_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'WARNING')
-    st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div class="value">{warning_count}</div><div class="sub">14–30 days</div></div>', unsafe_allow_html=True)
-
-with col3:
-    ok_count = sum(1 for s in sites_recalc.values() if s.get('success') and s.get('urgency') == 'OK')
-    st.markdown(f'<div class="metric-card"><div class="label">🟢 OK</div><div class="value">{ok_count}</div><div class="sub">≥ 30 days</div></div>', unsafe_allow_html=True)
-
-with col4:
-    failed_count = sum(1 for s in sites_recalc.values() if not s.get('success'))
-    st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div class="value">{failed_count}</div><div class="sub">Query error</div></div>', unsafe_allow_html=True)
-
-with col5:
-    successful = [s for s in sites_recalc.values() if s.get('success')]
-    rul_values = [s.get('rul_days', 0) for s in successful if s.get('has_sufficient_data', True) and s.get('rul_days') is not None and isinstance(s.get('rul_days'), (int, float)) and 0 <= s.get('rul_days', 0) <= 9999]
-    mean_rul = np.mean(rul_values) if rul_values else 0
-    mean_rul_str = f'{mean_rul:.0f}d' if rul_values and not np.isnan(mean_rul) and mean_rul < 10000 else '?'
-    st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div class="value">{mean_rul_str}</div><div class="sub">All sites</div></div>', unsafe_allow_html=True)
-
-st.markdown("---")
-
 # ============================================================================
 # BUILD DETAIL SITES LIST (used for both table and detail sections)
 # ============================================================================
@@ -917,10 +889,44 @@ detail_sites = detail_sites[:20]  # Limit to 20 for display
 detail_site_ids = {site_id for site_id, _ in detail_sites}
 
 # ============================================================================
+# METRICS (calculated from displayed sites only)
+# ============================================================================
+
+metrics_sites = {site_id: sites_recalc[site_id] for site_id, _ in detail_sites}
+
+# Metrics row
+col1, col2, col3, col4, col5 = st.columns(5)
+
+with col1:
+    urgent_count = sum(1 for s in metrics_sites.values() if s.get('success') and s.get('urgency') == 'URGENT')
+    st.markdown(f'<div class="metric-card danger"><div class="label">🔴 URGENT</div><div class="value">{urgent_count}</div><div class="sub">< 14 days</div></div>', unsafe_allow_html=True)
+
+with col2:
+    warning_count = sum(1 for s in metrics_sites.values() if s.get('success') and s.get('urgency') == 'WARNING')
+    st.markdown(f'<div class="metric-card warn"><div class="label">🟡 WARNING</div><div class="value">{warning_count}</div><div class="sub">14–30 days</div></div>', unsafe_allow_html=True)
+
+with col3:
+    ok_count = sum(1 for s in metrics_sites.values() if s.get('success') and s.get('urgency') == 'OK')
+    st.markdown(f'<div class="metric-card"><div class="label">🟢 OK</div><div class="value">{ok_count}</div><div class="sub">≥ 30 days</div></div>', unsafe_allow_html=True)
+
+with col4:
+    failed_count = sum(1 for s in metrics_sites.values() if not s.get('success'))
+    st.markdown(f'<div class="metric-card"><div class="label">⚪ FAILED</div><div class="value">{failed_count}</div><div class="sub">Query error</div></div>', unsafe_allow_html=True)
+
+with col5:
+    successful = [s for s in metrics_sites.values() if s.get('success')]
+    rul_values = [s.get('rul_days', 0) for s in successful if s.get('has_sufficient_data', True) and s.get('rul_days') is not None and isinstance(s.get('rul_days'), (int, float)) and 0 <= s.get('rul_days', 0) <= 9999]
+    mean_rul = np.mean(rul_values) if rul_values else 0
+    mean_rul_str = f'{mean_rul:.0f}d' if rul_values and not np.isnan(mean_rul) and mean_rul < 10000 else '?'
+    st.markdown(f'<div class="metric-card"><div class="label">Average RUL</div><div class="value">{mean_rul_str}</div><div class="sub">Displayed sites</div></div>', unsafe_allow_html=True)
+
+st.markdown("---")
+
+# ============================================================================
 # SITES TABLE (only show sites from detail_sites)
 # ============================================================================
 
-st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700;">📊 Sites Status Table</h3>', unsafe_allow_html=True)
+st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700;">📊 Sites Status Table — {len(detail_sites)} Sites Displayed</h3>', unsafe_allow_html=True)
 
 table_data = []
 for site_id, result in sites_recalc.items():
