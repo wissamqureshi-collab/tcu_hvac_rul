@@ -1,13 +1,18 @@
 # Global Project Index
 
-**Last Updated**: 2026-08-04  
+**Last Updated**: 2026-08-18  
 **Purpose**: Central hub for all active projects. Each project has its own dedicated folder with focused CLAUDE.md.
 
 ---
 
-## 🔴 Blockers & Active Issues
+## ✅ Recent Updates
 
-**HVAC Dashboard**: Missing site coordinates (on Bell laptop) → prevents air quality data fetch. See `hvac_rul_project/CLAUDE.md` for details.
+**HVAC Dashboard (Aug 18)**: Fixed data quality issues, unified display logic, removed display limits
+- All sites now show consistent analysis (no 20-site cap)
+- Fixed "quadrillion-day RUL" display bug
+- Sites with insufficient data show "N/A" (not misleading values)
+- Filter change detection unified across all sites
+- See `hvac_rul_project/CLAUDE.md` for details
 
 ---
 
@@ -34,12 +39,13 @@ streamlit run dashboard_unified.py  # View dashboard locally
 ```
 
 **What It Does**:
-- Queries 1020 Rogers HVAC sites in parallel via SSH + InfluxDB (68 sites with data)
+- Queries 1020 Rogers HVAC sites in parallel via SSH + InfluxDB (60+ sites with data, 53 displayed)
 - Extracts freecooling episodes and computes filter clogging RUL
 - Tracks max ΔT vs percentage-adjusted cooling hours (physics-based: fan_speed²)
-- **BLOCKED**: Air quality data (PM10, PM2.5) requires site coordinates (currently missing)
-- Currently: 1-factor regression (hours only) for all sites
+- 1-factor regression (hours only) for all sites with sufficient data
+- Shows "N/A" for sites with insufficient degradation trend
 - Displays unified dashboard with dynamic RUL threshold slider
+- Supports CSV-based analysis for sites without SSH access (e.g., W2567)
 
 **Key Files** (note: dashboard_unified.py & sites_data.json are at `/home/aillm/` root):
 - `hvac_rul_project/query_sites.py` — Parallel SSH query engine
