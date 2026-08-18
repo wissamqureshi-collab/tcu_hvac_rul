@@ -883,7 +883,6 @@ for site_id, result in sorted(sites_recalc.items()):
 
 # Combine CSV sites first, then successful sites
 detail_sites = csv_sites + detail_sites
-detail_sites = detail_sites[:20]  # Limit to 20 for display
 
 # Convert to dict for easy lookup in table
 detail_site_ids = {site_id for site_id, _ in detail_sites}
@@ -926,7 +925,7 @@ st.markdown("---")
 # SITES TABLE (only show sites from detail_sites)
 # ============================================================================
 
-st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700;">📊 Sites Status Table — {len(detail_sites)} Sites Displayed</h3>', unsafe_allow_html=True)
+st.markdown(f'<h3 style="color: #1a202c; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700;">📊 Sites Status Table — {len(detail_sites)} Sites</h3>', unsafe_allow_html=True)
 
 table_data = []
 for site_id, result in sites_recalc.items():
