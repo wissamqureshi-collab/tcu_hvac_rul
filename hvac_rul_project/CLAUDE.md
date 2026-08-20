@@ -642,6 +642,28 @@ System Time,System Current Mode,Indoor Temperature,Outdoor Temperature,Supply Ai
 - Mitigation: Script normalizes both CSVs (uppercase, strip whitespace) before matching
 - Fallback: Sites without matched coordinates skip Weatherbit; use raw slope (1-factor model)
 
+**August 20 (Session 1) Updates — Multi-Database Fallback & Failure Tracking**:
+- ✅ **Reverted to last working version** (commit 9156249) after discovering previous refactor broke all queries (0 sites returned data)
+- ✅ **Implemented intelligent multi-database fallback**:
+  - Try `aque` database first (modern tag-based schema with alias columns)
+  - Fallback to `hvac` database if aque returns no data (older field-based schema)
+  - Handles both tag-based pivot (alias → columns) and field-based raw data
+  - Combines multiple series from single query into unified DataFrame
+- ✅ **Added comprehensive error tracking**:
+  - `query_site_influxdb()` now returns tuple: `(DataFrame or None, failure_reason or None)`
+  - Captures specific reasons: "SSH auth failed", "Connection timeout", "No data in aque or hvac", etc.
+  - Failure reasons propagate through query pipeline and stored in sites_data.json
+- ✅ **Failed sites table added to dashboard**:
+  - New section at bottom shows all inaccessible sites with detailed failure reasons
+  - Helps iteratively debug and improve site coverage
+  - Can copy failure reasons to prioritize fixes (e.g., "auth failed" → check credentials, "timeout" → check network)
+- ✅ **Easy GitHub copy-paste workflow**:
+  - Updated scripts pushed to GitHub (main branch)
+  - Bell laptop can now easily copy-paste latest query_sites.py from GitHub
+  - No manual file sync needed
+
+**Expected impact**: With multi-database support, should recover many previously-failed sites (particularly J0761-like sites using hvac database). Failure tracking will reveal patterns to guide next iteration improvements.
+
 ## Next Steps (Priority Order)
 
 1. **Implement episode timestamp interpolation in dashboard** (IMMEDIATE after script completes):

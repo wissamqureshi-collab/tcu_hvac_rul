@@ -1,6 +1,6 @@
 # Global Project Index
 
-**Last Updated**: 2026-08-18  
+**Last Updated**: 2026-08-20  
 **Purpose**: Central hub for all active projects. Each project has its own dedicated folder with focused CLAUDE.md.
 
 ---
