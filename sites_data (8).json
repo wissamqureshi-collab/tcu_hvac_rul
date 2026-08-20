@@ -1,0 +1,7107 @@
+{
+  "query_timestamp": "2026-08-20T04:42:33.147873",
+  "query_elapsed_seconds": 3441.379289,
+  "sites_queried": 0,
+  "sites_total": 1020,
+  "sites_failed": 1020,
+  "sites_with_air_quality": 0,
+  "urgency_summary": {
+    "URGENT": 0,
+    "WARNING": 0,
+    "OK": 0
+  },
+  "air_quality_regression": null,
+  "sites": {
+    "W8498": {
+      "site_id": "W8498",
+      "site_name": "W8498 HEART LAKE ROAD 12942",
+      "ip": "10.117.197.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0991": {
+      "site_id": "T0991",
+      "site_name": "T0991 KIRKLAND LAKE",
+      "ip": "10.252.180.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0012": {
+      "site_id": "W0012",
+      "site_name": "W0012 KITCHENER",
+      "ip": "10.252.70.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0018": {
+      "site_id": "W0018",
+      "site_name": "W0018 RODNEY",
+      "ip": "10.252.70.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1618": {
+      "site_id": "W1618",
+      "site_name": "W1618 WESTWAY_ROYAL YORK",
+      "ip": "10.252.43.230",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0120": {
+      "site_id": "W0120",
+      "site_name": "W0120 LINDSAY",
+      "ip": "10.252.65.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2609": {
+      "site_id": "W2609",
+      "site_name": "W2609 TWEED EAST",
+      "ip": "10.252.153.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X6130": {
+      "site_id": "X6130",
+      "site_name": "X6130 INBLDG - TTC BSH_2 356 ST CLAIR AVE W (NHR)",
+      "ip": "10.48.141.195",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0441": {
+      "site_id": "W0441",
+      "site_name": "W0441 LANGSTAFF",
+      "ip": "10.252.209.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X4331": {
+      "site_id": "X4331",
+      "site_name": "X4331 POINT CLARK",
+      "ip": "10.117.244.116",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1542": {
+      "site_id": "W1542",
+      "site_name": "W1542 LEASKDALE",
+      "ip": "10.252.147.185",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1201": {
+      "site_id": "W1201",
+      "site_name": "W1201 ROSENEATH",
+      "ip": "10.252.78.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E2873": {
+      "site_id": "E2873",
+      "site_name": "E2873 ENTERPRISE",
+      "ip": "10.117.148.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0162": {
+      "site_id": "W0162",
+      "site_name": "W0162 BLACK BANK HILL",
+      "ip": "10.252.89.22",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1094": {
+      "site_id": "E1094",
+      "site_name": "E1094 JANELLE",
+      "ip": "10.252.164.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0244": {
+      "site_id": "W0244",
+      "site_name": "W0244 MOSSLEY",
+      "ip": "10.252.90.70",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J4373": {
+      "site_id": "J4373",
+      "site_name": "J4373 SYDNEY MEDIA",
+      "ip": "10.117.253.195",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1610": {
+      "site_id": "W1610",
+      "site_name": "W1610 HWY 403_WINSTON CHURCHILL",
+      "ip": "10.252.63.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E2878": {
+      "site_id": "E2878",
+      "site_name": "E2878 OBEDJIWAN",
+      "ip": "10.117.233.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E2876": {
+      "site_id": "E2876",
+      "site_name": "E2876 LAC LAUREL",
+      "ip": "10.117.228.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1363": {
+      "site_id": "W1363",
+      "site_name": "W1363 ROSLIN",
+      "ip": "10.252.145.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9063": {
+      "site_id": "W9063",
+      "site_name": "W9063 25 DILLANE DR",
+      "ip": "10.48.231.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0386": {
+      "site_id": "T0386",
+      "site_name": "T0386 LAC VARIA",
+      "ip": "10.117.183.99",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0581": {
+      "site_id": "W0581",
+      "site_name": "W0581 HWY 406_HWY 20",
+      "ip": "10.117.241.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0192": {
+      "site_id": "W0192",
+      "site_name": "W0192 YORKDALE RD  1 (GO TRANSIT)",
+      "ip": "10.252.55.214",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X2440": {
+      "site_id": "X2440",
+      "site_name": "X2440 WHANCLIFF RD 1710",
+      "ip": "10.117.244.83",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9244": {
+      "site_id": "W9244",
+      "site_name": "W9244 VANASTRA",
+      "ip": "10.117.192.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1065": {
+      "site_id": "W1065",
+      "site_name": "W1065 ELDORADO (BELL CANADA)",
+      "ip": "10.252.76.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0080": {
+      "site_id": "W0080",
+      "site_name": "W0080 DASHWOOD (GRAND BEND)",
+      "ip": "10.252.158.186",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X1758": {
+      "site_id": "X1758",
+      "site_name": "X1758 COBALT CRESCENT",
+      "ip": "10.252.196.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9482": {
+      "site_id": "W9482",
+      "site_name": "W9482 INSTA INSULATION",
+      "ip": "10.117.195.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0947": {
+      "site_id": "E0947",
+      "site_name": "E0947 BLONDEAU",
+      "ip": "10.252.115.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1456": {
+      "site_id": "W1456",
+      "site_name": "W1456 BLYTH",
+      "ip": "10.252.73.229",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0309": {
+      "site_id": "W0309",
+      "site_name": "W0309 RICE LAKE",
+      "ip": "10.252.91.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W8872": {
+      "site_id": "W8872",
+      "site_name": "W8872 WEST OAK VILLAGE",
+      "ip": "10.48.206.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J2209": {
+      "site_id": "J2209",
+      "site_name": "J2209 MCLELLANS MOUNTAIN",
+      "ip": "10.117.249.98",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3683": {
+      "site_id": "W3683",
+      "site_name": "W3683 MARKLAND 210",
+      "ip": "10.252.142.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1208": {
+      "site_id": "W1208",
+      "site_name": "W1208 PARRY SOUND HWY 69_124",
+      "ip": "10.252.69.153",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2549": {
+      "site_id": "W2549",
+      "site_name": "W2549 HWY 24_BLUE LAKE RD",
+      "ip": "10.252.152.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4024": {
+      "site_id": "W4024",
+      "site_name": "W4024 FAIRPORT & FINCH AVE",
+      "ip": "10.48.195.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3323": {
+      "site_id": "W3323",
+      "site_name": "W3323 COPERNICUS BLVD 84",
+      "ip": "10.117.244.211",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0287": {
+      "site_id": "W0287",
+      "site_name": "W0287 APSLEY",
+      "ip": "10.252.90.183",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0385": {
+      "site_id": "T0385",
+      "site_name": "T0385 LE DOMAINE",
+      "ip": "10.117.183.3",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J1144": {
+      "site_id": "J1144",
+      "site_name": "J1144 FLOWERS COVE",
+      "ip": "10.48.209.118",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1449": {
+      "site_id": "F1449",
+      "site_name": "F1449 RIVIERE BLEUE",
+      "ip": "10.48.155.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9484": {
+      "site_id": "W9484",
+      "site_name": "W9484 DELHI ARGYLE AVE 102",
+      "ip": "10.117.241.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0384": {
+      "site_id": "J0384",
+      "site_name": "J0384 GRAFTON",
+      "ip": "10.252.15.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0671": {
+      "site_id": "J0671",
+      "site_name": "J0671 COW BAY",
+      "ip": "10.252.7.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0437": {
+      "site_id": "W0437",
+      "site_name": "W0437 APPLEBY LINE",
+      "ip": "10.252.45.178",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "D0152": {
+      "site_id": "D0152",
+      "site_name": "D0152 YELLOWKNIFE DOWNTOWN",
+      "ip": "10.48.165.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0481": {
+      "site_id": "J0481",
+      "site_name": "J0481 GREENWOOD",
+      "ip": "10.252.29.166",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W8923": {
+      "site_id": "W8923",
+      "site_name": "W8923 THE QUEENSWAY 130",
+      "ip": "10.48.207.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3410": {
+      "site_id": "W3410",
+      "site_name": "W3410 FONTHILL",
+      "ip": "10.252.200.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3629": {
+      "site_id": "F3629",
+      "site_name": "F3629 GRANDES-PILES",
+      "ip": "10.117.233.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0738": {
+      "site_id": "F0738",
+      "site_name": "F0738 LATERRIERE",
+      "ip": "10.48.155.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1070": {
+      "site_id": "E1070",
+      "site_name": "E1070 PORTE DU NORD",
+      "ip": "10.252.166.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1432": {
+      "site_id": "W1432",
+      "site_name": "W1432 FLAMBORO SPEEDWAY",
+      "ip": "10.252.195.38",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X2115": {
+      "site_id": "X2115",
+      "site_name": "X2115 REAGENS INDUSTRIAL PARK",
+      "ip": "10.117.246.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1738": {
+      "site_id": "W1738",
+      "site_name": "W1738 WARDEN _ HWY 7",
+      "ip": "10.252.62.118",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1679": {
+      "site_id": "F1679",
+      "site_name": "F1679 LAC GATIEN",
+      "ip": "10.117.179.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2038": {
+      "site_id": "W2038",
+      "site_name": "W2038 LESLIE AND 16TH AVE",
+      "ip": "10.252.138.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2546": {
+      "site_id": "W2546",
+      "site_name": "W2546 WATFORD",
+      "ip": "10.252.152.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4755": {
+      "site_id": "W4755",
+      "site_name": "W4755 TEETERVILLE",
+      "ip": "10.117.194.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7155": {
+      "site_id": "W7155",
+      "site_name": "W7155 FRASERBURG",
+      "ip": "10.117.241.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0737": {
+      "site_id": "F0737",
+      "site_name": "F0737 ST LOUIS DE BAGOT",
+      "ip": "10.48.216.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1633": {
+      "site_id": "F1633",
+      "site_name": "F1633 SAINT-ANDRE",
+      "ip": "10.117.179.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0584": {
+      "site_id": "W0584",
+      "site_name": "W0584 YONGE ST  3080",
+      "ip": "10.252.56.8",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1265": {
+      "site_id": "E1265",
+      "site_name": "E1265 ADOLPHUS",
+      "ip": "10.48.153.211",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W7724": {
+      "site_id": "W7724",
+      "site_name": "W7724 MULDREW LAKE",
+      "ip": "10.117.242.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9019": {
+      "site_id": "W9019",
+      "site_name": "W9019 FINCH_ALTONA",
+      "ip": "10.48.201.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2517": {
+      "site_id": "W2517",
+      "site_name": "W2517 MEARNS AVE  3145",
+      "ip": "10.252.151.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2608": {
+      "site_id": "W2608",
+      "site_name": "W2608 MADOC",
+      "ip": "10.252.153.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1032": {
+      "site_id": "W1032",
+      "site_name": "W1032 CHARLESTON SIDEROAD",
+      "ip": "10.252.95.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1430": {
+      "site_id": "F1430",
+      "site_name": "F1430 RIVIERE-DU-MOULIN",
+      "ip": "10.117.147.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X6035": {
+      "site_id": "X6035",
+      "site_name": "X6035 LAMBS CONCESSION",
+      "ip": "10.252.136.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1947": {
+      "site_id": "J1947",
+      "site_name": "J1947 RIDGE WAY-GRAND BAY ROGERS (NEW SITE)",
+      "ip": "10.252.232.133",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0155": {
+      "site_id": "F0155",
+      "site_name": "F0155 MERRICKVILLE",
+      "ip": "10.252.103.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0809": {
+      "site_id": "W0809",
+      "site_name": "W0809 WHEATLEY",
+      "ip": "10.252.76.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9046": {
+      "site_id": "W9046",
+      "site_name": "W9046 GROSVENOR ST 95",
+      "ip": "10.117.200.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0635": {
+      "site_id": "W0635",
+      "site_name": "W0635 CAMP BORDEN",
+      "ip": "10.252.93.147",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0286": {
+      "site_id": "W0286",
+      "site_name": "W0286 WOODVIEW",
+      "ip": "10.252.90.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1683": {
+      "site_id": "W1683",
+      "site_name": "W1683 MAPLE LEAF",
+      "ip": "10.252.149.182",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0442": {
+      "site_id": "F0442",
+      "site_name": "F0442 LAC QUINN",
+      "ip": "10.252.119.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X4924": {
+      "site_id": "X4924",
+      "site_name": "X4924 BAYVIEW TERRACE COLLINGWOOD",
+      "ip": "10.117.234.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0259": {
+      "site_id": "E0259",
+      "site_name": "E0259 THURSO",
+      "ip": "10.252.109.202",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9723": {
+      "site_id": "W9723",
+      "site_name": "W9723 LIVING STONE RESORT COLLINGWOOD",
+      "ip": "10.117.234.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1090": {
+      "site_id": "E1090",
+      "site_name": "E1090 BOUL JEAN XXIII",
+      "ip": "10.252.160.117",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1412": {
+      "site_id": "W1412",
+      "site_name": "W1412 MIDLAND DOWNTOWN (RUSSEL ST_HANLY ST.)",
+      "ip": "10.252.145.228",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W4272": {
+      "site_id": "W4272",
+      "site_name": "W4272 REGIONAL RD 16 & WOODMOUNT DR",
+      "ip": "10.48.192.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0320": {
+      "site_id": "F0320",
+      "site_name": "F0320 POINTE CHAMBORD",
+      "ip": "10.252.107.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1267": {
+      "site_id": "W1267",
+      "site_name": "W1267 CHESLEY _(PAISLEY)",
+      "ip": "10.252.144.229",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J2096": {
+      "site_id": "J2096",
+      "site_name": "J2096 BOTWOOD",
+      "ip": "10.48.214.99",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0462": {
+      "site_id": "W0462",
+      "site_name": "W0462 PARKCREST  40",
+      "ip": "10.252.51.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0167": {
+      "site_id": "W0167",
+      "site_name": "W0167 RIDGETOWN",
+      "ip": "10.252.71.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0292": {
+      "site_id": "E0292",
+      "site_name": "E0292 BUTTERNUT BAY",
+      "ip": "10.252.103.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1149": {
+      "site_id": "F1149",
+      "site_name": "F1149 LAC BARNABE",
+      "ip": "10.117.179.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2774": {
+      "site_id": "W2774",
+      "site_name": "W2774 PORT LORING",
+      "ip": "10.117.197.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1178": {
+      "site_id": "W1178",
+      "site_name": "W1178 GORDON BAY",
+      "ip": "10.252.144.70",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1778": {
+      "site_id": "W1778",
+      "site_name": "W1778 CREDITVIEW_DERRY",
+      "ip": "10.252.208.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7703": {
+      "site_id": "W7703",
+      "site_name": "W7703 MORTIMER'S POINT",
+      "ip": "10.117.198.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4578": {
+      "site_id": "W4578",
+      "site_name": "W4578 MOSBOROUGH MTO",
+      "ip": "10.252.159.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0020": {
+      "site_id": "W0020",
+      "site_name": "W0020 BRANTFORD",
+      "ip": "10.252.66.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4881": {
+      "site_id": "W4881",
+      "site_name": "W4881 HWY 401_WINSTON CHURCHILL",
+      "ip": "10.252.42.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0817": {
+      "site_id": "W0817",
+      "site_name": "W0817 YORK MILLS RD 10",
+      "ip": "10.252.46.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1302": {
+      "site_id": "W1302",
+      "site_name": "W1302 HWY 407_LOCUST HILL",
+      "ip": "10.252.47.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0341": {
+      "site_id": "J0341",
+      "site_name": "J0341 PETERSVILLE",
+      "ip": "10.252.29.89",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1650": {
+      "site_id": "F1650",
+      "site_name": "F1650 LAC DES COMMISSAIRES",
+      "ip": "10.117.181.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1030": {
+      "site_id": "W1030",
+      "site_name": "W1030 TOTTENHAM",
+      "ip": "10.252.95.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2907": {
+      "site_id": "W2907",
+      "site_name": "W2907 SOUTHWORTH",
+      "ip": "10.252.196.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0131": {
+      "site_id": "W0131",
+      "site_name": "W0131 STURGEON FALLS",
+      "ip": "10.252.80.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1649": {
+      "site_id": "F1649",
+      "site_name": "F1649 LAC PRINZELES",
+      "ip": "10.117.180.246",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1669": {
+      "site_id": "E1669",
+      "site_name": "E1669 SAINT-HERMAS",
+      "ip": "10.117.182.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0393": {
+      "site_id": "T0393",
+      "site_name": "T0393 LAC PREISSAC",
+      "ip": "10.48.223.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1820": {
+      "site_id": "W1820",
+      "site_name": "W1820 BAYSVILLE WEST",
+      "ip": "10.252.150.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T1000": {
+      "site_id": "T1000",
+      "site_name": "T1000 KIPAWA",
+      "ip": "10.252.178.179",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0099": {
+      "site_id": "W0099",
+      "site_name": "W0099 POWASSAN",
+      "ip": "10.252.154.198",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W2001": {
+      "site_id": "W2001",
+      "site_name": "W2001 SAUBLE BEACH DT",
+      "ip": "10.252.74.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4832": {
+      "site_id": "W4832",
+      "site_name": "W4832 FLETCHER LAKE",
+      "ip": "10.252.146.226",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0184": {
+      "site_id": "W0184",
+      "site_name": "W0184 CARNARVON",
+      "ip": "10.252.74.38",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J3465": {
+      "site_id": "J3465",
+      "site_name": "J3465 TROUT RIVER NL 1",
+      "ip": "10.117.253.19",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0443": {
+      "site_id": "J0443",
+      "site_name": "J0443 WINDSOR",
+      "ip": "10.252.16.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0182": {
+      "site_id": "W0182",
+      "site_name": "W0182 CROSSHILL",
+      "ip": "10.252.65.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1677": {
+      "site_id": "W1677",
+      "site_name": "W1677 MISSISSAUGA RD 15801",
+      "ip": "10.252.149.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1653": {
+      "site_id": "F1653",
+      "site_name": "F1653 LABRECQUE",
+      "ip": "10.117.181.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1652": {
+      "site_id": "F1652",
+      "site_name": "F1652 ARGENTENAY",
+      "ip": "10.117.181.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F2818": {
+      "site_id": "F2818",
+      "site_name": "F2818 ST-JUDE NORD",
+      "ip": "10.117.191.4",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0419": {
+      "site_id": "W0419",
+      "site_name": "W0419 MARSLAND DR",
+      "ip": "10.252.66.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1763": {
+      "site_id": "E1763",
+      "site_name": "E1763 SAINT-EPHREM D'UPTON",
+      "ip": "10.117.181.115",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0161": {
+      "site_id": "W0161",
+      "site_name": "W0161 ALLISTON",
+      "ip": "10.252.89.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0649": {
+      "site_id": "W0649",
+      "site_name": "W0649 ROBLIN LAKE",
+      "ip": "10.252.93.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0239": {
+      "site_id": "W0239",
+      "site_name": "W0239 AYR",
+      "ip": "10.252.90.55",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1067": {
+      "site_id": "W1067",
+      "site_name": "W1067 COLLINGWOOD GRAIN ELEVATORS",
+      "ip": "10.252.84.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0196": {
+      "site_id": "W0196",
+      "site_name": "W0196 KALADAR",
+      "ip": "10.252.89.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1827": {
+      "site_id": "W1827",
+      "site_name": "W1827 WEST GUILFORD",
+      "ip": "10.252.81.54",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1687": {
+      "site_id": "F1687",
+      "site_name": "F1687 MT APICA",
+      "ip": "10.117.177.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0786": {
+      "site_id": "W0786",
+      "site_name": "W0786 STIRLING",
+      "ip": "10.252.94.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1182": {
+      "site_id": "F1182",
+      "site_name": "F1182 ST-STANISLAS",
+      "ip": "10.117.179.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0267": {
+      "site_id": "T0267",
+      "site_name": "T0267 LANDRIENNE",
+      "ip": "10.117.180.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1132": {
+      "site_id": "F1132",
+      "site_name": "F1132 BROMONT",
+      "ip": "10.252.116.132",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0209": {
+      "site_id": "W0209",
+      "site_name": "W0209 AMERICAN DR A",
+      "ip": "10.252.34.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1301": {
+      "site_id": "W1301",
+      "site_name": "W1301 HWY 407_BROCK RD",
+      "ip": "10.252.138.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W5385": {
+      "site_id": "W5385",
+      "site_name": "W5385 VINELAND",
+      "ip": "10.117.198.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1191": {
+      "site_id": "W1191",
+      "site_name": "W1191 INK LAKE",
+      "ip": "10.252.144.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1135": {
+      "site_id": "W1135",
+      "site_name": "W1135 WESTON RD  1901",
+      "ip": "10.252.38.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4465": {
+      "site_id": "W4465",
+      "site_name": "W4465 BALM BEACH",
+      "ip": "10.117.196.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1932": {
+      "site_id": "J1932",
+      "site_name": "J1932 PENNY MTN BELL",
+      "ip": "10.117.142.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1742": {
+      "site_id": "E1742",
+      "site_name": "E1742 DOMAINE-HEBERT",
+      "ip": "10.117.180.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0236": {
+      "site_id": "W0236",
+      "site_name": "W0236 COOKSTOWN",
+      "ip": "10.252.77.54",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1681": {
+      "site_id": "F1681",
+      "site_name": "F1681 LAC JANVRY",
+      "ip": "10.117.179.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0195": {
+      "site_id": "W0195",
+      "site_name": "W0195 TWEED",
+      "ip": "10.252.89.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0386": {
+      "site_id": "W0386",
+      "site_name": "W0386 KING CITY",
+      "ip": "10.252.45.166",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1796": {
+      "site_id": "E1796",
+      "site_name": "E1796 CKLC-FM WOLFE ISLAND",
+      "ip": "10.117.189.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0406": {
+      "site_id": "E0406",
+      "site_name": "E0406 ST FELICIEN",
+      "ip": "10.252.98.6",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1146": {
+      "site_id": "W1146",
+      "site_name": "W1146 YELVERTON",
+      "ip": "10.252.144.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3452": {
+      "site_id": "W3452",
+      "site_name": "W3452 NOTTAWA",
+      "ip": "10.117.198.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0383": {
+      "site_id": "T0383",
+      "site_name": "T0383 LAC CAVILLON",
+      "ip": "10.117.187.243",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0391": {
+      "site_id": "T0391",
+      "site_name": "T0391 LAC BOLDIES",
+      "ip": "10.117.183.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0121": {
+      "site_id": "W0121",
+      "site_name": "W0121 COMMANDER",
+      "ip": "10.252.33.180",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0154": {
+      "site_id": "W0154",
+      "site_name": "W0154 COURTRIGHT",
+      "ip": "10.252.88.196",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W7709": {
+      "site_id": "W7709",
+      "site_name": "W7709 KILWORTHY",
+      "ip": "10.117.192.67",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "L0086": {
+      "site_id": "L0086",
+      "site_name": "L0086 RESOLUTE BAY",
+      "ip": "10.48.161.22",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0374": {
+      "site_id": "W0374",
+      "site_name": "W0374 GRAFTON",
+      "ip": "10.252.91.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0210": {
+      "site_id": "W0210",
+      "site_name": "W0210 BOLTON",
+      "ip": "10.252.40.186",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1784": {
+      "site_id": "W1784",
+      "site_name": "W1784 CLAREVIEW",
+      "ip": "10.252.154.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0007": {
+      "site_id": "W0007",
+      "site_name": "W0007 CENTENNIAL",
+      "ip": "10.252.49.20",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1854": {
+      "site_id": "W1854",
+      "site_name": "W1854 KENNEDY ROAD 13992 (BLOOMINGTON RD AND KENNEDY RD)",
+      "ip": "10.252.138.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9111": {
+      "site_id": "W9111",
+      "site_name": "W9111 NESTOR FALLS",
+      "ip": "10.48.224.19",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1685": {
+      "site_id": "J1685",
+      "site_name": "J1685 HOULTON BORDER RF SITE",
+      "ip": "10.37.39.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1225": {
+      "site_id": "W1225",
+      "site_name": "W1225 BARRY S BAY",
+      "ip": "10.252.144.183",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0076": {
+      "site_id": "W0076",
+      "site_name": "W0076 STOUFFVILLE",
+      "ip": "10.252.45.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0804": {
+      "site_id": "W0804",
+      "site_name": "W0804 OLD VICTORIA",
+      "ip": "10.252.94.166",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3872": {
+      "site_id": "W3872",
+      "site_name": "W3872 SPRINGBANK DR 500",
+      "ip": "10.117.198.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J2100": {
+      "site_id": "J2100",
+      "site_name": "J2100 GREENHILL",
+      "ip": "10.117.248.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W5763": {
+      "site_id": "W5763",
+      "site_name": "W5763 BRONTE ST S 1193",
+      "ip": "10.48.201.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4987": {
+      "site_id": "W4987",
+      "site_name": "W4987 CLARKWAY & MAYFIELD RD",
+      "ip": "10.48.206.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0421": {
+      "site_id": "T0421",
+      "site_name": "T0421 9-MILES-CORNER",
+      "ip": "10.117.178.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7706": {
+      "site_id": "W7706",
+      "site_name": "W7706 BASS LAKE MUSKOKA",
+      "ip": "10.117.199.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7156": {
+      "site_id": "W7156",
+      "site_name": "W7156 MARY LAKE",
+      "ip": "10.117.197.211",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J2102": {
+      "site_id": "J2102",
+      "site_name": "J2102 BOURGEOIS-GRANDE DIGUE",
+      "ip": "10.252.174.195",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0838": {
+      "site_id": "J0838",
+      "site_name": "J0838 RED BANK",
+      "ip": "10.48.134.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1361": {
+      "site_id": "F1361",
+      "site_name": "F1361 SHIPSHAW",
+      "ip": "10.117.188.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9008": {
+      "site_id": "W9008",
+      "site_name": "W9008 CARSON CT",
+      "ip": "10.48.200.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3579": {
+      "site_id": "F3579",
+      "site_name": "F3579 CHEMIN TOURVILLE",
+      "ip": "10.117.182.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1634": {
+      "site_id": "F1634",
+      "site_name": "F1634 DABLON",
+      "ip": "10.117.180.228",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J1297": {
+      "site_id": "J1297",
+      "site_name": "J1297 RALEIGH",
+      "ip": "10.117.143.67",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7960": {
+      "site_id": "W7960",
+      "site_name": "W7960 TROUT CREEK",
+      "ip": "10.117.192.83",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0545": {
+      "site_id": "W0545",
+      "site_name": "W0545 HILL RD 60",
+      "ip": "10.252.68.229",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0395": {
+      "site_id": "T0395",
+      "site_name": "T0395 LAC HEBECOURT",
+      "ip": "10.117.187.227",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X1859": {
+      "site_id": "X1859",
+      "site_name": "X1859 HUMBERWEST PKWY",
+      "ip": "10.117.247.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0200": {
+      "site_id": "W0200",
+      "site_name": "W0200 BRIGHTON",
+      "ip": "10.252.90.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0266": {
+      "site_id": "T0266",
+      "site_name": "T0266 VAL-SENNEVILLE",
+      "ip": "10.117.178.179",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J5013": {
+      "site_id": "J5013",
+      "site_name": "J5013 BRACKLEY BEACH",
+      "ip": "10.117.142.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W5038": {
+      "site_id": "W5038",
+      "site_name": "W5038 DINGMAN DR 3050",
+      "ip": "10.117.197.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0384": {
+      "site_id": "T0384",
+      "site_name": "T0384 DORVAL LODGE",
+      "ip": "10.117.182.245",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "E1795": {
+      "site_id": "E1795",
+      "site_name": "E1795 FM-STL BROCKVILLE",
+      "ip": "10.117.177.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7522": {
+      "site_id": "W7522",
+      "site_name": "W7522 HILLY LAKE-KENORA",
+      "ip": "10.117.189.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0379": {
+      "site_id": "T0379",
+      "site_name": "T0379 PONT RIVER",
+      "ip": "10.117.184.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0436": {
+      "site_id": "F0436",
+      "site_name": "F0436 VALINOUET",
+      "ip": "10.252.119.86",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W8718": {
+      "site_id": "W8718",
+      "site_name": "W8718 EASTERN AVE 1080",
+      "ip": "10.48.201.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W8829": {
+      "site_id": "W8829",
+      "site_name": "W8829 TALWOOD DR 6 (WATER TOWER)",
+      "ip": "10.48.201.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W8012": {
+      "site_id": "W8012",
+      "site_name": "W8012 SENECA COLLEGE KING CAMPUS",
+      "ip": "10.117.193.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J3467": {
+      "site_id": "J3467",
+      "site_name": "J3467 WINTERTON NL",
+      "ip": "10.117.251.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3271": {
+      "site_id": "W3271",
+      "site_name": "W3271 SANDY COVE",
+      "ip": "10.117.197.20",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W2326": {
+      "site_id": "W2326",
+      "site_name": "W2326 CRIEFF",
+      "ip": "10.117.198.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "D0173": {
+      "site_id": "D0173",
+      "site_name": "D0173 INUVIK AIRPORT",
+      "ip": "10.48.167.178",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1832": {
+      "site_id": "E1832",
+      "site_name": "E1832 DES PRAIRIES",
+      "ip": "10.117.188.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2551": {
+      "site_id": "W2551",
+      "site_name": "W2551 HILLSDALE",
+      "ip": "10.252.152.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0390": {
+      "site_id": "T0390",
+      "site_name": "T0390 WINNEWAY TOWER",
+      "ip": "10.117.179.51",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F2709": {
+      "site_id": "F2709",
+      "site_name": "F2709 L'ASCENSION-DE-NOTRE-SEIGNEUR (RS)",
+      "ip": "10.117.186.203",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3536": {
+      "site_id": "W3536",
+      "site_name": "W3536 KENILWORTH AVE N AND BARTON ST E",
+      "ip": "10.117.198.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3366": {
+      "site_id": "F3366",
+      "site_name": "F3366 GRAND BOIS\u00c3\u2030",
+      "ip": "10.117.185.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0440": {
+      "site_id": "J0440",
+      "site_name": "J0440 AIRPORT 2",
+      "ip": "10.252.26.148",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "X2170": {
+      "site_id": "X2170",
+      "site_name": "X2170 INBLDG - ECLRT - EMSF YARD - TELCO HOTEL",
+      "ip": "10.117.206.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3869": {
+      "site_id": "F3869",
+      "site_name": "F3869 ACHILLE-GAGNON",
+      "ip": "10.117.235.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3407": {
+      "site_id": "F3407",
+      "site_name": "F3407 LANARK HEIGHTS",
+      "ip": "10.117.187.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0231": {
+      "site_id": "W0231",
+      "site_name": "W0231 ADVANCE",
+      "ip": "10.252.32.166",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1836": {
+      "site_id": "W1836",
+      "site_name": "W1836 HWY12 / HORSESHOE VALLEY RD",
+      "ip": "10.252.159.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3107": {
+      "site_id": "F3107",
+      "site_name": "F3107 MONT ADSTOCK",
+      "ip": "10.117.178.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3627": {
+      "site_id": "F3627",
+      "site_name": "F3627 LAC-DES-ILES",
+      "ip": "10.117.235.3",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0166": {
+      "site_id": "W0166",
+      "site_name": "W0166 BALLINAFAD",
+      "ip": "10.252.89.70",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "F0722": {
+      "site_id": "F0722",
+      "site_name": "F0722 ST POLYCARPE",
+      "ip": "10.117.178.196",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "T0392": {
+      "site_id": "T0392",
+      "site_name": "T0392 REMIGNY",
+      "ip": "10.117.179.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1852": {
+      "site_id": "W1852",
+      "site_name": "W1852 LAKERIDGE_BAYLY",
+      "ip": "10.252.48.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3451": {
+      "site_id": "W3451",
+      "site_name": "W3451 SQUIRE JOHN'S BLUE MOUNTAIN",
+      "ip": "10.252.195.195",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1880": {
+      "site_id": "E1880",
+      "site_name": "E1880 AVONMORE RD",
+      "ip": "10.117.184.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7154": {
+      "site_id": "W7154",
+      "site_name": "W7154 GERMANIA",
+      "ip": "10.117.196.147",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0221": {
+      "site_id": "W0221",
+      "site_name": "W0221 SELECT",
+      "ip": "10.252.34.134",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9978": {
+      "site_id": "W9978",
+      "site_name": "W9978 HWY 406_WOODLAWN RD",
+      "ip": "10.117.195.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9853": {
+      "site_id": "W9853",
+      "site_name": "W9853 HWY 406_FIRST ST LOUTH",
+      "ip": "10.117.193.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0129": {
+      "site_id": "W0129",
+      "site_name": "W0129 INDUSTRIAL PKWY",
+      "ip": "10.252.33.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0428": {
+      "site_id": "T0428",
+      "site_name": "T0428 SOUTH PORCUPINE WEST",
+      "ip": "10.117.184.115",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2241": {
+      "site_id": "W2241",
+      "site_name": "W2241 TOTTENHAM WT",
+      "ip": "10.252.220.247",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3067": {
+      "site_id": "W3067",
+      "site_name": "W3067 QEW_GUELPH LINE",
+      "ip": "10.48.206.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W8703": {
+      "site_id": "W8703",
+      "site_name": "W8703 KENORA SNOW DRIVE",
+      "ip": "10.117.186.227",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W8099": {
+      "site_id": "W8099",
+      "site_name": "W8099 DUNTROON",
+      "ip": "10.117.196.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0394": {
+      "site_id": "T0394",
+      "site_name": "T0394 CLERICY",
+      "ip": "10.117.183.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9207": {
+      "site_id": "W9207",
+      "site_name": "W9207 LORETTO",
+      "ip": "10.252.198.133",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X2681": {
+      "site_id": "X2681",
+      "site_name": "X2681 BRITANNIA RD_THOMPSON RD",
+      "ip": "10.117.241.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0087": {
+      "site_id": "W0087",
+      "site_name": "W0087 WARDEN",
+      "ip": "10.252.42.118",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3623": {
+      "site_id": "W3623",
+      "site_name": "W3623 LAFONTAINE",
+      "ip": "10.252.198.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7474": {
+      "site_id": "W7474",
+      "site_name": "W7474 NEWTONVILLE RD 2136",
+      "ip": "10.117.197.244",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "E1830": {
+      "site_id": "E1830",
+      "site_name": "E1830 TERRASSE-DUVERNAY",
+      "ip": "10.117.188.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W6365": {
+      "site_id": "W6365",
+      "site_name": "W6365 BIG CURVE ACRES",
+      "ip": "10.117.199.133",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2244": {
+      "site_id": "W2244",
+      "site_name": "W2244 NIPISSING",
+      "ip": "10.252.82.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1560": {
+      "site_id": "W1560",
+      "site_name": "W1560 NIPPISSING #10",
+      "ip": "10.252.68.21",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W4577": {
+      "site_id": "W4577",
+      "site_name": "W4577 OLD CHURCH / CENTREVILLE CREEK",
+      "ip": "10.117.194.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4714": {
+      "site_id": "W4714",
+      "site_name": "W4714 KING ST W 255 (HAMILTON)",
+      "ip": "10.48.230.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3779": {
+      "site_id": "W3779",
+      "site_name": "W3779 FERGUS DT",
+      "ip": "10.252.155.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0397": {
+      "site_id": "T0397",
+      "site_name": "T0397 ANGLIERS",
+      "ip": "10.117.179.19",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1509": {
+      "site_id": "W1509",
+      "site_name": "W1509 HWY 118 _ HWY 28",
+      "ip": "10.252.147.6",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W5147": {
+      "site_id": "W5147",
+      "site_name": "W5147 HURONTARIO AND WANLESS",
+      "ip": "10.117.200.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0209": {
+      "site_id": "E0209",
+      "site_name": "E0209 GANANOQUE",
+      "ip": "10.252.116.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X2434": {
+      "site_id": "X2434",
+      "site_name": "X2434 BLOOR ST_MERRITT ST",
+      "ip": "10.252.33.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1888": {
+      "site_id": "J1888",
+      "site_name": "J1888 BAULINE LINE",
+      "ip": "10.48.130.19",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0478": {
+      "site_id": "T0478",
+      "site_name": "T0478 MISTISSINI MESO",
+      "ip": "10.117.232.51",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W6887": {
+      "site_id": "W6887",
+      "site_name": "W6887 THESSALON DT",
+      "ip": "10.117.193.67",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3630": {
+      "site_id": "F3630",
+      "site_name": "F3630 AMHERST-VENDEE",
+      "ip": "10.117.185.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1427": {
+      "site_id": "W1427",
+      "site_name": "W1427 MISSISSAUGA RD 6750",
+      "ip": "10.252.185.233",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0288": {
+      "site_id": "W0288",
+      "site_name": "W0288 BANCROFT",
+      "ip": "10.252.71.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0389": {
+      "site_id": "T0389",
+      "site_name": "T0389 LAC BEAUCHASTEL",
+      "ip": "10.117.189.3",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0187": {
+      "site_id": "W0187",
+      "site_name": "W0187 HALIBURTON",
+      "ip": "10.252.74.86",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0377": {
+      "site_id": "W0377",
+      "site_name": "W0377 BELLEVILLE SOUTH",
+      "ip": "10.252.66.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0014": {
+      "site_id": "F0014",
+      "site_name": "F0014 DES_TEXTILES",
+      "ip": "10.252.110.98",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0237": {
+      "site_id": "E0237",
+      "site_name": "E0237 PEMBROKE",
+      "ip": "10.252.121.88",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9238": {
+      "site_id": "W9238",
+      "site_name": "W9238 WELLINGTON ST 129",
+      "ip": "10.117.195.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0141": {
+      "site_id": "W0141",
+      "site_name": "W0141 CLAYSON",
+      "ip": "10.252.36.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0276": {
+      "site_id": "E0276",
+      "site_name": "E0276 PRESCOTT",
+      "ip": "10.252.123.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0227": {
+      "site_id": "E0227",
+      "site_name": "E0227 DRUMMOND CENTER",
+      "ip": "10.252.103.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0183": {
+      "site_id": "W0183",
+      "site_name": "W0183 MINDEN",
+      "ip": "10.252.74.22",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0293": {
+      "site_id": "E0293",
+      "site_name": "E0293 LONG SAULT",
+      "ip": "10.252.123.166",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1811": {
+      "site_id": "E1811",
+      "site_name": "E1811 DOMAINE-DU-REPOS",
+      "ip": "10.117.184.67",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0229": {
+      "site_id": "E0229",
+      "site_name": "E0229 CHANTRY",
+      "ip": "10.252.120.150",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J8117": {
+      "site_id": "J8117",
+      "site_name": "J8117 LOGAN ROAD",
+      "ip": "10.117.251.211",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W6839": {
+      "site_id": "W6839",
+      "site_name": "W6839 EAST ST & ALBERT ST E SSM",
+      "ip": "10.48.230.67",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0235": {
+      "site_id": "E0235",
+      "site_name": "E0235 RENFREW",
+      "ip": "10.252.109.182",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0284": {
+      "site_id": "E0284",
+      "site_name": "E0284 VANKLEEK HILL",
+      "ip": "10.252.123.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J8079": {
+      "site_id": "J8079",
+      "site_name": "J8079 BRIDGETOWN CTV",
+      "ip": "10.252.170.211",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9179": {
+      "site_id": "W9179",
+      "site_name": "W9179 HORNER AND KIPLING",
+      "ip": "10.117.201.194",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1461": {
+      "site_id": "W1461",
+      "site_name": "W1461 STONEY POINT",
+      "ip": "10.252.146.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3589": {
+      "site_id": "F3589",
+      "site_name": "F3589 HWY148 - RTE DU CANTON",
+      "ip": "10.117.183.67",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1432": {
+      "site_id": "J1432",
+      "site_name": "J1432 MACKENZIE BLDG",
+      "ip": "10.252.234.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4249": {
+      "site_id": "W4249",
+      "site_name": "W4249 BRADFORD SOUTH",
+      "ip": "10.48.140.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7717": {
+      "site_id": "W7717",
+      "site_name": "W7717 CAMEL LAKE",
+      "ip": "10.117.241.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0279": {
+      "site_id": "E0279",
+      "site_name": "E0279 LANCASTER",
+      "ip": "10.252.123.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0931": {
+      "site_id": "T0931",
+      "site_name": "T0931 COBALT",
+      "ip": "10.252.179.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3864": {
+      "site_id": "W3864",
+      "site_name": "W3864 CENTRAL AVE 311",
+      "ip": "10.252.46.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1463": {
+      "site_id": "W1463",
+      "site_name": "W1463 RAYMOND",
+      "ip": "10.252.80.166",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1380": {
+      "site_id": "W1380",
+      "site_name": "W1380 QEW_WARNER",
+      "ip": "10.252.145.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0409": {
+      "site_id": "E0409",
+      "site_name": "E0409 SIMONCOUCHE",
+      "ip": "10.252.107.39",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3575": {
+      "site_id": "W3575",
+      "site_name": "W3575 SOUTHAMPTON",
+      "ip": "10.252.198.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1633": {
+      "site_id": "W1633",
+      "site_name": "W1633 COPETOWN",
+      "ip": "10.252.149.106",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W3377": {
+      "site_id": "W3377",
+      "site_name": "W3377 PALMERSTON",
+      "ip": "10.252.205.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9720": {
+      "site_id": "W9720",
+      "site_name": "W9720 HURON_FISHER-HALLMAN RD (KITCHENER)",
+      "ip": "10.117.194.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2561": {
+      "site_id": "W2561",
+      "site_name": "W2561 KESWICK (TELUS)",
+      "ip": "10.252.85.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0289": {
+      "site_id": "W0289",
+      "site_name": "W0289 PICTON",
+      "ip": "10.252.90.199",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1759": {
+      "site_id": "W1759",
+      "site_name": "W1759 LONDON RD_RUSSELL ST",
+      "ip": "10.252.81.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0624": {
+      "site_id": "J0624",
+      "site_name": "J0624 SEAFORTH",
+      "ip": "10.252.172.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1968": {
+      "site_id": "J1968",
+      "site_name": "J1968 NEW HARBOUR",
+      "ip": "10.48.129.211",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W2605": {
+      "site_id": "W2605",
+      "site_name": "W2605 STONEY CREEK (TELUS)",
+      "ip": "10.252.86.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1571": {
+      "site_id": "J1571",
+      "site_name": "J1571 PORTLAND STREET",
+      "ip": "10.48.131.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3579": {
+      "site_id": "W3579",
+      "site_name": "W3579 SEAFORTH",
+      "ip": "10.252.203.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2552": {
+      "site_id": "W2552",
+      "site_name": "W2552 HWY 93 _ REG RD 27",
+      "ip": "10.252.152.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W5194": {
+      "site_id": "W5194",
+      "site_name": "W5194 FROOMFIELD",
+      "ip": "10.252.222.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2637": {
+      "site_id": "W2637",
+      "site_name": "W2637 HWY 8 452 (STONEY CREEK)",
+      "ip": "10.252.84.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1337": {
+      "site_id": "W1337",
+      "site_name": "W1337 WILLOWDALE CRES 340 (SARNIA)",
+      "ip": "10.252.84.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0511": {
+      "site_id": "E0511",
+      "site_name": "E0511 ST SAUVEUR",
+      "ip": "10.252.103.8",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1451": {
+      "site_id": "J1451",
+      "site_name": "J1451 QUINGATE",
+      "ip": "10.48.150.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9021": {
+      "site_id": "W9021",
+      "site_name": "W9021 WANLESS DR_MISSISSAUGA RD",
+      "ip": "10.117.202.37",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0143": {
+      "site_id": "W0143",
+      "site_name": "W0143 HELENA",
+      "ip": "10.252.71.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0246": {
+      "site_id": "E0246",
+      "site_name": "E0246 ARDEN",
+      "ip": "10.252.122.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2667": {
+      "site_id": "W2667",
+      "site_name": "W2667 DUFFERIN ST _ RUTHERFORD RD",
+      "ip": "10.252.142.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J8055": {
+      "site_id": "J8055",
+      "site_name": "J8055 MARTINS RIVER",
+      "ip": "10.117.248.52",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W4127": {
+      "site_id": "W4127",
+      "site_name": "W4127 GLENRIDGE AVE 541",
+      "ip": "10.48.143.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X0731": {
+      "site_id": "X0731",
+      "site_name": "X0731 HAMILTON RD / WARD ST",
+      "ip": "10.117.244.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0944": {
+      "site_id": "W0944",
+      "site_name": "W0944 CENTRAL AVE 111 (FORT ERIE) WT",
+      "ip": "10.252.83.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4387": {
+      "site_id": "W4387",
+      "site_name": "W4387 NIAGARA COLLEGE -TAYLOR RD 135",
+      "ip": "10.48.189.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2363": {
+      "site_id": "W2363",
+      "site_name": "W2363 MILVERTON",
+      "ip": "10.252.157.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4222": {
+      "site_id": "W4222",
+      "site_name": "W4222 WILLIS RD AND PINE VALLEY DR",
+      "ip": "10.252.215.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3661": {
+      "site_id": "W3661",
+      "site_name": "W3661 BLOOMINGTON DOWNS",
+      "ip": "10.117.200.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W8993": {
+      "site_id": "W8993",
+      "site_name": "W8993 GREENSTONE GOLD",
+      "ip": "10.117.195.180",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1089": {
+      "site_id": "W1089",
+      "site_name": "W1089 WELLINGTON RD S 855",
+      "ip": "10.252.83.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2269": {
+      "site_id": "W2269",
+      "site_name": "W2269 AIRPORT RD & BRAYDON BLVD",
+      "ip": "10.252.51.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1811": {
+      "site_id": "W1811",
+      "site_name": "W1811 QEW_TRAFALGAR RD",
+      "ip": "10.252.142.133",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X0725": {
+      "site_id": "X0725",
+      "site_name": "X0725 KIPLING AVE 2901",
+      "ip": "10.117.202.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J2114": {
+      "site_id": "J2114",
+      "site_name": "J2114 ERB SETTLEMENT-ROUTE1",
+      "ip": "10.117.131.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4523": {
+      "site_id": "W4523",
+      "site_name": "W4523 LAKESHORE 1363 (BURLINGTON)",
+      "ip": "10.252.201.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3609": {
+      "site_id": "F3609",
+      "site_name": "F3609 LE BOIS\u00c3\u2030",
+      "ip": "10.117.230.227",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3576": {
+      "site_id": "W3576",
+      "site_name": "W3576 PORT ELGIN DT",
+      "ip": "10.252.204.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X1843": {
+      "site_id": "X1843",
+      "site_name": "X1843 OMEMEE VHF",
+      "ip": "10.252.72.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3166": {
+      "site_id": "W3166",
+      "site_name": "W3166 DIXIE RD & PETER ROBERTSON BLVD",
+      "ip": "10.252.187.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7722": {
+      "site_id": "W7722",
+      "site_name": "W7722 HUMPHREY",
+      "ip": "10.117.193.211",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3476": {
+      "site_id": "W3476",
+      "site_name": "W3476 COUNTRY INN",
+      "ip": "10.252.222.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0222": {
+      "site_id": "W0222",
+      "site_name": "W0222 WINGARDEN",
+      "ip": "10.252.32.133",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1445": {
+      "site_id": "W1445",
+      "site_name": "W1445 SNELGROVE PLAZA LOW-SITE",
+      "ip": "10.252.191.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7373": {
+      "site_id": "W7373",
+      "site_name": "W7373 BASS PRO MILLS DR 151",
+      "ip": "10.48.201.150",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1359": {
+      "site_id": "F1359",
+      "site_name": "F1359 ST-FULGENCE",
+      "ip": "10.117.229.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1345": {
+      "site_id": "W1345",
+      "site_name": "W1345 COUNTRY HILL DR 250",
+      "ip": "10.252.73.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3595": {
+      "site_id": "F3595",
+      "site_name": "F3595 LA PATRIE (RS)",
+      "ip": "10.117.229.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4921": {
+      "site_id": "W4921",
+      "site_name": "W4921 KENNEDY & CARLTON",
+      "ip": "10.48.193.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "S1323": {
+      "site_id": "S1323",
+      "site_name": "S1323 SAINT-LUDGER",
+      "ip": "10.117.187.131",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4103": {
+      "site_id": "W4103",
+      "site_name": "W4103 EDWARDS BLVD_ANNAGEM BLVD",
+      "ip": "10.48.194.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2638": {
+      "site_id": "W2638",
+      "site_name": "W2638 WASHBURN DR 173",
+      "ip": "10.252.84.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0639": {
+      "site_id": "E0639",
+      "site_name": "E0639 FARNHAM",
+      "ip": "10.252.96.7",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0811": {
+      "site_id": "W0811",
+      "site_name": "W0811 BASELINE RD",
+      "ip": "10.252.83.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4125": {
+      "site_id": "W4125",
+      "site_name": "W4125 RUTHERFORD AND WESTBOURNE",
+      "ip": "10.252.215.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9242": {
+      "site_id": "W9242",
+      "site_name": "W9242 CREDITVIEW AND SANDALWOOD",
+      "ip": "10.117.202.116",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "X0674": {
+      "site_id": "X0674",
+      "site_name": "X0674 BARTON ST_CENTENNIAL PKWY (MESO)",
+      "ip": "10.117.240.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E2094": {
+      "site_id": "E2094",
+      "site_name": "E2094 CLERMONT",
+      "ip": "10.117.229.178",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9806": {
+      "site_id": "W9806",
+      "site_name": "W9806 THE COLLEGEWAY & WINSTON CHURCHILL (MESO)",
+      "ip": "10.117.240.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3531": {
+      "site_id": "W3531",
+      "site_name": "W3531 EMERALD ST S_MAIN ST E",
+      "ip": "10.252.196.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3628": {
+      "site_id": "F3628",
+      "site_name": "F3628 RIVIERE MATAWIN",
+      "ip": "10.117.228.35",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2017": {
+      "site_id": "W2017",
+      "site_name": "W2017 FINCH AVE 56 (SARNIA)",
+      "ip": "10.252.84.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9108": {
+      "site_id": "W9108",
+      "site_name": "W9108 CELESTICA",
+      "ip": "10.117.203.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3409": {
+      "site_id": "W3409",
+      "site_name": "W3409 WINDWARD DR 4",
+      "ip": "10.252.205.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4873": {
+      "site_id": "W4873",
+      "site_name": "W4873 FAIRHILL AVE 333",
+      "ip": "10.252.230.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3482": {
+      "site_id": "W3482",
+      "site_name": "W3482 ISLINGTON AVE & NAPA VALLEY AVE",
+      "ip": "10.252.230.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1378": {
+      "site_id": "W1378",
+      "site_name": "W1378 DAVIS DR W  1600(KING CITY)",
+      "ip": "10.252.138.37",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W5235": {
+      "site_id": "W5235",
+      "site_name": "W5235 JANE ST/AMERICA AVE",
+      "ip": "10.48.197.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9034": {
+      "site_id": "W9034",
+      "site_name": "W9034 SKYWAY AVE 161",
+      "ip": "10.117.201.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2911": {
+      "site_id": "W2911",
+      "site_name": "W2911 HARTZEL RD_DUNVEGAN RD",
+      "ip": "10.117.192.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1850": {
+      "site_id": "W1850",
+      "site_name": "W1850 TRENCH ST  10",
+      "ip": "10.252.48.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1084": {
+      "site_id": "W1084",
+      "site_name": "W1084 SANDY LANE 1275",
+      "ip": "10.252.83.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1732": {
+      "site_id": "W1732",
+      "site_name": "W1732 CHURCH ST  AJAX",
+      "ip": "10.252.48.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0895": {
+      "site_id": "W0895",
+      "site_name": "W0895 ORANGEVILLE DOWNTOWN",
+      "ip": "10.252.83.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7704": {
+      "site_id": "W7704",
+      "site_name": "W7704 SKELETON BAY LAKE ROSSEAU",
+      "ip": "10.117.193.83",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1307": {
+      "site_id": "W1307",
+      "site_name": "W1307 QUEENSWAY AVE  30",
+      "ip": "10.252.51.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9480": {
+      "site_id": "W9480",
+      "site_name": "W9480 WOODCOCK BROTHERS",
+      "ip": "10.117.194.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9275": {
+      "site_id": "W9275",
+      "site_name": "W9275 RAINHAM RD 5981",
+      "ip": "10.117.243.116",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1245": {
+      "site_id": "W1245",
+      "site_name": "W1245 EAST VALHALLA DR  50",
+      "ip": "10.252.57.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1860": {
+      "site_id": "W1860",
+      "site_name": "W1860 UPPER MIDDLE_8TH LINE",
+      "ip": "10.48.197.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3207": {
+      "site_id": "W3207",
+      "site_name": "W3207 THE GORE RD",
+      "ip": "10.252.208.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T1010": {
+      "site_id": "T1010",
+      "site_name": "T1010 MCKENZIE  (KEEWATIN)",
+      "ip": "10.252.176.131",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1495": {
+      "site_id": "J1495",
+      "site_name": "J1495 NORTHFIELD",
+      "ip": "10.117.248.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J8053": {
+      "site_id": "J8053",
+      "site_name": "J8053 GRANT ROAD",
+      "ip": "10.117.250.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J3461": {
+      "site_id": "J3461",
+      "site_name": "J3461 HAMPDEN NL 1",
+      "ip": "10.117.250.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J2103": {
+      "site_id": "J2103",
+      "site_name": "J2103 COBEQUID PASS",
+      "ip": "10.117.248.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1139": {
+      "site_id": "W1139",
+      "site_name": "W1139 GLEN HILL DR",
+      "ip": "10.252.56.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1815": {
+      "site_id": "E1815",
+      "site_name": "E1815 NITRO_ROUTES_132_201",
+      "ip": "10.117.232.212",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W9479": {
+      "site_id": "W9479",
+      "site_name": "W9479 HAMILTON RD 89",
+      "ip": "10.117.240.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4002": {
+      "site_id": "W4002",
+      "site_name": "W4002 OLD FINCH AVENUE 363 (ROGERS COLOCATE C2785)",
+      "ip": "10.252.227.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1608": {
+      "site_id": "J1608",
+      "site_name": "J1608 MILLER LAKE",
+      "ip": "10.117.250.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4112": {
+      "site_id": "W4112",
+      "site_name": "W4112 VAUGHAN MILLS MALL",
+      "ip": "10.252.225.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1180": {
+      "site_id": "W1180",
+      "site_name": "W1180 OWEN SOUND DT",
+      "ip": "10.252.84.6",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J2210": {
+      "site_id": "J2210",
+      "site_name": "J2210 ST EDWARD",
+      "ip": "10.252.171.35",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1600": {
+      "site_id": "W1600",
+      "site_name": "W1600 TAUNTON_ALTONA  PICKERING",
+      "ip": "10.252.138.68",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W9237": {
+      "site_id": "W9237",
+      "site_name": "W9237 THORNBURY WEST",
+      "ip": "10.117.242.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3960": {
+      "site_id": "W3960",
+      "site_name": "W3960 BATTLEFORD RD 2645",
+      "ip": "10.48.193.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0497": {
+      "site_id": "E0497",
+      "site_name": "E0497 WINCHESTER",
+      "ip": "10.252.104.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1440": {
+      "site_id": "W1440",
+      "site_name": "W1440 MOUNT CARMEL",
+      "ip": "10.252.78.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7711": {
+      "site_id": "W7711",
+      "site_name": "W7711 STANLEY HOUSE",
+      "ip": "10.117.193.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X6129": {
+      "site_id": "X6129",
+      "site_name": "X6129 INBLDG - TTC BSH_1 33 BLOOR ST (NHR)",
+      "ip": "10.48.137.147",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W7970": {
+      "site_id": "W7970",
+      "site_name": "W7970 WILBERFORCE",
+      "ip": "10.48.189.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9236": {
+      "site_id": "W9236",
+      "site_name": "W9236 ANCHOR BAY TRAILER PARK",
+      "ip": "10.117.195.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J8059": {
+      "site_id": "J8059",
+      "site_name": "J8059 EAST DOVER",
+      "ip": "10.117.253.131",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1167": {
+      "site_id": "J1167",
+      "site_name": "J1167 TORBAYMANS POND",
+      "ip": "10.117.253.51",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0941": {
+      "site_id": "W0941",
+      "site_name": "W0941 DUFFERIN_KING-VAUGHAN RD",
+      "ip": "10.252.60.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7725": {
+      "site_id": "W7725",
+      "site_name": "W7725 BALA BELL CO",
+      "ip": "10.117.242.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0446": {
+      "site_id": "W0446",
+      "site_name": "W0446 HWY 404_14TH AVE",
+      "ip": "10.252.58.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1020": {
+      "site_id": "W1020",
+      "site_name": "W1020 PIONEER RD",
+      "ip": "10.252.42.196",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0059": {
+      "site_id": "W0059",
+      "site_name": "W0059 COBOURG",
+      "ip": "10.252.71.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2454": {
+      "site_id": "W2454",
+      "site_name": "W2454 NORTH PARK 2250",
+      "ip": "10.252.143.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9264": {
+      "site_id": "W9264",
+      "site_name": "W9264 TURKEY POINT",
+      "ip": "10.117.240.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3623": {
+      "site_id": "F3623",
+      "site_name": "F3623 LAC BECS-SCIE",
+      "ip": "10.117.229.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X3990": {
+      "site_id": "X3990",
+      "site_name": "X3990 SALEM",
+      "ip": "10.117.243.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9215": {
+      "site_id": "W9215",
+      "site_name": "W9215 WALTON RACEWAY",
+      "ip": "10.117.194.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4160": {
+      "site_id": "W4160",
+      "site_name": "W4160 YONGE & EDGAR AVE",
+      "ip": "10.252.228.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0047": {
+      "site_id": "W0047",
+      "site_name": "W0047 WYECROFT",
+      "ip": "10.252.42.103",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X1725": {
+      "site_id": "X1725",
+      "site_name": "X1725 HAMILTON RD 1163",
+      "ip": "10.117.242.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0482": {
+      "site_id": "F0482",
+      "site_name": "F0482 ST JACQUES-LEEDS",
+      "ip": "10.252.111.214",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0316": {
+      "site_id": "W0316",
+      "site_name": "W0316 GRANITE COURT",
+      "ip": "10.252.187.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0057": {
+      "site_id": "W0057",
+      "site_name": "W0057 JANE_HWY 7",
+      "ip": "10.252.49.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1248": {
+      "site_id": "W1248",
+      "site_name": "W1248 HWY 404_AURORA RD",
+      "ip": "10.252.47.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J3456": {
+      "site_id": "J3456",
+      "site_name": "J3456 BURIN NL 1",
+      "ip": "10.117.252.131",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0232": {
+      "site_id": "J0232",
+      "site_name": "J0232 THORBURN LAKE",
+      "ip": "10.37.13.59",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2518": {
+      "site_id": "W2518",
+      "site_name": "W2518 SHORNCLIFFE RD  37",
+      "ip": "10.252.60.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0016": {
+      "site_id": "F0016",
+      "site_name": "F0016 CARMAN",
+      "ip": "10.252.116.55",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0835": {
+      "site_id": "W0835",
+      "site_name": "W0835 SUNDERLAND",
+      "ip": "10.252.76.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2497": {
+      "site_id": "W2497",
+      "site_name": "W2497 KITCHENER AVE  316",
+      "ip": "10.252.58.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X4803": {
+      "site_id": "X4803",
+      "site_name": "X4803 BUTTONVILLE",
+      "ip": "10.48.193.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2143": {
+      "site_id": "W2143",
+      "site_name": "W2143 BEVERLY HILLS DRIVE 21",
+      "ip": "10.252.40.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1669": {
+      "site_id": "W1669",
+      "site_name": "W1669 BAYVIEW AVE 2395",
+      "ip": "10.252.44.87",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3764": {
+      "site_id": "W3764",
+      "site_name": "W3764 HUNTLEY STREET 77",
+      "ip": "10.252.213.37",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4183": {
+      "site_id": "W4183",
+      "site_name": "W4183 KIPLING AVE & EVANS AVE",
+      "ip": "10.252.189.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1497": {
+      "site_id": "W1497",
+      "site_name": "W1497 FINCH AVE. & MORNINGSIDE RD.(20-22 CASEBRIDGE CRT)",
+      "ip": "10.252.43.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4070": {
+      "site_id": "W4070",
+      "site_name": "W4070 BLEECKER STREET 375",
+      "ip": "10.252.213.18",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1165": {
+      "site_id": "W1165",
+      "site_name": "W1165 PINEBUSH RD 211 (HWY 401_FRANKLIN BLVD)",
+      "ip": "10.252.69.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0250": {
+      "site_id": "W0250",
+      "site_name": "W0250 BIGGAR",
+      "ip": "10.252.65.150",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1244": {
+      "site_id": "W1244",
+      "site_name": "W1244 YONGE ST  7411",
+      "ip": "10.252.47.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0826": {
+      "site_id": "W0826",
+      "site_name": "W0826 RIDGEWAY",
+      "ip": "10.252.72.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1366": {
+      "site_id": "W1366",
+      "site_name": "W1366 KENNEDY_SANDALWOOD",
+      "ip": "10.252.62.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2476": {
+      "site_id": "W2476",
+      "site_name": "W2476 QUEENSWAY_HWY 427",
+      "ip": "10.252.62.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2511": {
+      "site_id": "W2511",
+      "site_name": "W2511 HOWDEN RD  115",
+      "ip": "10.252.59.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X4444": {
+      "site_id": "X4444",
+      "site_name": "X4444 SANDHURST CIR 1600",
+      "ip": "10.117.207.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1156": {
+      "site_id": "W1156",
+      "site_name": "W1156 HWY 407_HWY 403",
+      "ip": "10.252.224.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0639": {
+      "site_id": "F0639",
+      "site_name": "F0639 DENISON",
+      "ip": "10.252.127.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W5360": {
+      "site_id": "W5360",
+      "site_name": "W5360 HWY 27/KIRBY RD",
+      "ip": "10.48.198.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J4444": {
+      "site_id": "J4444",
+      "site_name": "J4444 MT EDWARD BUSINESS PARK EASTLINK COLO",
+      "ip": "10.117.253.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3911": {
+      "site_id": "W3911",
+      "site_name": "W3911 CLARKWAY DR",
+      "ip": "10.252.215.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1500": {
+      "site_id": "W1500",
+      "site_name": "W1500 HWY 401_YONGE ST. (WARNER MOVE)",
+      "ip": "10.252.38.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3473": {
+      "site_id": "W3473",
+      "site_name": "W3473 BISHOP TUTU BLVD 25",
+      "ip": "10.252.191.166",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0223": {
+      "site_id": "E0223",
+      "site_name": "E0223 NAPANEE",
+      "ip": "10.252.120.6",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J8102": {
+      "site_id": "J8102",
+      "site_name": "J8102 WYSE ROAD",
+      "ip": "10.117.253.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3599": {
+      "site_id": "F3599",
+      "site_name": "F3599 SAURON",
+      "ip": "10.117.230.35",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4074": {
+      "site_id": "W4074",
+      "site_name": "W4074 GRENVILLE ST 77",
+      "ip": "10.252.215.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1342": {
+      "site_id": "W1342",
+      "site_name": "W1342 BATHURST ST 755",
+      "ip": "10.252.47.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2502": {
+      "site_id": "W2502",
+      "site_name": "W2502 MARMAC DR  50",
+      "ip": "10.252.59.2",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0211": {
+      "site_id": "E0211",
+      "site_name": "E0211 CEDAR GROVE",
+      "ip": "10.252.117.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2501": {
+      "site_id": "W2501",
+      "site_name": "W2501 WENTWORTH ST W  505",
+      "ip": "10.252.58.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2510": {
+      "site_id": "W2510",
+      "site_name": "W2510 ORENDA RD",
+      "ip": "10.252.59.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7475": {
+      "site_id": "W7475",
+      "site_name": "W7475 MARYCROFT 171",
+      "ip": "10.117.201.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1379": {
+      "site_id": "W1379",
+      "site_name": "W1379 HWY 401_ISLINGTON AVE",
+      "ip": "10.252.52.194",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1856": {
+      "site_id": "W1856",
+      "site_name": "W1856 QUEEN_DUFFERIN",
+      "ip": "10.252.139.102",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0380": {
+      "site_id": "E0380",
+      "site_name": "E0380 MASKINONGE",
+      "ip": "10.252.124.120",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0213": {
+      "site_id": "E0213",
+      "site_name": "E0213 REEVECRAIG",
+      "ip": "10.252.118.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0875": {
+      "site_id": "J0875",
+      "site_name": "J0875 INBLDG - HEALTH SCIENCES COMPLEX (HYB)",
+      "ip": "10.117.252.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0940": {
+      "site_id": "E0940",
+      "site_name": "E0940 MANSEAU",
+      "ip": "10.252.115.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0582": {
+      "site_id": "W0582",
+      "site_name": "W0582 HWY 401_THICKSON",
+      "ip": "10.252.51.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2494": {
+      "site_id": "W2494",
+      "site_name": "W2494 KEELE VALLEY LANDFILL",
+      "ip": "10.252.58.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3384": {
+      "site_id": "W3384",
+      "site_name": "W3384 ROYAL YORK AND NEWCASTLE",
+      "ip": "10.252.188.133",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2668": {
+      "site_id": "W2668",
+      "site_name": "W2668 TAUNTON RD _ TOWNLINE RD",
+      "ip": "10.252.60.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0220": {
+      "site_id": "W0220",
+      "site_name": "W0220 PASSMORE",
+      "ip": "10.252.40.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0992": {
+      "site_id": "W0992",
+      "site_name": "W0992 HWY 407_HWY 50",
+      "ip": "10.252.42.178",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2498": {
+      "site_id": "W2498",
+      "site_name": "W2498 RITSON RD N  328",
+      "ip": "10.252.58.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0259": {
+      "site_id": "W0259",
+      "site_name": "W0259 WESTON RD  10367",
+      "ip": "10.252.41.21",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "F0811": {
+      "site_id": "F0811",
+      "site_name": "F0811 INISVILLE",
+      "ip": "10.252.109.119",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4187": {
+      "site_id": "W4187",
+      "site_name": "W4187 KEELE ST & GULLIVER RD",
+      "ip": "10.252.230.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2495": {
+      "site_id": "W2495",
+      "site_name": "W2495 HWY 410_ORENDA RD",
+      "ip": "10.252.58.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2965": {
+      "site_id": "W2965",
+      "site_name": "W2965 MELITA GARDENS 600",
+      "ip": "10.48.192.54",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0283": {
+      "site_id": "E0283",
+      "site_name": "E0283 POINTE FORTUNE",
+      "ip": "10.252.106.150",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X1412": {
+      "site_id": "X1412",
+      "site_name": "X1412 QEW_THIRD LINE",
+      "ip": "10.117.243.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9028": {
+      "site_id": "W9028",
+      "site_name": "W9028 CROOKSTON ROAD",
+      "ip": "10.117.197.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3376": {
+      "site_id": "W3376",
+      "site_name": "W3376 ACTON SOUTH",
+      "ip": "10.48.190.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3624": {
+      "site_id": "F3624",
+      "site_name": "F3624 LA BOSTONNAIS",
+      "ip": "10.117.191.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0898": {
+      "site_id": "W0898",
+      "site_name": "W0898 BARRIE NORTH",
+      "ip": "10.252.72.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X9994": {
+      "site_id": "X9994",
+      "site_name": "X9994 20 ERB ST WATERLOO ON N2L 1T2",
+      "ip": "10.117.196.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2669": {
+      "site_id": "W2669",
+      "site_name": "W2669 HARMONY RD N  1661",
+      "ip": "10.252.55.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2120": {
+      "site_id": "W2120",
+      "site_name": "W2120 MISSISSAUGA RD. 8525  HUTTONVILLE",
+      "ip": "10.252.49.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0383": {
+      "site_id": "F0383",
+      "site_name": "F0383 NORTH AUGUSTA",
+      "ip": "10.252.119.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X1921": {
+      "site_id": "X1921",
+      "site_name": "X1921 KERRISDALE BLVD",
+      "ip": "10.48.197.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4234": {
+      "site_id": "W4234",
+      "site_name": "W4234 CHANNEL NINE COURT 9",
+      "ip": "10.252.230.166",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0215": {
+      "site_id": "E0215",
+      "site_name": "E0215 CORNWALL",
+      "ip": "10.252.119.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2958": {
+      "site_id": "W2958",
+      "site_name": "W2958 RICHMOND STREET WEST 800",
+      "ip": "10.252.184.55",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2516": {
+      "site_id": "W2516",
+      "site_name": "W2516 FERNSTAFF CRT  50",
+      "ip": "10.252.59.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W6366": {
+      "site_id": "W6366",
+      "site_name": "W6366 MARA RAMA BOUNDARY RD 4111",
+      "ip": "10.117.198.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1479": {
+      "site_id": "W1479",
+      "site_name": "W1479 SIMCOE ST _ CONLIN RD (OSHAWA)",
+      "ip": "10.252.43.212",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "X1675": {
+      "site_id": "X1675",
+      "site_name": "X1675 SHELDON DR 20",
+      "ip": "10.117.246.99",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0869": {
+      "site_id": "F0869",
+      "site_name": "F0869 ST-VALERIEN",
+      "ip": "10.252.121.164",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "X2158": {
+      "site_id": "X2158",
+      "site_name": "X2158 KENNEDY RD 9664",
+      "ip": "10.117.244.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3456": {
+      "site_id": "W3456",
+      "site_name": "W3456 TORBRAM & QUEEN",
+      "ip": "10.252.208.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0204": {
+      "site_id": "W0204",
+      "site_name": "W0204 SHAWSON",
+      "ip": "10.252.32.215",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0517": {
+      "site_id": "W0517",
+      "site_name": "W0517 MARYSVILLE",
+      "ip": "10.252.92.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0256": {
+      "site_id": "W0256",
+      "site_name": "W0256 VALLEY WOODS",
+      "ip": "10.252.37.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0562": {
+      "site_id": "E0562",
+      "site_name": "E0562 ABBOTSFORD",
+      "ip": "10.252.98.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J8162": {
+      "site_id": "J8162",
+      "site_name": "J8162 DARTMOUTH CROSSING -REPLACEMENT",
+      "ip": "10.117.252.115",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4260": {
+      "site_id": "W4260",
+      "site_name": "W4260 GOULAIS BAY",
+      "ip": "10.252.222.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3884": {
+      "site_id": "W3884",
+      "site_name": "W3884 CITY CENTRE DR 201",
+      "ip": "10.252.225.133",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X4090": {
+      "site_id": "X4090",
+      "site_name": "X4090 LUNDY`S LN_DRUMMOND RD",
+      "ip": "10.48.228.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J4437": {
+      "site_id": "J4437",
+      "site_name": "J4437 REPLACEMENT FOR J0767 ELSIPOGTOG",
+      "ip": "10.117.253.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X1861": {
+      "site_id": "X1861",
+      "site_name": "X1861 GURU NANAK MISSION CENTRE",
+      "ip": "10.252.141.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3985": {
+      "site_id": "W3985",
+      "site_name": "W3985 MERLIN_COUNTY RD",
+      "ip": "10.117.240.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W5393": {
+      "site_id": "W5393",
+      "site_name": "W5393 PARK LAWN RD AND BERRY RD",
+      "ip": "10.252.228.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0444": {
+      "site_id": "F0444",
+      "site_name": "F0444 LAC GALIPAULT",
+      "ip": "10.252.101.57",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0250": {
+      "site_id": "J0250",
+      "site_name": "J0250 PLEASANTVILLE",
+      "ip": "10.48.128.6",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0974": {
+      "site_id": "F0974",
+      "site_name": "F0974 BROOKDALE",
+      "ip": "10.252.122.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W6367": {
+      "site_id": "W6367",
+      "site_name": "W6367 BRODIE DR 1118",
+      "ip": "10.117.198.37",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1622": {
+      "site_id": "J1622",
+      "site_name": "J1622 OXFORD STREET",
+      "ip": "10.117.141.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1462": {
+      "site_id": "W1462",
+      "site_name": "W1462 SUTTON SHORELINE",
+      "ip": "10.252.69.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0478": {
+      "site_id": "F0478",
+      "site_name": "F0478 ABBOTTS HILL",
+      "ip": "10.252.119.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1033": {
+      "site_id": "E1033",
+      "site_name": "E1033 CHEMIN CRYSTAL",
+      "ip": "10.252.127.6",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0940": {
+      "site_id": "F0940",
+      "site_name": "F0940 ST-GERARD DES LAURENTIDES",
+      "ip": "10.252.164.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3165": {
+      "site_id": "W3165",
+      "site_name": "W3165 12134 MISSISSAUGA RD",
+      "ip": "10.117.247.164",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1849": {
+      "site_id": "W1849",
+      "site_name": "W1849 HWY 401 _ MIDLAND AVENUE",
+      "ip": "10.252.39.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1024": {
+      "site_id": "E1024",
+      "site_name": "E1024 LAC SUPERIEUR",
+      "ip": "10.48.223.150",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2520": {
+      "site_id": "W2520",
+      "site_name": "W2520 CLEMENTS RD  2000",
+      "ip": "10.252.60.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2522": {
+      "site_id": "W2522",
+      "site_name": "W2522 STOUFFVILLE RD_KENNEDY",
+      "ip": "10.252.60.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X2520": {
+      "site_id": "X2520",
+      "site_name": "X2520 RIVERMEDE RD & RAYETTE RD",
+      "ip": "10.252.39.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2491": {
+      "site_id": "W2491",
+      "site_name": "W2491 FISHERMAN DRIVE  20",
+      "ip": "10.252.58.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2483": {
+      "site_id": "W2483",
+      "site_name": "W2483 CN LAND - AURORA",
+      "ip": "10.252.61.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E1040": {
+      "site_id": "E1040",
+      "site_name": "E1040 RANG DU BORD",
+      "ip": "10.48.223.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1424": {
+      "site_id": "W1424",
+      "site_name": "W1424 WILLIAMS PKWY E 1945",
+      "ip": "10.252.185.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0043": {
+      "site_id": "W0043",
+      "site_name": "W0043 WOLFEDALE",
+      "ip": "10.252.33.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2073": {
+      "site_id": "W2073",
+      "site_name": "W2073 MARKHAM RD & MAJOR MACKENZIE DR",
+      "ip": "10.252.143.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3590": {
+      "site_id": "F3590",
+      "site_name": "F3590 OPINICON",
+      "ip": "10.48.217.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2480": {
+      "site_id": "W2480",
+      "site_name": "W2480 HWY 404_19TH AVE",
+      "ip": "10.252.58.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X6131": {
+      "site_id": "X6131",
+      "site_name": "X6131 INBLDG - TTC BSH_3 1910 YONGE STREET (NHR)",
+      "ip": "10.252.33.243",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0255": {
+      "site_id": "W0255",
+      "site_name": "W0255 BRIDGELAND",
+      "ip": "10.252.34.214",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0116": {
+      "site_id": "J0116",
+      "site_name": "J0116 CLYDE AVE",
+      "ip": "10.252.3.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4184": {
+      "site_id": "W4184",
+      "site_name": "W4184 TITAN RD & ISLINGTON AVE",
+      "ip": "10.48.195.53",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1254": {
+      "site_id": "W1254",
+      "site_name": "W1254 KINGSTON RD  6039",
+      "ip": "10.252.50.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4964": {
+      "site_id": "W4964",
+      "site_name": "W4964 THORNTON ROAD SOUTH",
+      "ip": "10.48.197.132",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0439": {
+      "site_id": "W0439",
+      "site_name": "W0439 KING_VAUGHAN",
+      "ip": "10.252.45.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0110": {
+      "site_id": "W0110",
+      "site_name": "W0110 QEB  70 (HYB)",
+      "ip": "10.252.140.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3897": {
+      "site_id": "W3897",
+      "site_name": "W3897 MICHIGAN AVE 1221",
+      "ip": "10.117.195.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0624": {
+      "site_id": "F0624",
+      "site_name": "F0624 EGANVILLE",
+      "ip": "10.252.120.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1104": {
+      "site_id": "F1104",
+      "site_name": "F1104 DUNHAM",
+      "ip": "10.252.121.118",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1789": {
+      "site_id": "W1789",
+      "site_name": "W1789 WILLIAMS PKWY E  1305",
+      "ip": "10.252.44.178",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X1941": {
+      "site_id": "X1941",
+      "site_name": "X1941 BROCK ST AND SYNDICATE AVE",
+      "ip": "10.48.136.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0360": {
+      "site_id": "W0360",
+      "site_name": "W0360 WEST TORONTO ST",
+      "ip": "10.252.41.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F1105": {
+      "site_id": "F1105",
+      "site_name": "F1105 FRELIGHSBURG",
+      "ip": "10.48.217.55",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W3516": {
+      "site_id": "W3516",
+      "site_name": "W3516 QEW_15TH ST",
+      "ip": "10.252.205.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1377": {
+      "site_id": "W1377",
+      "site_name": "W1377 BUSHBURY DR  12",
+      "ip": "10.252.48.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0351": {
+      "site_id": "F0351",
+      "site_name": "F0351 CROSBY",
+      "ip": "10.252.103.133",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W5310": {
+      "site_id": "W5310",
+      "site_name": "W5310 MILTON DT",
+      "ip": "10.48.198.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0993": {
+      "site_id": "F0993",
+      "site_name": "F0993 ARCHER",
+      "ip": "10.252.122.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1642": {
+      "site_id": "W1642",
+      "site_name": "W1642 JANE ST 1901",
+      "ip": "10.252.39.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0788": {
+      "site_id": "F0788",
+      "site_name": "F0788 BRUHAM",
+      "ip": "10.252.125.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0539": {
+      "site_id": "W0539",
+      "site_name": "W0539 QUINTE",
+      "ip": "10.252.92.102",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "F0503": {
+      "site_id": "F0503",
+      "site_name": "F0503 MAITLAND",
+      "ip": "10.252.106.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2574": {
+      "site_id": "W2574",
+      "site_name": "W2574 HWY 404 _ VANDORF",
+      "ip": "10.252.61.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1300": {
+      "site_id": "W1300",
+      "site_name": "W1300 HWY 50_MAYFIELD RD",
+      "ip": "10.252.139.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2514": {
+      "site_id": "W2514",
+      "site_name": "W2514 MIDLAND AVE  1800",
+      "ip": "10.252.59.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2213": {
+      "site_id": "W2213",
+      "site_name": "W2213 FINCH AVENUE EAST 4190",
+      "ip": "10.252.184.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2505": {
+      "site_id": "W2505",
+      "site_name": "W2505 CN LAND  VAUGHAN 1",
+      "ip": "10.252.61.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0405": {
+      "site_id": "F0405",
+      "site_name": "F0405 HILL ISLAND",
+      "ip": "10.252.119.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1602": {
+      "site_id": "W1602",
+      "site_name": "W1602 NINTH LINE _ 14TH AVE",
+      "ip": "10.252.52.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9203": {
+      "site_id": "W9203",
+      "site_name": "W9203 PARIS DT",
+      "ip": "10.252.203.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4990": {
+      "site_id": "W4990",
+      "site_name": "W4990 CASTLEMORE & GORE",
+      "ip": "10.252.210.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0327": {
+      "site_id": "F0327",
+      "site_name": "F0327 OSGOODE",
+      "ip": "10.252.106.216",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0623": {
+      "site_id": "F0623",
+      "site_name": "F0623 DOUGLAS",
+      "ip": "10.252.120.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2603": {
+      "site_id": "W2603",
+      "site_name": "W2603 PINE HEIGHTS TRAIL  2590",
+      "ip": "10.252.139.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4493": {
+      "site_id": "W4493",
+      "site_name": "W4493 MARKHAM FAIRGROUND (SITE MOVE)",
+      "ip": "10.252.140.198",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0994": {
+      "site_id": "F0994",
+      "site_name": "F0994 MERWIN",
+      "ip": "10.252.111.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W5680": {
+      "site_id": "W5680",
+      "site_name": "W5680 BAYVIEW AVE & FARMSTEAD RD",
+      "ip": "10.48.207.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0408": {
+      "site_id": "F0408",
+      "site_name": "F0408 CALABOGIE",
+      "ip": "10.252.119.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0104": {
+      "site_id": "W0104",
+      "site_name": "W0104 CANADIAN LEGION",
+      "ip": "10.252.49.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0330": {
+      "site_id": "J0330",
+      "site_name": "J0330 PRICE ST.",
+      "ip": "10.252.0.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2632": {
+      "site_id": "W2632",
+      "site_name": "W2632 HWY 400 _ HWY 7",
+      "ip": "10.252.136.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E3008": {
+      "site_id": "E3008",
+      "site_name": "E3008 CLUB DE GOLF KI-8-EB",
+      "ip": "10.117.231.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0267": {
+      "site_id": "W0267",
+      "site_name": "W0267 GUIDED CRT",
+      "ip": "10.252.34.229",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W5430": {
+      "site_id": "W5430",
+      "site_name": "W5430 ELGIN MILLS & HIGHWAY 404",
+      "ip": "10.48.198.230",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0996": {
+      "site_id": "F0996",
+      "site_name": "F0996 FINDLAY",
+      "ip": "10.252.122.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2635": {
+      "site_id": "W2635",
+      "site_name": "W2635 MCCOWAN RD_ HWY 407",
+      "ip": "10.252.136.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0505": {
+      "site_id": "F0505",
+      "site_name": "F0505 NARROWS",
+      "ip": "10.252.119.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0504": {
+      "site_id": "F0504",
+      "site_name": "F0504 MALLORYTOWN",
+      "ip": "10.252.111.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1710": {
+      "site_id": "W1710",
+      "site_name": "W1710 DUFFERIN ST _ MAJOR MACKENZIE DRIVE WEST BELL ROW",
+      "ip": "10.252.44.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1352": {
+      "site_id": "W1352",
+      "site_name": "W1352 LESLIE ST 1300",
+      "ip": "10.252.62.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0261": {
+      "site_id": "E0261",
+      "site_name": "E0261 MCCRIMMON",
+      "ip": "10.252.123.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1660": {
+      "site_id": "W1660",
+      "site_name": "W1660 MAPLE MOVE",
+      "ip": "10.252.51.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1303": {
+      "site_id": "W1303",
+      "site_name": "W1303 TAUNTON_LAKERIDGE",
+      "ip": "10.252.138.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0212": {
+      "site_id": "E0212",
+      "site_name": "E0212 CARDINAL",
+      "ip": "10.252.117.246",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0018": {
+      "site_id": "F0018",
+      "site_name": "F0018 KITLEY",
+      "ip": "10.252.116.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0939": {
+      "site_id": "E0939",
+      "site_name": "E0939 DAVELUYVILLE",
+      "ip": "10.252.115.150",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0226": {
+      "site_id": "E0226",
+      "site_name": "E0226 GALBRAITH",
+      "ip": "10.252.120.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0227": {
+      "site_id": "W0227",
+      "site_name": "W0227 BROWNS LINE",
+      "ip": "10.252.34.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X1722": {
+      "site_id": "X1722",
+      "site_name": "X1722 SOVEREIGN RD 348",
+      "ip": "10.117.244.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1945": {
+      "site_id": "W1945",
+      "site_name": "W1945 BEAVERBROOK",
+      "ip": "10.252.137.98",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0248": {
+      "site_id": "E0248",
+      "site_name": "E0248 WEMYSS",
+      "ip": "10.252.122.230",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0973": {
+      "site_id": "F0973",
+      "site_name": "F0973 CALIFORNIA",
+      "ip": "10.252.122.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0292": {
+      "site_id": "F0292",
+      "site_name": "F0292 METCALFE",
+      "ip": "10.252.106.73",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7710": {
+      "site_id": "W7710",
+      "site_name": "W7710 CLEAR LAKE PARRY SOUND",
+      "ip": "10.117.193.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X3686": {
+      "site_id": "X3686",
+      "site_name": "X3686 HALLS ROAD 4970",
+      "ip": "10.117.203.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J3457": {
+      "site_id": "J3457",
+      "site_name": "J3457 BURIN NL 2",
+      "ip": "10.117.251.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0356": {
+      "site_id": "F0356",
+      "site_name": "F0356 EICHSTEADT",
+      "ip": "10.252.118.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X5173": {
+      "site_id": "X5173",
+      "site_name": "X5173 AMAZING ROCKY PARK CAMPGROUND",
+      "ip": "10.117.245.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0628": {
+      "site_id": "F0628",
+      "site_name": "F0628 ROUTE 43",
+      "ip": "10.252.120.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0550": {
+      "site_id": "F0550",
+      "site_name": "F0550 WENDOVER",
+      "ip": "10.252.108.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0019": {
+      "site_id": "F0019",
+      "site_name": "F0019 WYLIE",
+      "ip": "10.252.116.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X2268": {
+      "site_id": "X2268",
+      "site_name": "X2268 SOUTHDALE",
+      "ip": "10.117.244.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0995": {
+      "site_id": "F0995",
+      "site_name": "F0995 CUNNINGHAM",
+      "ip": "10.252.122.135",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X3991": {
+      "site_id": "X3991",
+      "site_name": "X3991 DRAYTON DT",
+      "ip": "10.117.243.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X5588": {
+      "site_id": "X5588",
+      "site_name": "X5588 KING ST W 812",
+      "ip": "10.117.246.35",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W4223": {
+      "site_id": "W4223",
+      "site_name": "W4223 THICKSON ROAD N & DRYDEN BLVD",
+      "ip": "10.252.211.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W5290": {
+      "site_id": "W5290",
+      "site_name": "W5290 BOYD CONSERVATION AREA",
+      "ip": "10.252.62.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0794": {
+      "site_id": "F0794",
+      "site_name": "F0794 APPLE HILL",
+      "ip": "10.252.111.148",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W5226": {
+      "site_id": "W5226",
+      "site_name": "W5226 HYDRO CHINGUACOUSY QUEEN",
+      "ip": "10.48.203.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0914": {
+      "site_id": "T0914",
+      "site_name": "T0914 BASSIN - FUSION",
+      "ip": "10.252.181.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X2496": {
+      "site_id": "X2496",
+      "site_name": "X2496 MARTIN ROSS AVENUE 78 (MESO)",
+      "ip": "10.48.195.67",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0291": {
+      "site_id": "F0291",
+      "site_name": "F0291 COBDEN",
+      "ip": "10.252.105.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2100": {
+      "site_id": "W2100",
+      "site_name": "W2100 MALTON NORTH",
+      "ip": "10.252.143.102",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1617": {
+      "site_id": "W1617",
+      "site_name": "W1617 DVP_SPANBRIDGE",
+      "ip": "10.252.63.37",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0105": {
+      "site_id": "W0105",
+      "site_name": "W0105 WILSON AVE  210",
+      "ip": "10.252.33.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J5016": {
+      "site_id": "J5016",
+      "site_name": "J5016 HEART'S CONTENT",
+      "ip": "10.37.13.28",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1253": {
+      "site_id": "W1253",
+      "site_name": "W1253 KENNEDY RD 1025",
+      "ip": "10.252.136.135",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0352": {
+      "site_id": "F0352",
+      "site_name": "F0352 SOUTH BURGESS",
+      "ip": "10.252.118.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3497": {
+      "site_id": "W3497",
+      "site_name": "W3497 TORBRAM & FATHER TOBIN",
+      "ip": "10.252.191.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X4389": {
+      "site_id": "X4389",
+      "site_name": "X4389 RIPLEY",
+      "ip": "10.117.245.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9483": {
+      "site_id": "W9483",
+      "site_name": "W9483 PARK RD 36",
+      "ip": "10.117.202.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0639": {
+      "site_id": "W0639",
+      "site_name": "W0639 GREEN RIVER",
+      "ip": "10.252.137.133",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0552": {
+      "site_id": "E0552",
+      "site_name": "E0552 WHITE LAKE",
+      "ip": "10.252.125.21",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "T0904": {
+      "site_id": "T0904",
+      "site_name": "T0904 GROSSE-ILE-NORD",
+      "ip": "10.117.232.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0236": {
+      "site_id": "E0236",
+      "site_name": "E0236 STAFFORD",
+      "ip": "10.252.101.166",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0454": {
+      "site_id": "W0454",
+      "site_name": "W0454 RICHMOND HILL GC",
+      "ip": "10.252.37.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0987": {
+      "site_id": "T0987",
+      "site_name": "T0987 SOUTH PORCUPINE",
+      "ip": "10.252.179.120",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1831": {
+      "site_id": "J1831",
+      "site_name": "J1831 KILBRIDE",
+      "ip": "10.117.253.163",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0192": {
+      "site_id": "F0192",
+      "site_name": "F0192 HWY 2_401",
+      "ip": "10.252.107.229",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0625": {
+      "site_id": "F0625",
+      "site_name": "F0625 HUCKABONES",
+      "ip": "10.252.120.101",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "E0228": {
+      "site_id": "E0228",
+      "site_name": "E0228 NOLAN S CORNER",
+      "ip": "10.252.103.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0574": {
+      "site_id": "W0574",
+      "site_name": "W0574 CAMPBELLFORD",
+      "ip": "10.252.92.230",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0829": {
+      "site_id": "E0829",
+      "site_name": "E0829 GOULBOURN",
+      "ip": "10.252.115.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J5015": {
+      "site_id": "J5015",
+      "site_name": "J5015 CUSLETT",
+      "ip": "10.37.13.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0046": {
+      "site_id": "W0046",
+      "site_name": "W0046 NORTH QUEEN",
+      "ip": "10.252.33.54",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2538": {
+      "site_id": "W2538",
+      "site_name": "W2538 BAYVIEW PKWY  160",
+      "ip": "10.252.61.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0589": {
+      "site_id": "F0589",
+      "site_name": "F0589 MONTGOMERY",
+      "ip": "10.252.109.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3997": {
+      "site_id": "W3997",
+      "site_name": "W3997 SHERKSTON",
+      "ip": "10.252.217.198",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1142": {
+      "site_id": "W1142",
+      "site_name": "W1142 MCKINNEY DR  WHITBY",
+      "ip": "10.252.50.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0366": {
+      "site_id": "W0366",
+      "site_name": "W0366 OSHAWA SOUTH",
+      "ip": "10.252.41.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0098": {
+      "site_id": "W0098",
+      "site_name": "W0098 SOUTH RIVER",
+      "ip": "10.252.154.185",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0683": {
+      "site_id": "W0683",
+      "site_name": "W0683 WESLEY CORNERS",
+      "ip": "10.252.186.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2500": {
+      "site_id": "W2500",
+      "site_name": "W2500 KOA CAMP  BRIGHTON",
+      "ip": "10.252.151.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0879": {
+      "site_id": "W0879",
+      "site_name": "W0879 COLBORNE",
+      "ip": "10.252.76.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0714": {
+      "site_id": "W0714",
+      "site_name": "W0714 CHERRYWOOD",
+      "ip": "10.252.142.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J5021": {
+      "site_id": "J5021",
+      "site_name": "J5021 NEW CHELSEA",
+      "ip": "10.37.13.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0506": {
+      "site_id": "F0506",
+      "site_name": "F0506 HALSTEADS BAY",
+      "ip": "10.252.119.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0404": {
+      "site_id": "F0404",
+      "site_name": "F0404 RAVENSVIEW",
+      "ip": "10.252.102.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1110": {
+      "site_id": "W1110",
+      "site_name": "W1110 HARWOOD AVE 165",
+      "ip": "10.252.46.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1340": {
+      "site_id": "W1340",
+      "site_name": "W1340 KINGSTON RD_BROCK RD  PICKERING",
+      "ip": "10.252.47.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2508": {
+      "site_id": "W2508",
+      "site_name": "W2508 WARDEN AVE  10231",
+      "ip": "10.252.59.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0344": {
+      "site_id": "F0344",
+      "site_name": "F0344 LAC BLANC",
+      "ip": "10.252.118.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X2245": {
+      "site_id": "X2245",
+      "site_name": "X2245 WATER ST S 301",
+      "ip": "10.117.243.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0637": {
+      "site_id": "F0637",
+      "site_name": "F0637 GLENVIEW",
+      "ip": "10.252.111.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1241": {
+      "site_id": "W1241",
+      "site_name": "W1241 BAYVIEW_ST. JOHNS SIDEROAD",
+      "ip": "10.252.61.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0652": {
+      "site_id": "W0652",
+      "site_name": "W0652 HWY 401_BRIDGEPOINT CTR",
+      "ip": "10.252.46.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1130": {
+      "site_id": "W1130",
+      "site_name": "W1130 HWY 400_RUTHERFORD",
+      "ip": "10.252.38.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3966": {
+      "site_id": "W3966",
+      "site_name": "W3966 NASH RD/MAPLE GROVE RD",
+      "ip": "10.48.137.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0219": {
+      "site_id": "W0219",
+      "site_name": "W0219 BIRCHMOUNT AVE  2360",
+      "ip": "10.252.34.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0218": {
+      "site_id": "W0218",
+      "site_name": "W0218 ELLESMERE AVE  1302",
+      "ip": "10.252.34.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E2884": {
+      "site_id": "E2884",
+      "site_name": "E2884 PARC PIE-XII",
+      "ip": "10.117.229.116",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0455": {
+      "site_id": "W0455",
+      "site_name": "W0455 TOY AVE",
+      "ip": "10.252.41.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1538": {
+      "site_id": "W1538",
+      "site_name": "W1538 UFFINGTON",
+      "ip": "10.252.79.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1129": {
+      "site_id": "W1129",
+      "site_name": "W1129 HWY 400_STEELES",
+      "ip": "10.252.52.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0675": {
+      "site_id": "W0675",
+      "site_name": "W0675 HWY 401_MORNINGSIDE",
+      "ip": "10.252.42.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0194": {
+      "site_id": "W0194",
+      "site_name": "W0194 MARMORA",
+      "ip": "10.252.89.214",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1339": {
+      "site_id": "W1339",
+      "site_name": "W1339 BOWMANVILLE_DOWNTOWN",
+      "ip": "10.252.78.85",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "F3633": {
+      "site_id": "F3633",
+      "site_name": "F3633 PRINCEVILLE",
+      "ip": "10.117.232.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0075": {
+      "site_id": "W0075",
+      "site_name": "W0075 GORMLEY",
+      "ip": "10.252.45.55",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0081": {
+      "site_id": "W0081",
+      "site_name": "W0081 RYMAL",
+      "ip": "10.252.71.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2523": {
+      "site_id": "W2523",
+      "site_name": "W2523 HWY 410 _ WILLIAMS PKWY",
+      "ip": "10.252.139.37",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0277": {
+      "site_id": "E0277",
+      "site_name": "E0277 MORRISBURG",
+      "ip": "10.252.106.200",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J2277": {
+      "site_id": "J2277",
+      "site_name": "J2277 VIRGINIA PARK",
+      "ip": "10.117.252.211",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0232": {
+      "site_id": "W0232",
+      "site_name": "W0232 GLIDDEN",
+      "ip": "10.252.34.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X2234": {
+      "site_id": "X2234",
+      "site_name": "X2234 FRANKLIN BLVD 800",
+      "ip": "10.117.246.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0231": {
+      "site_id": "E0231",
+      "site_name": "E0231 PAKENHAM",
+      "ip": "10.252.120.247",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0464": {
+      "site_id": "T0464",
+      "site_name": "T0464 SAVANE",
+      "ip": "10.117.234.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1682": {
+      "site_id": "W1682",
+      "site_name": "W1682 DAGMAR",
+      "ip": "10.252.66.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9133": {
+      "site_id": "W9133",
+      "site_name": "W9133 CONCORD/THORNHILL REGIONAL PARK",
+      "ip": "10.117.207.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J2119": {
+      "site_id": "J2119",
+      "site_name": "J2119 RIPPLES",
+      "ip": "10.48.130.35",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0124": {
+      "site_id": "W0124",
+      "site_name": "W0124 VICTORIA ROAD",
+      "ip": "10.252.88.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0061": {
+      "site_id": "W0061",
+      "site_name": "W0061 BELLEVILLE",
+      "ip": "10.117.242.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1409": {
+      "site_id": "W1409",
+      "site_name": "W1409 MUNRO",
+      "ip": "10.252.145.214",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1594": {
+      "site_id": "W1594",
+      "site_name": "W1594 BETHANY",
+      "ip": "10.252.149.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1112": {
+      "site_id": "W1112",
+      "site_name": "W1112 GAMEBRIDGE",
+      "ip": "10.252.76.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3986": {
+      "site_id": "W3986",
+      "site_name": "W3986 VICTORIA RD 21135",
+      "ip": "10.48.228.52",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0246": {
+      "site_id": "W0246",
+      "site_name": "W0246 RAILROAD",
+      "ip": "10.252.90.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0487": {
+      "site_id": "T0487",
+      "site_name": "T0487 CHIGOUBICHE",
+      "ip": "10.117.234.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J8106": {
+      "site_id": "J8106",
+      "site_name": "J8106 EMMERSON RIDGE",
+      "ip": "10.117.254.51",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2337": {
+      "site_id": "W2337",
+      "site_name": "W2337 GRIMSBY EAST",
+      "ip": "10.252.158.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0465": {
+      "site_id": "J0465",
+      "site_name": "J0465 WESTCHESTER VALLEY",
+      "ip": "10.252.17.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2554": {
+      "site_id": "W2554",
+      "site_name": "W2554 STANLEY AVE 1900 (TELUS)",
+      "ip": "10.252.85.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F2892": {
+      "site_id": "F2892",
+      "site_name": "F2892 SQUATEC",
+      "ip": "10.117.228.134",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0359": {
+      "site_id": "J0359",
+      "site_name": "J0359 SAINT JOHN AIRPORT",
+      "ip": "10.252.5.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2484": {
+      "site_id": "W2484",
+      "site_name": "W2484 9TH LINE _ 19TH AVE",
+      "ip": "10.252.58.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J2121": {
+      "site_id": "J2121",
+      "site_name": "J2121 PINE GLEN RD RIVERVIEW",
+      "ip": "10.117.249.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0165": {
+      "site_id": "J0165",
+      "site_name": "J0165 GULL LAKE",
+      "ip": "10.37.13.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0312": {
+      "site_id": "J0312",
+      "site_name": "J0312 THOMPSON ROAD",
+      "ip": "10.252.18.231",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J5017": {
+      "site_id": "J5017",
+      "site_name": "J5017 MCIVERS ROUTE 440",
+      "ip": "10.37.13.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1614": {
+      "site_id": "W1614",
+      "site_name": "W1614 WISMER ST 460",
+      "ip": "10.252.149.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T1005": {
+      "site_id": "T1005",
+      "site_name": "T1005 SIOUX NARROWS",
+      "ip": "10.252.176.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0665": {
+      "site_id": "J0665",
+      "site_name": "J0665 AMHERST INDUSTRIAL PARK",
+      "ip": "10.252.17.4",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0125": {
+      "site_id": "W0125",
+      "site_name": "W0125 SCUGOG",
+      "ip": "10.252.88.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0048": {
+      "site_id": "W0048",
+      "site_name": "W0048 WONDERLAND RD N 710 (LONDON)",
+      "ip": "10.252.70.230",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1441": {
+      "site_id": "J1441",
+      "site_name": "J1441 ACADIA",
+      "ip": "10.48.145.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0364": {
+      "site_id": "J0364",
+      "site_name": "J0364 ROTHESAY",
+      "ip": "10.252.0.212",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J0353": {
+      "site_id": "J0353",
+      "site_name": "J0353 MONCTON EAST",
+      "ip": "10.252.3.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0756": {
+      "site_id": "J0756",
+      "site_name": "J0756 GONDOLA POINT",
+      "ip": "10.252.1.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1136": {
+      "site_id": "J1136",
+      "site_name": "J1136 IRISHTOWN",
+      "ip": "10.37.13.140",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0765": {
+      "site_id": "J0765",
+      "site_name": "J0765 RENFORTH",
+      "ip": "10.252.5.37",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J0462": {
+      "site_id": "J0462",
+      "site_name": "J0462 THOMPSON STATION",
+      "ip": "10.252.17.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0158": {
+      "site_id": "W0158",
+      "site_name": "W0158 MOUNT FOREST",
+      "ip": "10.252.88.229",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2362": {
+      "site_id": "W2362",
+      "site_name": "W2362 AILSA CRAIG",
+      "ip": "10.252.157.228",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J0395": {
+      "site_id": "J0395",
+      "site_name": "J0395 BATHURST CENTER",
+      "ip": "10.252.16.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0764": {
+      "site_id": "J0764",
+      "site_name": "J0764 ST HILLAIRE",
+      "ip": "10.252.13.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0378": {
+      "site_id": "W0378",
+      "site_name": "W0378 ACTON",
+      "ip": "10.252.74.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J4421": {
+      "site_id": "J4421",
+      "site_name": "J4421 MARINE PARK MESO",
+      "ip": "10.117.253.227",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1543": {
+      "site_id": "W1543",
+      "site_name": "W1543 ARISS",
+      "ip": "10.252.147.200",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0679": {
+      "site_id": "J0679",
+      "site_name": "J0679 BLUEWATER ROAD",
+      "ip": "10.252.3.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0147": {
+      "site_id": "W0147",
+      "site_name": "W0147 HEATHER",
+      "ip": "10.252.65.54",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2228": {
+      "site_id": "W2228",
+      "site_name": "W2228 NORWOOD DOWNTOWN",
+      "ip": "10.252.151.99",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0152": {
+      "site_id": "W0152",
+      "site_name": "W0152 DUNNVILLE",
+      "ip": "10.252.88.167",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0848": {
+      "site_id": "W0848",
+      "site_name": "W0848 HWY 405_QUEENSTON",
+      "ip": "10.48.177.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1338": {
+      "site_id": "W1338",
+      "site_name": "W1338 WATERWORKS RD 6152",
+      "ip": "10.252.77.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1568": {
+      "site_id": "W1568",
+      "site_name": "W1568 CHATSWORTH",
+      "ip": "10.252.148.106",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0522": {
+      "site_id": "F0522",
+      "site_name": "F0522 BEAUCHAMP",
+      "ip": "10.252.105.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1447": {
+      "site_id": "W1447",
+      "site_name": "W1447 HICKSON",
+      "ip": "10.252.146.71",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1564": {
+      "site_id": "W1564",
+      "site_name": "W1564 GLEN MEYER",
+      "ip": "10.252.148.87",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1446": {
+      "site_id": "W1446",
+      "site_name": "W1446 PORT LAMBTON",
+      "ip": "10.252.146.54",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0473": {
+      "site_id": "E0473",
+      "site_name": "E0473 24 JUIN",
+      "ip": "10.252.125.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2531": {
+      "site_id": "W2531",
+      "site_name": "W2531 CAMPBELLVILLE (TELUS)",
+      "ip": "10.252.139.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0355": {
+      "site_id": "J0355",
+      "site_name": "J0355 BRUNSWICK SQUARE",
+      "ip": "10.252.5.102",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2553": {
+      "site_id": "W2553",
+      "site_name": "W2553 NANTICOKE",
+      "ip": "10.252.85.182",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0017": {
+      "site_id": "W0017",
+      "site_name": "W0017 CHATHAM",
+      "ip": "10.252.70.166",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0781": {
+      "site_id": "J0781",
+      "site_name": "J0781 MAPLETON ROAD",
+      "ip": "10.252.170.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0360": {
+      "site_id": "J0360",
+      "site_name": "J0360 MARYLAND HILL",
+      "ip": "10.252.0.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1869": {
+      "site_id": "W1869",
+      "site_name": "W1869 LANXESS",
+      "ip": "10.252.80.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0351": {
+      "site_id": "J0351",
+      "site_name": "J0351 RIVERVIEW",
+      "ip": "10.252.3.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0382": {
+      "site_id": "E0382",
+      "site_name": "E0382 MEMPHRE",
+      "ip": "10.252.104.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0458": {
+      "site_id": "W0458",
+      "site_name": "W0458 ROSE STREET  BARRIE",
+      "ip": "10.252.72.21",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J0782": {
+      "site_id": "J0782",
+      "site_name": "J0782 LOCH LOMOND (ROGERS CO-BUILD)",
+      "ip": "10.252.170.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0657": {
+      "site_id": "J0657",
+      "site_name": "J0657 VICTORIA JUNCTION",
+      "ip": "10.252.15.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0421": {
+      "site_id": "J0421",
+      "site_name": "J0421 ALBRO LAKE",
+      "ip": "10.252.5.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0802": {
+      "site_id": "W0802",
+      "site_name": "W0802 CHATHAM DT",
+      "ip": "10.252.75.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0763": {
+      "site_id": "J0763",
+      "site_name": "J0763 RED HEAD",
+      "ip": "10.252.5.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X4114": {
+      "site_id": "X4114",
+      "site_name": "X4114 CHERRY ST/ UNWIN AVE",
+      "ip": "10.252.211.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J4485": {
+      "site_id": "J4485",
+      "site_name": "J4485 KILLAM DRIVE",
+      "ip": "10.117.254.3",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0356": {
+      "site_id": "J0356",
+      "site_name": "J0356 WEST SAINT JOHN",
+      "ip": "10.252.4.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0602": {
+      "site_id": "J0602",
+      "site_name": "J0602 PORT WILLIAMS",
+      "ip": "10.252.27.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0439": {
+      "site_id": "J0439",
+      "site_name": "J0439 KEARNEY LAKE",
+      "ip": "10.252.5.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0577": {
+      "site_id": "J0577",
+      "site_name": "J0577 STOKIL RD",
+      "ip": "10.252.169.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0494": {
+      "site_id": "J0494",
+      "site_name": "J0494 JAMES RIVER",
+      "ip": "10.252.24.216",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J0408": {
+      "site_id": "J0408",
+      "site_name": "J0408 FALL RIVER",
+      "ip": "10.252.28.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0656": {
+      "site_id": "J0656",
+      "site_name": "J0656 TATAMAGOUCHE",
+      "ip": "10.252.18.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E2882": {
+      "site_id": "E2882",
+      "site_name": "E2882 INBLDG - COLISE TROIS-RIVIERE (ASIR)",
+      "ip": "10.117.233.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0413": {
+      "site_id": "J0413",
+      "site_name": "J0413 SUNNYSIDE",
+      "ip": "10.252.2.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0446": {
+      "site_id": "J0446",
+      "site_name": "J0446 SHANNON HILL",
+      "ip": "10.252.4.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0082": {
+      "site_id": "W0082",
+      "site_name": "W0082 WELLAND",
+      "ip": "10.252.64.12",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0486": {
+      "site_id": "J0486",
+      "site_name": "J0486 ITALY CROSS",
+      "ip": "10.252.21.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0618": {
+      "site_id": "W0618",
+      "site_name": "W0618 PETROLIA",
+      "ip": "10.252.75.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0627": {
+      "site_id": "W0627",
+      "site_name": "W0627 WEST LORNE",
+      "ip": "10.252.77.183",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0747": {
+      "site_id": "J0747",
+      "site_name": "J0747 RIVERVIEW MALL",
+      "ip": "10.252.1.133",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0521": {
+      "site_id": "F0521",
+      "site_name": "F0521 TRACY",
+      "ip": "10.252.103.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0616": {
+      "site_id": "J0616",
+      "site_name": "J0616 FOREST HILLS",
+      "ip": "10.252.4.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0160": {
+      "site_id": "W0160",
+      "site_name": "W0160 WILLIAMSFORD",
+      "ip": "10.252.88.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0480": {
+      "site_id": "T0480",
+      "site_name": "T0480 WEMOTACI",
+      "ip": "10.117.234.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0690": {
+      "site_id": "J0690",
+      "site_name": "J0690 WESTMOUNT",
+      "ip": "10.252.16.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0687": {
+      "site_id": "J0687",
+      "site_name": "J0687 DEBERT",
+      "ip": "10.252.18.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0630": {
+      "site_id": "J0630",
+      "site_name": "J0630 HARRIETSFIELD",
+      "ip": "10.252.4.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J5039": {
+      "site_id": "J5039",
+      "site_name": "J5039 PORT HOPE SIMPSON PWRS",
+      "ip": "10.37.13.108",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0666": {
+      "site_id": "J0666",
+      "site_name": "J0666 STEWIACKE",
+      "ip": "10.252.26.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0650": {
+      "site_id": "J0650",
+      "site_name": "J0650 INGONISH",
+      "ip": "10.252.23.37",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0490": {
+      "site_id": "J0490",
+      "site_name": "J0490 SYDNEY MINES",
+      "ip": "10.252.168.22",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0564": {
+      "site_id": "J0564",
+      "site_name": "J0564 LAKEVIEW RD",
+      "ip": "10.252.168.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0762": {
+      "site_id": "J0762",
+      "site_name": "J0762 RAGGED POINT",
+      "ip": "10.252.28.36",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J0607": {
+      "site_id": "J0607",
+      "site_name": "J0607 CATALONE",
+      "ip": "10.252.23.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2018": {
+      "site_id": "W2018",
+      "site_name": "W2018 HWY 401_COMMUNICATION RD",
+      "ip": "10.252.82.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0422": {
+      "site_id": "J0422",
+      "site_name": "J0422 FAIRVIEW COVE",
+      "ip": "10.252.6.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0703": {
+      "site_id": "J0703",
+      "site_name": "J0703 COLSON COVE",
+      "ip": "10.252.9.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0648": {
+      "site_id": "J0648",
+      "site_name": "J0648 BAKERS SETTLEMENT",
+      "ip": "10.252.19.198",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1189": {
+      "site_id": "W1189",
+      "site_name": "W1189 ELORA",
+      "ip": "10.252.76.229",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J0420": {
+      "site_id": "J0420",
+      "site_name": "J0420 WOLFVILLE",
+      "ip": "10.252.27.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W9153": {
+      "site_id": "W9153",
+      "site_name": "W9153 HWY 7 AT MARTIN GROVE RD",
+      "ip": "10.117.247.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1433": {
+      "site_id": "W1433",
+      "site_name": "W1433 LUCKNOW",
+      "ip": "10.252.146.38",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0423": {
+      "site_id": "J0423",
+      "site_name": "J0423 DALHOUSIE (UNIVERSITY)",
+      "ip": "10.252.7.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1909": {
+      "site_id": "W1909",
+      "site_name": "W1909 LANSDOWNE ST PTBO",
+      "ip": "10.252.81.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0691": {
+      "site_id": "J0691",
+      "site_name": "J0691 OAKES ROAD",
+      "ip": "10.252.28.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0670": {
+      "site_id": "J0670",
+      "site_name": "J0670 PORT HOOD",
+      "ip": "10.252.22.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J5019": {
+      "site_id": "J5019",
+      "site_name": "J5019 COW HEAD",
+      "ip": "10.37.13.124",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0434": {
+      "site_id": "J0434",
+      "site_name": "J0434 COLDBROOK",
+      "ip": "10.252.27.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0489": {
+      "site_id": "J0489",
+      "site_name": "J0489 HANTSPORT",
+      "ip": "10.252.168.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2237": {
+      "site_id": "W2237",
+      "site_name": "W2237 THORNDALE",
+      "ip": "10.252.153.214",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0651": {
+      "site_id": "J0651",
+      "site_name": "J0651 WALLACE",
+      "ip": "10.252.18.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0334": {
+      "site_id": "J0334",
+      "site_name": "J0334 MICHAUD MOUNTAIN",
+      "ip": "10.252.8.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0696": {
+      "site_id": "J0696",
+      "site_name": "J0696 ESKASONI",
+      "ip": "10.252.171.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3868": {
+      "site_id": "F3868",
+      "site_name": "F3868 SNUG HARBOUR",
+      "ip": "10.117.235.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2544": {
+      "site_id": "W2544",
+      "site_name": "W2544 RYMAL RD 1967",
+      "ip": "10.252.85.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0604": {
+      "site_id": "J0604",
+      "site_name": "J0604 AFTON",
+      "ip": "10.252.24.229",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0022": {
+      "site_id": "W0022",
+      "site_name": "W0022 ST CATHARINES",
+      "ip": "10.252.70.198",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3819": {
+      "site_id": "F3819",
+      "site_name": "F3819 BOUL L'ACADIE",
+      "ip": "10.117.233.228",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J0261": {
+      "site_id": "J0261",
+      "site_name": "J0261 GODALEICH HILL TMR 114",
+      "ip": "10.37.13.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0559": {
+      "site_id": "J0559",
+      "site_name": "J0559 MIDDLETON",
+      "ip": "10.252.171.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3634": {
+      "site_id": "F3634",
+      "site_name": "F3634 ROUTE CAYA",
+      "ip": "10.117.235.51",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J0441": {
+      "site_id": "J0441",
+      "site_name": "J0441 GUYSBOROUGH RADIO",
+      "ip": "10.252.24.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J5022": {
+      "site_id": "J5022",
+      "site_name": "J5022 LOCKSTON PATH",
+      "ip": "10.37.13.115",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0673": {
+      "site_id": "J0673",
+      "site_name": "J0673 SAMBRO",
+      "ip": "10.252.14.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J4463": {
+      "site_id": "J4463",
+      "site_name": "J4463 BLACKHEAD ROAD ROGERS COLO",
+      "ip": "10.117.254.19",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E3007": {
+      "site_id": "E3007",
+      "site_name": "E3007 LES ESTACADES",
+      "ip": "10.117.234.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0435": {
+      "site_id": "J0435",
+      "site_name": "J0435 TIMBERLEA WATERTOWER",
+      "ip": "10.252.31.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0635": {
+      "site_id": "J0635",
+      "site_name": "J0635 MIC MAC MALL",
+      "ip": "10.252.4.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2333": {
+      "site_id": "W2333",
+      "site_name": "W2333 HILLSBURGH",
+      "ip": "10.252.158.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J1973": {
+      "site_id": "J1973",
+      "site_name": "J1973 NORTH OF QUISPAMSIS ROGERS A0335-MESO",
+      "ip": "10.117.255.179",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0483": {
+      "site_id": "J0483",
+      "site_name": "J0483 MILL VILLAGE",
+      "ip": "10.252.21.38",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W5353": {
+      "site_id": "W5353",
+      "site_name": "W5353 LORNE PARK 1150",
+      "ip": "10.48.202.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0466": {
+      "site_id": "J0466",
+      "site_name": "J0466 AYLESFORD",
+      "ip": "10.252.25.246",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0686": {
+      "site_id": "J0686",
+      "site_name": "J0686 LACEWOOD",
+      "ip": "10.252.3.37",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1815": {
+      "site_id": "W1815",
+      "site_name": "W1815 KENNISIS LAKE",
+      "ip": "10.252.81.37",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W2240": {
+      "site_id": "W2240",
+      "site_name": "W2240 GLENCOE",
+      "ip": "10.252.151.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0428": {
+      "site_id": "J0428",
+      "site_name": "J0428 OGILVIE TOWER",
+      "ip": "10.252.6.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0419": {
+      "site_id": "J0419",
+      "site_name": "J0419 DELTA",
+      "ip": "10.252.2.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0488": {
+      "site_id": "J0488",
+      "site_name": "J0488 MAVILLETTE",
+      "ip": "10.252.26.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0680": {
+      "site_id": "J0680",
+      "site_name": "J0680 LAKESIDE",
+      "ip": "10.252.6.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0406": {
+      "site_id": "J0406",
+      "site_name": "J0406 TACOMA",
+      "ip": "10.252.7.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J6000": {
+      "site_id": "J6000",
+      "site_name": "J6000 UPEI CONFEDERATION",
+      "ip": "10.117.254.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J5041": {
+      "site_id": "J5041",
+      "site_name": "J5041 RIVER ROAD",
+      "ip": "10.37.13.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0418": {
+      "site_id": "J0418",
+      "site_name": "J0418 HALIFAX SHOPPING CENTER",
+      "ip": "10.252.6.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4701": {
+      "site_id": "W4701",
+      "site_name": "W4701 CRYSTAL BEACH LAKE MUSKOKA",
+      "ip": "10.117.241.67",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0683": {
+      "site_id": "J0683",
+      "site_name": "J0683 HAMMONDS PLAINS",
+      "ip": "10.252.28.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0578": {
+      "site_id": "J0578",
+      "site_name": "J0578 MILLS RD",
+      "ip": "10.252.169.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0458": {
+      "site_id": "J0458",
+      "site_name": "J0458 SYDNEY",
+      "ip": "10.252.15.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3065": {
+      "site_id": "M3065",
+      "site_name": "M3065 SH 002",
+      "ip": "10.48.201.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0270": {
+      "site_id": "J0270",
+      "site_name": "J0270 GRANITE CANAL TMR 112",
+      "ip": "10.37.13.91",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3014": {
+      "site_id": "M3014",
+      "site_name": "M3014 CBFGSX1S",
+      "ip": "10.252.210.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0508": {
+      "site_id": "J0508",
+      "site_name": "J0508 BORDEN PEI",
+      "ip": "10.252.23.102",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7470": {
+      "site_id": "W7470",
+      "site_name": "W7470 CLARKE RD 570 (LONDON)",
+      "ip": "10.117.194.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3148": {
+      "site_id": "M3148",
+      "site_name": "M3148 SH 085",
+      "ip": "10.252.214.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0029": {
+      "site_id": "J0029",
+      "site_name": "J0029 MCPHEE PONTIAC",
+      "ip": "10.252.4.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0497": {
+      "site_id": "J0497",
+      "site_name": "J0497 MULGRAVE",
+      "ip": "10.252.24.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2577": {
+      "site_id": "W2577",
+      "site_name": "W2577 YONGE ST  INNISFIL",
+      "ip": "10.252.86.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0585": {
+      "site_id": "W0585",
+      "site_name": "W0585 CAVAN",
+      "ip": "10.48.180.230",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J5018": {
+      "site_id": "J5018",
+      "site_name": "J5018 MAINLAND",
+      "ip": "10.37.13.172",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1368": {
+      "site_id": "W1368",
+      "site_name": "W1368 HWY 115 _ FISHER DR PTBO",
+      "ip": "10.252.67.117",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W2105": {
+      "site_id": "W2105",
+      "site_name": "W2105 FERGUS",
+      "ip": "10.252.82.84",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0699": {
+      "site_id": "J0699",
+      "site_name": "J0699 LAKE ECHO",
+      "ip": "10.252.169.214",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2000": {
+      "site_id": "W2000",
+      "site_name": "W2000 10TH LINE W 5602",
+      "ip": "10.252.53.117",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3071": {
+      "site_id": "M3071",
+      "site_name": "M3071 SH 008",
+      "ip": "10.117.245.201",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0476": {
+      "site_id": "F0476",
+      "site_name": "F0476 LOYALIST",
+      "ip": "10.252.119.151",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0878": {
+      "site_id": "W0878",
+      "site_name": "W0878 SANDBANKS",
+      "ip": "10.252.94.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0526": {
+      "site_id": "J0526",
+      "site_name": "J0526 EL MIRA (CBC)",
+      "ip": "10.252.23.118",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J0004": {
+      "site_id": "J0004",
+      "site_name": "J0004 FREDERICTON MAIN",
+      "ip": "10.252.0.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0199": {
+      "site_id": "W0199",
+      "site_name": "W0199 BOWMANVILLE",
+      "ip": "10.252.65.103",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "M3139": {
+      "site_id": "M3139",
+      "site_name": "M3139 SH 076",
+      "ip": "10.117.192.227",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1662": {
+      "site_id": "W1662",
+      "site_name": "W1662 LAIRD_MILLWOOD",
+      "ip": "10.252.60.132",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "M3061": {
+      "site_id": "M3061",
+      "site_name": "M3061 CBBGQN83",
+      "ip": "10.252.214.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2235": {
+      "site_id": "W2235",
+      "site_name": "W2235 DORCHESTER",
+      "ip": "10.252.153.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0640": {
+      "site_id": "J0640",
+      "site_name": "J0640 BEZANSON",
+      "ip": "10.252.19.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1415": {
+      "site_id": "W1415",
+      "site_name": "W1415 SINGHAMPTON",
+      "ip": "10.252.145.246",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3006": {
+      "site_id": "M3006",
+      "site_name": "M3006 CBFGG3SB",
+      "ip": "10.252.214.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X1482": {
+      "site_id": "X1482",
+      "site_name": "X1482 LINCOLN ALEXANDER PKWY_UPPER WENTWORTH ST (MESO)",
+      "ip": "10.252.198.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0475": {
+      "site_id": "F0475",
+      "site_name": "F0475 MANITOU",
+      "ip": "10.252.101.132",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W2044": {
+      "site_id": "W2044",
+      "site_name": "W2044 ANGUS",
+      "ip": "10.252.86.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0563": {
+      "site_id": "F0563",
+      "site_name": "F0563 DEAUVILLE",
+      "ip": "10.117.234.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1875": {
+      "site_id": "W1875",
+      "site_name": "W1875 ERIN MILLS_BURNHANTHROPE",
+      "ip": "10.252.53.54",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3094": {
+      "site_id": "M3094",
+      "site_name": "M3094 SH 031",
+      "ip": "10.252.68.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0013": {
+      "site_id": "F0013",
+      "site_name": "F0013 BATTERSEA",
+      "ip": "10.252.116.20",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "M3080": {
+      "site_id": "M3080",
+      "site_name": "M3080 SH 017",
+      "ip": "10.48.228.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0618": {
+      "site_id": "J0618",
+      "site_name": "J0618 PARRSBORO",
+      "ip": "10.252.17.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2231": {
+      "site_id": "W2231",
+      "site_name": "W2231 MITCHELL",
+      "ip": "10.252.158.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W4925": {
+      "site_id": "W4925",
+      "site_name": "W4925 DUNDAS ST W_WINSTON PARK DR",
+      "ip": "10.48.193.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2530": {
+      "site_id": "W2530",
+      "site_name": "W2530 LAWSON RD (MILTON)",
+      "ip": "10.252.60.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3143": {
+      "site_id": "M3143",
+      "site_name": "M3143 SH 080",
+      "ip": "10.117.192.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3091": {
+      "site_id": "M3091",
+      "site_name": "M3091 SH 028",
+      "ip": "10.252.215.228",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "D0890": {
+      "site_id": "D0890",
+      "site_name": "D0890 ATLIN",
+      "ip": "10.117.208.5",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1395": {
+      "site_id": "W1395",
+      "site_name": "W1395 VISITORS CENTRE",
+      "ip": "10.117.192.99",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W2496": {
+      "site_id": "W2496",
+      "site_name": "W2496 HWY 2  2935",
+      "ip": "10.252.151.212",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J2024": {
+      "site_id": "J2024",
+      "site_name": "J2024 ST MARY'S NL",
+      "ip": "10.252.171.243",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0722": {
+      "site_id": "J0722",
+      "site_name": "J0722 MCNAMEE",
+      "ip": "10.252.12.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0693": {
+      "site_id": "J0693",
+      "site_name": "J0693 KEMPTOWN",
+      "ip": "10.252.170.231",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3090": {
+      "site_id": "M3090",
+      "site_name": "M3090 SH 027",
+      "ip": "10.252.66.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3089": {
+      "site_id": "M3089",
+      "site_name": "M3089 SH 026",
+      "ip": "10.252.67.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3078": {
+      "site_id": "M3078",
+      "site_name": "M3078 SH 015",
+      "ip": "10.48.228.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3151": {
+      "site_id": "M3151",
+      "site_name": "M3151 SH 088",
+      "ip": "10.117.195.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J2194": {
+      "site_id": "J2194",
+      "site_name": "J2194 MAPLETON RD (MESO)",
+      "ip": "10.117.248.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0424": {
+      "site_id": "J0424",
+      "site_name": "J0424 ENFIELD",
+      "ip": "10.252.26.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "T0940": {
+      "site_id": "T0940",
+      "site_name": "T0940 MOUNT KEMPIS",
+      "ip": "10.252.179.229",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1986": {
+      "site_id": "W1986",
+      "site_name": "W1986 MILTON E",
+      "ip": "10.252.139.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2611": {
+      "site_id": "W2611",
+      "site_name": "W2611 DEMORESTVILLE",
+      "ip": "10.252.153.84",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1057": {
+      "site_id": "W1057",
+      "site_name": "W1057 BRISTOL RD 1475",
+      "ip": "10.252.189.133",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W7716": {
+      "site_id": "W7716",
+      "site_name": "W7716 SKELETON LAKE NORTH",
+      "ip": "10.117.245.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3104": {
+      "site_id": "M3104",
+      "site_name": "M3104 SH 041",
+      "ip": "10.252.219.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3117": {
+      "site_id": "M3117",
+      "site_name": "M3117 SH 054",
+      "ip": "10.117.194.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0332": {
+      "site_id": "W0332",
+      "site_name": "W0332 LAKE MUSKOKA",
+      "ip": "10.252.91.52",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "X3544": {
+      "site_id": "X3544",
+      "site_name": "X3544 HWY 401_CEDAR CREEK RD",
+      "ip": "10.252.136.247",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "X1723": {
+      "site_id": "X1723",
+      "site_name": "X1723 ARGYLE",
+      "ip": "10.117.240.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3111": {
+      "site_id": "M3111",
+      "site_name": "M3111 SH 048",
+      "ip": "10.48.228.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2918": {
+      "site_id": "W2918",
+      "site_name": "W2918 THIRD ST 501",
+      "ip": "10.252.159.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1676": {
+      "site_id": "W1676",
+      "site_name": "W1676 RUTHERFORD 2500",
+      "ip": "10.252.43.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3105": {
+      "site_id": "M3105",
+      "site_name": "M3105 SH 042",
+      "ip": "10.117.195.132",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "M3106": {
+      "site_id": "M3106",
+      "site_name": "M3106 SH 043",
+      "ip": "10.117.195.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0675": {
+      "site_id": "J0675",
+      "site_name": "J0675 MOUNT UNIACKE",
+      "ip": "10.252.169.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0015": {
+      "site_id": "W0015",
+      "site_name": "W0015 BARRIE",
+      "ip": "10.252.70.138",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0739": {
+      "site_id": "J0739",
+      "site_name": "J0739 CHIPMAN",
+      "ip": "10.252.10.181",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0233": {
+      "site_id": "E0233",
+      "site_name": "E0233 FARRELTON",
+      "ip": "10.252.121.70",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "M3092": {
+      "site_id": "M3092",
+      "site_name": "M3092 SH 029",
+      "ip": "10.252.72.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3127": {
+      "site_id": "M3127",
+      "site_name": "M3127 SH 064",
+      "ip": "10.252.218.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3112": {
+      "site_id": "M3112",
+      "site_name": "M3112 SH 049",
+      "ip": "10.117.194.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3093": {
+      "site_id": "M3093",
+      "site_name": "M3093 SH 030",
+      "ip": "10.48.199.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3132": {
+      "site_id": "M3132",
+      "site_name": "M3132 SH 069",
+      "ip": "10.117.192.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X6251": {
+      "site_id": "X6251",
+      "site_name": "X6251 THAMES PARK TOWER - CHATHAM",
+      "ip": "10.252.65.197",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "T0477": {
+      "site_id": "T0477",
+      "site_name": "T0477 MISTISSINI RR   (EEPF)",
+      "ip": "10.117.230.20",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "X6253": {
+      "site_id": "X6253",
+      "site_name": "X6253 INGERSOLL",
+      "ip": "10.48.185.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2525": {
+      "site_id": "W2525",
+      "site_name": "W2525 BOWMANVILLE TS",
+      "ip": "10.252.221.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2196": {
+      "site_id": "W2196",
+      "site_name": "W2196 ROYAL WINDSOR DR",
+      "ip": "10.252.61.149",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X6254": {
+      "site_id": "X6254",
+      "site_name": "X6254 HARGRIEVE RD LONDON",
+      "ip": "10.252.141.228",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "M3133": {
+      "site_id": "M3133",
+      "site_name": "M3133 SH 070",
+      "ip": "10.252.220.20",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E3572": {
+      "site_id": "E3572",
+      "site_name": "E3572 GRANDMONT",
+      "ip": "10.117.235.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X6478": {
+      "site_id": "X6478",
+      "site_name": "X6478 PENETANGUISHENE RD",
+      "ip": "10.117.199.115",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0113": {
+      "site_id": "W0113",
+      "site_name": "W0113 LORELAND AVE 2253",
+      "ip": "10.252.36.132",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1611": {
+      "site_id": "W1611",
+      "site_name": "W1611 BROOKVILLE",
+      "ip": "10.252.149.54",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1866": {
+      "site_id": "W1866",
+      "site_name": "W1866 HANOVER",
+      "ip": "10.252.150.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1832": {
+      "site_id": "W1832",
+      "site_name": "W1832 SCHMON PKWY",
+      "ip": "10.252.81.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1990": {
+      "site_id": "W1990",
+      "site_name": "W1990 SPEERS RD 1257",
+      "ip": "10.252.143.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0570": {
+      "site_id": "W0570",
+      "site_name": "W0570 QEW_HAIG MICRO",
+      "ip": "10.252.55.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3188": {
+      "site_id": "M3188",
+      "site_name": "M3188 THE REFINERY DISTRICT",
+      "ip": "10.252.80.116",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W2689": {
+      "site_id": "W2689",
+      "site_name": "W2689 QEW_WINSTON CHURCHILL",
+      "ip": "10.252.136.102",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W6880": {
+      "site_id": "W6880",
+      "site_name": "W6880 REGENT & ALGONQUIN SUDBURY",
+      "ip": "10.48.192.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3759": {
+      "site_id": "W3759",
+      "site_name": "W3759 PARKHILL &  HWY 7",
+      "ip": "10.48.137.244",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3378": {
+      "site_id": "F3378",
+      "site_name": "F3378 LANCASTER HWY 34",
+      "ip": "10.117.180.116",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "D0236": {
+      "site_id": "D0236",
+      "site_name": "D0236 IQALUIT AIRPORT",
+      "ip": "10.48.164.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0831": {
+      "site_id": "W0831",
+      "site_name": "W0831 SPEYSIDE",
+      "ip": "10.252.137.229",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2482": {
+      "site_id": "W2482",
+      "site_name": "W2482 KING RD_HWY 400",
+      "ip": "10.252.61.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F0012": {
+      "site_id": "F0012",
+      "site_name": "F0012 PRINCESS",
+      "ip": "10.252.111.196",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "M3075": {
+      "site_id": "M3075",
+      "site_name": "M3075 SH 012",
+      "ip": "10.252.219.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1588": {
+      "site_id": "W1588",
+      "site_name": "W1588 KESWICK SOUTH",
+      "ip": "10.252.148.228",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J0677": {
+      "site_id": "J0677",
+      "site_name": "J0677 CHURCH POINT",
+      "ip": "10.252.26.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3142": {
+      "site_id": "M3142",
+      "site_name": "M3142 SH 079",
+      "ip": "10.48.201.227",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1867": {
+      "site_id": "W1867",
+      "site_name": "W1867 GUELPH DELTA HOTEL",
+      "ip": "10.252.156.21",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1828": {
+      "site_id": "W1828",
+      "site_name": "W1828 BELLEVILLE CENTRAL",
+      "ip": "10.252.81.69",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0491": {
+      "site_id": "J0491",
+      "site_name": "J0491 SILVER LANE",
+      "ip": "10.252.168.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3140": {
+      "site_id": "M3140",
+      "site_name": "M3140 SH 077",
+      "ip": "10.48.200.99",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1240": {
+      "site_id": "W1240",
+      "site_name": "W1240 AIRPORT RD  16764",
+      "ip": "10.252.144.212",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1988": {
+      "site_id": "W1988",
+      "site_name": "W1988 CANADIAN DR (NIAGARA FALLS)",
+      "ip": "10.252.81.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0185": {
+      "site_id": "W0185",
+      "site_name": "W0185 DORSET",
+      "ip": "10.252.74.53",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1845": {
+      "site_id": "W1845",
+      "site_name": "W1845 LOGISTICS DR 2025",
+      "ip": "10.252.43.71",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0300": {
+      "site_id": "W0300",
+      "site_name": "W0300 DEUX RIVIERES (CANTEL TOWER)",
+      "ip": "10.252.90.212",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "D0322": {
+      "site_id": "D0322",
+      "site_name": "D0322 WHITEHORSE DT NORTH",
+      "ip": "10.48.167.131",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3144": {
+      "site_id": "M3144",
+      "site_name": "M3144 SH 081",
+      "ip": "10.252.77.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3578": {
+      "site_id": "W3578",
+      "site_name": "W3578 REGENT ST 245",
+      "ip": "10.252.218.101",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0133": {
+      "site_id": "W0133",
+      "site_name": "W0133 CRESTLAWN",
+      "ip": "10.252.33.215",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2041": {
+      "site_id": "W2041",
+      "site_name": "W2041 GRANNY WHITE SIDEROAD _ HWY 12",
+      "ip": "10.252.151.57",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3134": {
+      "site_id": "M3134",
+      "site_name": "M3134 SH 071",
+      "ip": "10.117.195.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0920": {
+      "site_id": "E0920",
+      "site_name": "E0920 HWY 417_138",
+      "ip": "10.252.115.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0609": {
+      "site_id": "J0609",
+      "site_name": "J0609 LUCASVILLE",
+      "ip": "10.252.14.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1841": {
+      "site_id": "W1841",
+      "site_name": "W1841 HWY 69_REGENT ST",
+      "ip": "10.252.80.23",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2567": {
+      "site_id": "W2567",
+      "site_name": "W2567 DERRY RD (MILTON)",
+      "ip": "10.252.61.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1334": {
+      "site_id": "W1334",
+      "site_name": "W1334 LAKE ST. PETER",
+      "ip": "10.252.145.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0382": {
+      "site_id": "J0382",
+      "site_name": "J0382 NIGADOO",
+      "ip": "10.252.17.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3881": {
+      "site_id": "F3881",
+      "site_name": "F3881 GRANBY-OUEST",
+      "ip": "10.117.236.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0617": {
+      "site_id": "J0617",
+      "site_name": "J0617 SPRINGHILL",
+      "ip": "10.252.169.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0487": {
+      "site_id": "J0487",
+      "site_name": "J0487 PRINCEDALE",
+      "ip": "10.252.29.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0100": {
+      "site_id": "W0100",
+      "site_name": "W0100 NORTH BAY",
+      "ip": "10.252.71.134",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1520": {
+      "site_id": "W1520",
+      "site_name": "W1520 TWELVEMILE BAY",
+      "ip": "10.252.147.39",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1966": {
+      "site_id": "W1966",
+      "site_name": "W1966 HAGERSVILLE",
+      "ip": "10.252.151.5",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0629": {
+      "site_id": "J0629",
+      "site_name": "J0629 SHEET HARBOUR CBC",
+      "ip": "10.252.27.133",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3309": {
+      "site_id": "W3309",
+      "site_name": "W3309 VILLIERS STREET 62 (ROGERS COLOCATE)",
+      "ip": "10.252.211.10",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1991": {
+      "site_id": "W1991",
+      "site_name": "W1991 BRONTE_UPPER MIDDLE RD",
+      "ip": "10.252.55.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J4481": {
+      "site_id": "J4481",
+      "site_name": "J4481 MONTEBELLO DR",
+      "ip": "10.48.129.35",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0091": {
+      "site_id": "W0091",
+      "site_name": "W0091 PORT SEVERN",
+      "ip": "10.252.154.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0631": {
+      "site_id": "J0631",
+      "site_name": "J0631 PORT HAWKESBURY",
+      "ip": "10.252.24.36",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2521": {
+      "site_id": "W2521",
+      "site_name": "W2521 9TH LINE  14162",
+      "ip": "10.252.62.180",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1935": {
+      "site_id": "W1935",
+      "site_name": "W1935 ST JEROME  SUDBURY",
+      "ip": "10.252.68.86",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3872": {
+      "site_id": "F3872",
+      "site_name": "F3872 LAC D'ARGENT",
+      "ip": "10.48.156.132",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W1803": {
+      "site_id": "W1803",
+      "site_name": "W1803 ST GEORGE",
+      "ip": "10.252.150.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2243": {
+      "site_id": "W2243",
+      "site_name": "W2243 SARNIA RD 1075 (LONDON)",
+      "ip": "10.252.82.100",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0681": {
+      "site_id": "J0681",
+      "site_name": "J0681 ANTIGONISH EAST",
+      "ip": "10.252.169.165",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1751": {
+      "site_id": "W1751",
+      "site_name": "W1751 MAGNETAWAN",
+      "ip": "10.252.70.10",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1521": {
+      "site_id": "W1521",
+      "site_name": "W1521 MCKELLAR",
+      "ip": "10.252.69.234",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0684": {
+      "site_id": "J0684",
+      "site_name": "J0684 MORRISTOWN",
+      "ip": "10.252.26.6",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0652": {
+      "site_id": "J0652",
+      "site_name": "J0652 BELLE COTE_MARGAREE HBR",
+      "ip": "10.252.23.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2006": {
+      "site_id": "W2006",
+      "site_name": "W2006 BARRY DOWNE RD-MARCUS DR",
+      "ip": "10.252.81.212",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W2506": {
+      "site_id": "W2506",
+      "site_name": "W2506 ALSTEP DR 1780",
+      "ip": "10.252.59.53",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J0663": {
+      "site_id": "J0663",
+      "site_name": "J0663 SIMPSONS CORNER",
+      "ip": "10.252.19.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2045": {
+      "site_id": "W2045",
+      "site_name": "W2045 ALLISTON WEST",
+      "ip": "10.252.82.68",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3182": {
+      "site_id": "W3182",
+      "site_name": "W3182 HORSE COLLAR",
+      "ip": "10.48.190.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W0054": {
+      "site_id": "W0054",
+      "site_name": "W0054 GRAVENHURST",
+      "ip": "10.252.70.242",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X6241": {
+      "site_id": "X6241",
+      "site_name": "X6241 JAMIESON BONE RD",
+      "ip": "10.252.70.85",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2640": {
+      "site_id": "W2640",
+      "site_name": "W2640 WENTWORTH ST_BURLINGTON ST",
+      "ip": "10.252.85.4",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "X6458": {
+      "site_id": "X6458",
+      "site_name": "X6458 16TH AVE HANOVER",
+      "ip": "10.248.40.60",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0642": {
+      "site_id": "J0642",
+      "site_name": "J0642 DINGWALL",
+      "ip": "10.252.22.228",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0634": {
+      "site_id": "J0634",
+      "site_name": "J0634 MAHONE BAY",
+      "ip": "10.252.20.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J4579": {
+      "site_id": "J4579",
+      "site_name": "J4579 T5_087-ROI SITE BUCKET 5",
+      "ip": "10.117.255.83",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0485": {
+      "site_id": "J0485",
+      "site_name": "J0485 CLYDE RIVER",
+      "ip": "10.252.25.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0668": {
+      "site_id": "J0668",
+      "site_name": "J0668 LOCKEPORT",
+      "ip": "10.252.25.213",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J8131": {
+      "site_id": "J8131",
+      "site_name": "J8131 FORREST GREEN",
+      "ip": "10.117.128.19",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J4547": {
+      "site_id": "J4547",
+      "site_name": "J4547 CHEMIN INDUSTRIAL",
+      "ip": "10.117.255.67",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1333": {
+      "site_id": "W1333",
+      "site_name": "W1333 MADAWASKA",
+      "ip": "10.252.145.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W3360": {
+      "site_id": "W3360",
+      "site_name": "W3360 GRAND VALLEY",
+      "ip": "10.252.223.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "M3096": {
+      "site_id": "M3096",
+      "site_name": "M3096 SH 033",
+      "ip": "10.117.241.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J4504": {
+      "site_id": "J4504",
+      "site_name": "J4504 HILLSIDE",
+      "ip": "10.48.135.163",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0412": {
+      "site_id": "J0412",
+      "site_name": "J0412 SACKVILLE LANDFILL",
+      "ip": "10.252.6.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0563": {
+      "site_id": "J0563",
+      "site_name": "J0563 MOUNT EDWARD DRIVE",
+      "ip": "10.252.168.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1455": {
+      "site_id": "W1455",
+      "site_name": "W1455 OIL SPRINGS",
+      "ip": "10.252.146.148",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J4558": {
+      "site_id": "J4558",
+      "site_name": "J4558 AULAC",
+      "ip": "10.48.129.227",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W2928": {
+      "site_id": "W2928",
+      "site_name": "W2928 YONGE & HARDING BLVD",
+      "ip": "10.252.189.37",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "J0655": {
+      "site_id": "J0655",
+      "site_name": "J0655 NEW ROSS",
+      "ip": "10.252.19.229",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1705": {
+      "site_id": "W1705",
+      "site_name": "W1705 COOKS MILLS",
+      "ip": "10.252.79.180",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J4568": {
+      "site_id": "J4568",
+      "site_name": "J4568 T5_074-ROI SITE BUCKET 5",
+      "ip": "10.117.255.99",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E0383": {
+      "site_id": "E0383",
+      "site_name": "E0383 BERNIERVILLE",
+      "ip": "10.252.105.53",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "J0451": {
+      "site_id": "J0451",
+      "site_name": "J0451 DEEP COVE",
+      "ip": "10.252.31.245",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "F3883": {
+      "site_id": "F3883",
+      "site_name": "F3883 STE-CECILE-DE-MILTON",
+      "ip": "10.117.236.52",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W1484": {
+      "site_id": "W1484",
+      "site_name": "W1484 HWY 8_SAFARI RD",
+      "ip": "10.252.80.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E3570": {
+      "site_id": "E3570",
+      "site_name": "E3570 GP3R - FUSION",
+      "ip": "10.117.237.164",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "W5259": {
+      "site_id": "W5259",
+      "site_name": "W5259 CEDAR AVENUE",
+      "ip": "10.48.204.197",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E3575": {
+      "site_id": "E3575",
+      "site_name": "E3575 BENNETT",
+      "ip": "10.117.239.84",
+      "success": false,
+      "error": "Insufficient episodes: 0"
+    },
+    "W0242": {
+      "site_id": "W0242",
+      "site_name": "W0242 DELAWARE",
+      "ip": "10.252.74.101",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E3629": {
+      "site_id": "E3629",
+      "site_name": "E3629 SAINT-PACOME",
+      "ip": "10.117.236.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    },
+    "E3626": {
+      "site_id": "E3626",
+      "site_name": "E3626 SAINT-CYRILLE-DE-WENDOVER",
+      "ip": "10.117.235.196",
+      "success": false,
+      "error": "InfluxDB query failed"
+    }
+  }
+}
