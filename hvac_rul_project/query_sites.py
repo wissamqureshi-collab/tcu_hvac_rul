@@ -198,8 +198,8 @@ def fetch_weatherbit_90day_avg(latitude, longitude, api_key):
 
 def query_site_influxdb(site, password):
     """
-    SSH into site and query InfluxDB 1.x for HVAC data.
-    Returns parsed DataFrame or None on error.
+    SSH into site and query InfluxDB 1.x for HVAC data with multi-schema fallback.
+    Returns tuple: (DataFrame or None, failure_reason or None)
     """
     site_ip = site['ip']
     site_id = site['site_id']
@@ -216,83 +216,97 @@ def query_site_influxdb(site, password):
             timeout=SSH_TIMEOUT
         )
 
-        # InfluxDB query (InfluxDB 1.x InfluxQL format)
-        query = f"SELECT * FROM hvac WHERE time > now() - {QUERY_DAYS}d"
-        cmd = f'curl -s -G "http://localhost:8086/query?db=aque" --data-urlencode "q={query}"'
+        # Try multiple databases in order: aque, hvac
+        for database in ['aque', 'hvac']:
+            query = f"SELECT * FROM hvac WHERE time > now() - {QUERY_DAYS}d"
+            cmd = f'curl -s -G "http://localhost:8086/query?db={database}" --data-urlencode "q={query}"'
 
-        stdin, stdout, stderr = ssh.exec_command(cmd, timeout=QUERY_TIMEOUT)
-        output = stdout.read().decode('utf-8')
-        error = stderr.read().decode('utf-8')
+            stdin, stdout, stderr = ssh.exec_command(cmd, timeout=QUERY_TIMEOUT)
+            output = stdout.read().decode('utf-8')
+            error = stderr.read().decode('utf-8')
+
+            if error or not output:
+                logging.debug(f"{site_id}: {database} database query failed")
+                continue
+
+            try:
+                # Parse JSON response
+                response = json.loads(output)
+                if 'results' not in response or not response['results']:
+                    logging.debug(f"{site_id}: Empty results from {database}")
+                    continue
+
+                result = response['results'][0]
+                if 'series' not in result or not result['series']:
+                    logging.debug(f"{site_id}: No series in {database}")
+                    continue
+
+                # Handle multiple series (tag-based schema may return multiple)
+                df_list = []
+                for series in result['series']:
+                    columns = series.get('columns', [])
+                    values = series.get('values', [])
+
+                    if not columns or not values:
+                        continue
+
+                    df = pd.DataFrame(values, columns=columns)
+
+                    # Parse timestamp
+                    if 'time' in df.columns:
+                        df['time'] = pd.to_datetime(df['time'], utc=True)
+                    else:
+                        continue
+
+                    df_list.append(df)
+
+                if not df_list:
+                    logging.debug(f"{site_id}: No usable data from {database}")
+                    continue
+
+                # Combine multiple series
+                df = pd.concat(df_list, ignore_index=True) if len(df_list) > 1 else df_list[0]
+
+                # Convert value to numeric
+                if 'value' in df.columns:
+                    df['value'] = pd.to_numeric(df['value'], errors='coerce')
+
+                # For tag-based schema, pivot by 'alias' tag
+                if 'alias' in df.columns:
+                    df_pivot = df.pivot_table(
+                        index='time',
+                        columns='alias',
+                        values='value',
+                        aggfunc='last'
+                    ).reset_index()
+                    logging.info(f"✓ {site_id}: Retrieved {len(df_pivot)} rows from {database} (tag-based, alias pivot)")
+                    ssh.close()
+                    return df_pivot, None
+                else:
+                    # Field-based schema
+                    logging.info(f"✓ {site_id}: Retrieved {len(df)} rows from {database} (field-based)")
+                    ssh.close()
+                    return df, None
+
+            except json.JSONDecodeError:
+                logging.debug(f"{site_id}: Failed to parse JSON from {database}")
+                continue
+            except Exception as e:
+                logging.debug(f"{site_id}: Error processing {database}: {e}")
+                continue
 
         ssh.close()
-
-        if error or not output:
-            logging.warning(f"{site_id}: Query failed or no output")
-            return None
-
-        # Parse JSON response
-        response = json.loads(output)
-        if 'results' not in response or not response['results']:
-            logging.warning(f"{site_id}: Empty results from InfluxDB")
-            return None
-
-        result = response['results'][0]
-        if 'series' not in result or not result['series']:
-            logging.warning(f"{site_id}: No series in InfluxDB response")
-            return None
-
-        series = result['series'][0]
-        columns = series.get('columns', [])
-        values = series.get('values', [])
-
-        if not columns or not values:
-            logging.warning(f"{site_id}: No data in series")
-            return None
-
-        # Convert to DataFrame
-        df = pd.DataFrame(values, columns=columns)
-
-        # Parse timestamp and convert to datetime
-        if 'time' in df.columns:
-            df['time'] = pd.to_datetime(df['time'], utc=True)
-        else:
-            logging.warning(f"{site_id}: No time column in response")
-            return None
-
-        # Convert value to numeric
-        if 'value' in df.columns:
-            df['value'] = pd.to_numeric(df['value'], errors='coerce')
-
-        # For tag-based schema, pivot by 'alias' tag to create columns for each sensor
-        if 'alias' in df.columns:
-            df_pivot = df.pivot_table(
-                index='time',
-                columns='alias',
-                values='value',
-                aggfunc='last'
-            ).reset_index()
-            logging.info(f"✓ {site_id}: Retrieved {len(df_pivot)} rows from InfluxDB (pivoted by alias)")
-            return df_pivot
-        else:
-            # Fallback for field-based schema (older sites)
-            logging.info(f"✓ {site_id}: Retrieved {len(df)} rows from InfluxDB")
-            return df
+        logging.warning(f"{site_id}: No data found in aque or hvac databases")
+        return None, "No data in aque or hvac databases"
 
     except paramiko.AuthenticationException:
-        logging.error(f"{site_id}: Authentication failed (check plc user/password)")
-        return None
+        return None, "SSH authentication failed"
     except (socket.timeout, TimeoutError):
-        logging.warning(f"{site_id}: Connection timeout (unreachable or slow site)")
-        return None
+        return None, "SSH connection timeout (unreachable or slow)"
     except paramiko.SSHException as e:
-        logging.warning(f"{site_id}: SSH error: {e}")
-        return None
-    except json.JSONDecodeError:
-        logging.error(f"{site_id}: Failed to parse InfluxDB JSON response")
-        return None
+        return None, f"SSH error: {str(e)[:50]}"
     except Exception as e:
-        logging.error(f"{site_id}: Unexpected error: {e}")
-        return None
+        return None, f"Unexpected error: {str(e)[:50]}"
 
 
 # ============================================================================
@@ -524,14 +538,14 @@ def query_site_complete(site, password, weatherbit_token=None):
 
     try:
         # Query InfluxDB
-        df = query_site_influxdb(site, password)
+        df, failure_reason = query_site_influxdb(site, password)
         if df is None:
             return {
                 'site_id': site_id,
                 'site_name': site['site_name'],
                 'ip': site_ip,
                 'success': False,
-                'error': 'InfluxDB query failed'
+                'error': failure_reason or 'InfluxDB query failed'
             }
 
         # Extract episodes
@@ -856,6 +870,7 @@ def main():
 
     # Aggregate and save
     successful_sites = {k: v for k, v in results.items() if v.get('success')}
+    failed_sites = {k: v for k, v in results.items() if not v.get('success')}
     sites_with_aq = sum(1 for r in successful_sites.values() if r.get('air_quality'))
 
     urgency_counts = {
@@ -880,6 +895,17 @@ def main():
             logging.info("\nApplying pollution effect multiplier to RUL calculations...")
             apply_pollution_effect_to_rul(results, regression_results)
 
+    # Prepare failed sites list for dashboard
+    failed_sites_list = [
+        {
+            'site_id': site_id,
+            'site_name': result.get('site_name', 'N/A'),
+            'ip': result.get('ip', 'N/A'),
+            'error': result.get('error', 'Unknown error')
+        }
+        for site_id, result in failed_sites.items()
+    ]
+
     output = {
         'query_timestamp': datetime.now().isoformat(),
         'query_elapsed_seconds': elapsed,
@@ -890,6 +916,7 @@ def main():
         'urgency_summary': urgency_counts,
         'air_quality_regression': regression_results,
         'sites': results,
+        'failed_sites': failed_sites_list,
     }
 
     with open(output_file, 'w') as f:

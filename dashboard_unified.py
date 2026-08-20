@@ -1372,6 +1372,30 @@ Readings</strong><br>
                 else:
                     st.info("Not enough episodes for trend plot.")
 
+# Display failed sites table
+if data.get('failed_sites'):
+    st.markdown("---")
+    st.markdown("### 🔴 Inaccessible Sites")
+    st.markdown(f"**{len(data['failed_sites'])} sites** could not be queried. Use this table to debug and improve coverage in the next iteration.")
+
+    # Prepare failed sites dataframe
+    failed_df = pd.DataFrame(data['failed_sites'])
+    failed_df = failed_df[['site_id', 'site_name', 'ip', 'error']].copy()
+    failed_df.columns = ['Site ID', 'Site Name', 'IP', 'Failure Reason']
+
+    # Display as dataframe
+    st.dataframe(
+        failed_df,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            'Site ID': st.column_config.TextColumn(width=100),
+            'Site Name': st.column_config.TextColumn(width=200),
+            'IP': st.column_config.TextColumn(width=120),
+            'Failure Reason': st.column_config.TextColumn(width=300),
+        }
+    )
+
 st.markdown("---")
 st.markdown(f"""
 <div style="text-align:center;font-size:0.75rem;color:#6b7280;margin-top:2rem;padding:1.5rem;background:#f8fafc;border-radius:8px;border:1px solid #e5e7eb;">
