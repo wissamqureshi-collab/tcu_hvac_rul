@@ -263,8 +263,20 @@ def query_site_influxdb(site, password):
         if 'value' in df.columns:
             df['value'] = pd.to_numeric(df['value'], errors='coerce')
 
-        logging.info(f"✓ {site_id}: Retrieved {len(df)} rows from InfluxDB")
-        return df
+        # For tag-based schema, pivot by 'alias' tag to create columns for each sensor
+        if 'alias' in df.columns:
+            df_pivot = df.pivot_table(
+                index='time',
+                columns='alias',
+                values='value',
+                aggfunc='last'
+            ).reset_index()
+            logging.info(f"✓ {site_id}: Retrieved {len(df_pivot)} rows from InfluxDB (pivoted by alias)")
+            return df_pivot
+        else:
+            # Fallback for field-based schema (older sites)
+            logging.info(f"✓ {site_id}: Retrieved {len(df)} rows from InfluxDB")
+            return df
 
     except paramiko.AuthenticationException:
         logging.error(f"{site_id}: Authentication failed (check plc user/password)")
@@ -301,15 +313,8 @@ def extract_episodes(df):
     if df is None or len(df) < 2:
         return []
 
-    # Pivot by display_point to get separate columns for each sensor
-    df_pivot = df.pivot_table(
-        index='time',
-        columns='display_point',
-        values='value',
-        aggfunc='first'
-    ).reset_index()
-
-    df_pivot = df_pivot.sort_values('time').reset_index(drop=True)
+    # DataFrame is already pivoted by 'alias' in query_influxdb, so no need to pivot again
+    df_pivot = df.sort_values('time').reset_index(drop=True)
 
     # Check for critical sensors (try different naming conventions)
     fan_col = None
