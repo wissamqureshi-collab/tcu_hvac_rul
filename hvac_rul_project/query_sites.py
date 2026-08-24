@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 Query all Rogers HVAC sites (1020+) via parallel SSH + InfluxDB.
 Extract Mode 3 RUL for each site.
@@ -124,7 +125,6 @@ def load_inventory(csv_path, coords_csv_path=None):
     logging.info(f"Loaded {len(sites)} sites from inventory")
     return sites
 
-
 # ============================================================================
 # WEATHERBIT AIR QUALITY QUERY
 # ============================================================================
@@ -191,15 +191,15 @@ def fetch_weatherbit_90day_avg(latitude, longitude, api_key):
         logging.debug(f"Weatherbit fetch failed at ({latitude}, {longitude}): {e}")
         return None
 
-
 # ============================================================================
-# INFLUXDB QUERY
+# INFLUXDB QUERY WITH MULTI-DATABASE FALLBACK
 # ============================================================================
 
 def query_site_influxdb(site, password):
     """
-    SSH into site and query InfluxDB 1.x for HVAC data with multi-schema fallback.
-    Returns tuple: (DataFrame or None, failure_reason or None)
+    SSH into site and query InfluxDB 1.x for HVAC data.
+    Tries both 'aque' (modern tag-based) and 'hvac' (older field-based) databases.
+    Returns parsed DataFrame or None on error.
     """
     site_ip = site['ip']
     site_id = site['site_id']
@@ -216,7 +216,7 @@ def query_site_influxdb(site, password):
             timeout=SSH_TIMEOUT
         )
 
-        # Try multiple databases in order: aque, hvac
+        # Try both databases: aque (modern) then hvac (legacy)
         for database in ['aque', 'hvac']:
             query = f"SELECT * FROM hvac WHERE time > now() - {QUERY_DAYS}d"
             cmd = f'curl -s -G "http://localhost:8086/query?db={database}" --data-urlencode "q={query}"'
@@ -226,7 +226,7 @@ def query_site_influxdb(site, password):
             error = stderr.read().decode('utf-8')
 
             if error or not output:
-                logging.debug(f"{site_id}: {database} database query failed")
+                logging.debug(f"{site_id}: {database} database query failed or no output")
                 continue
 
             try:
@@ -241,22 +241,32 @@ def query_site_influxdb(site, password):
                     logging.debug(f"{site_id}: No series in {database}")
                     continue
 
-                # Handle multiple series (tag-based schema may return multiple)
+                # Combine all series into one DataFrame (InfluxDB may return multiple series from tag-based queries)
                 df_list = []
                 for series in result['series']:
                     columns = series.get('columns', [])
                     values = series.get('values', [])
+                    tags = series.get('tags', {})
 
                     if not columns or not values:
                         continue
 
+                    # Create DataFrame from columns and values
                     df = pd.DataFrame(values, columns=columns)
 
-                    # Parse timestamp
+                    # Add tag columns (tags are in metadata, not in values array)
+                    for tag_key, tag_value in tags.items():
+                        df[tag_key] = tag_value
+
+                    # Parse timestamp and convert to datetime
                     if 'time' in df.columns:
                         df['time'] = pd.to_datetime(df['time'], utc=True)
                     else:
                         continue
+
+                    # Convert value to numeric
+                    if 'value' in df.columns:
+                        df['value'] = pd.to_numeric(df['value'], errors='coerce')
 
                     df_list.append(df)
 
@@ -264,29 +274,12 @@ def query_site_influxdb(site, password):
                     logging.debug(f"{site_id}: No usable data from {database}")
                     continue
 
-                # Combine multiple series
+                # Combine all series into single DataFrame
                 df = pd.concat(df_list, ignore_index=True) if len(df_list) > 1 else df_list[0]
 
-                # Convert value to numeric
-                if 'value' in df.columns:
-                    df['value'] = pd.to_numeric(df['value'], errors='coerce')
-
-                # For tag-based schema, pivot by 'alias' tag
-                if 'alias' in df.columns:
-                    df_pivot = df.pivot_table(
-                        index='time',
-                        columns='alias',
-                        values='value',
-                        aggfunc='last'
-                    ).reset_index()
-                    logging.info(f"✓ {site_id}: Retrieved {len(df_pivot)} rows from {database} (tag-based, alias pivot)")
-                    ssh.close()
-                    return df_pivot, None
-                else:
-                    # Field-based schema
-                    logging.info(f"✓ {site_id}: Retrieved {len(df)} rows from {database} (field-based)")
-                    ssh.close()
-                    return df, None
+                logging.info(f"✓ {site_id}: Retrieved {len(df)} rows from {database}")
+                ssh.close()
+                return df
 
             except json.JSONDecodeError:
                 logging.debug(f"{site_id}: Failed to parse JSON from {database}")
@@ -297,17 +290,20 @@ def query_site_influxdb(site, password):
 
         ssh.close()
         logging.warning(f"{site_id}: No data found in aque or hvac databases")
-        return None, "No data in aque or hvac databases"
+        return None
 
     except paramiko.AuthenticationException:
-        return None, "SSH authentication failed"
+        logging.error(f"{site_id}: Authentication failed (check plc user/password)")
+        return None
     except (socket.timeout, TimeoutError):
-        return None, "SSH connection timeout (unreachable or slow)"
+        logging.warning(f"{site_id}: Connection timeout (unreachable or slow site)")
+        return None
     except paramiko.SSHException as e:
-        return None, f"SSH error: {str(e)[:50]}"
+        logging.warning(f"{site_id}: SSH error: {e}")
+        return None
     except Exception as e:
-        return None, f"Unexpected error: {str(e)[:50]}"
-
+        logging.error(f"{site_id}: Unexpected error: {e}")
+        return None
 
 # ============================================================================
 # EPISODE EXTRACTION
@@ -327,8 +323,15 @@ def extract_episodes(df):
     if df is None or len(df) < 2:
         return []
 
-    # DataFrame is already pivoted by 'alias' in query_influxdb, so no need to pivot again
-    df_pivot = df.sort_values('time').reset_index(drop=True)
+    # Pivot by display_point to get separate columns for each sensor
+    df_pivot = df.pivot_table(
+        index='time',
+        columns='display_point',
+        values='value',
+        aggfunc='first'
+    ).reset_index()
+
+    df_pivot = df_pivot.sort_values('time').reset_index(drop=True)
 
     # Check for critical sensors (try different naming conventions)
     fan_col = None
@@ -415,7 +418,6 @@ def extract_episodes(df):
         episodes.append(ep_data)
 
     return episodes
-
 
 # ============================================================================
 # RUL CALCULATION
@@ -523,7 +525,6 @@ def compute_rul_mode3(episodes, pollution_effect=None):
         'last_episode_time': episodes[-1]['start_time'].isoformat(),
     }
 
-
 # ============================================================================
 # PARALLEL QUERY EXECUTOR
 # ============================================================================
@@ -538,14 +539,14 @@ def query_site_complete(site, password, weatherbit_token=None):
 
     try:
         # Query InfluxDB
-        df, failure_reason = query_site_influxdb(site, password)
+        df = query_site_influxdb(site, password)
         if df is None:
             return {
                 'site_id': site_id,
                 'site_name': site['site_name'],
                 'ip': site_ip,
                 'success': False,
-                'error': failure_reason or 'InfluxDB query failed'
+                'error': 'InfluxDB query failed'
             }
 
         # Extract episodes
@@ -606,7 +607,6 @@ def query_site_complete(site, password, weatherbit_token=None):
             'error': str(e)
         }
 
-
 def query_all_sites_parallel(sites, password, weatherbit_token=None, max_workers=10):
     """
     Query all sites in parallel using ThreadPoolExecutor.
@@ -643,7 +643,6 @@ def query_all_sites_parallel(sites, password, weatherbit_token=None, max_workers
                 logging.error(f"[{i}/{len(sites)}] ✗ {site['site_id']}: {e}")
 
     return results, completed, failed
-
 
 # ============================================================================
 # AIR QUALITY REGRESSION & RUL ADJUSTMENT
@@ -757,7 +756,6 @@ def run_air_quality_regression(results):
     logging.info(f"Air Quality Regression: {result['interpretation']}")
     return result
 
-
 def apply_pollution_effect_to_rul(results, regression_results):
     """
     For each site with air quality data, recalculate RUL using the pollution effect multiplier.
@@ -832,7 +830,6 @@ def apply_pollution_effect_to_rul(results, regression_results):
 
     logging.info(f"Applied pollution effect adjustment to {adjusted_count} sites with air quality data")
 
-
 # ============================================================================
 # MAIN
 # ============================================================================
@@ -870,8 +867,8 @@ def main():
 
     # Aggregate and save
     successful_sites = {k: v for k, v in results.items() if v.get('success')}
-    failed_sites = {k: v for k, v in results.items() if not v.get('success')}
     sites_with_aq = sum(1 for r in successful_sites.values() if r.get('air_quality'))
+    sites_with_episode_times = sum(1 for r in successful_sites.values() if r.get('episode_start_times'))
 
     urgency_counts = {
         'URGENT': sum(1 for r in successful_sites.values() if r.get('urgency') == 'URGENT'),
@@ -895,17 +892,6 @@ def main():
             logging.info("\nApplying pollution effect multiplier to RUL calculations...")
             apply_pollution_effect_to_rul(results, regression_results)
 
-    # Prepare failed sites list for dashboard
-    failed_sites_list = [
-        {
-            'site_id': site_id,
-            'site_name': result.get('site_name', 'N/A'),
-            'ip': result.get('ip', 'N/A'),
-            'error': result.get('error', 'Unknown error')
-        }
-        for site_id, result in failed_sites.items()
-    ]
-
     output = {
         'query_timestamp': datetime.now().isoformat(),
         'query_elapsed_seconds': elapsed,
@@ -913,10 +899,10 @@ def main():
         'sites_total': len(sites),
         'sites_failed': failed,
         'sites_with_air_quality': sites_with_aq,
+        'sites_with_episode_dates': sites_with_episode_times,
         'urgency_summary': urgency_counts,
         'air_quality_regression': regression_results,
         'sites': results,
-        'failed_sites': failed_sites_list,
     }
 
     with open(output_file, 'w') as f:
@@ -933,7 +919,7 @@ def main():
     logging.info(f"🟢 OK (≥ 30d):        {urgency_counts['OK']:>4} sites")
     logging.info(f"⚪ Unknown/Failed:    {failed:>4} sites")
     logging.info(f"🌍 With Air Quality:  {sites_with_aq:>4} sites")
-
+    logging.info(f"📅 With Episode Dates: {sites_with_episode_times:>4} sites")
 
 if __name__ == '__main__':
     main()
