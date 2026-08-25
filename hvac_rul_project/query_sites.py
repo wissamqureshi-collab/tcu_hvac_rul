@@ -852,8 +852,8 @@ def apply_pollution_effect_to_rul(results, regression_results):
 def main():
     """Main entry point."""
 
-    inventory_csv = 'sites_inventory.csv'
-    coords_csv = 'sites_inventory_2.csv'
+    inventory_csv = '../sites_inventory.csv'
+    coords_csv = '../sites_inventory_2.csv'
     output_file = 'sites_data.json'
     max_workers = 10
 
