@@ -59,9 +59,25 @@ def load_inventory(csv_path, coords_csv_path=None):
     coords_csv_path should have columns: Site ID, Latitude, Longitude
     Sites without coordinates will have lat=None, lon=None.
     """
-    if not os.path.exists(csv_path):
-        logging.error(f"Inventory file not found: {csv_path}")
+    # Try multiple path variations (handles Windows/Linux, different run locations)
+    possible_paths = [
+        csv_path,
+        os.path.join('..', csv_path),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), '..', csv_path))
+    ]
+    
+    actual_path = None
+    for p in possible_paths:
+        if os.path.exists(p):
+            actual_path = p
+            logging.info(f"Found inventory at: {actual_path}")
+            break
+    
+    if not actual_path:
+        logging.error(f"Inventory file not found. Tried: {possible_paths}")
         sys.exit(1)
+    
+    csv_path = actual_path
 
     df = pd.read_csv(csv_path)
     # Normalize column names (case-insensitive)
@@ -84,43 +100,60 @@ def load_inventory(csv_path, coords_csv_path=None):
             })
 
     # Load coordinates if provided
-    if coords_csv_path and os.path.exists(coords_csv_path):
-        coords_df = pd.read_csv(coords_csv_path)
-        coords_df.columns = coords_df.columns.str.strip().str.lower()
-
-        # Normalize Site ID column name (try multiple variations)
-        site_id_col = None
-        for col in ['site id', 'site_id', 'site']:
-            if col in coords_df.columns:
-                site_id_col = col
+    if coords_csv_path:
+        # Try multiple path variations for coordinates CSV
+        possible_coords_paths = [
+            coords_csv_path,
+            os.path.join('..', coords_csv_path),
+            os.path.abspath(os.path.join(os.path.dirname(__file__), '..', coords_csv_path))
+        ]
+        
+        coords_actual_path = None
+        for p in possible_coords_paths:
+            if os.path.exists(p):
+                coords_actual_path = p
+                logging.info(f"Found coordinates CSV at: {coords_actual_path}")
                 break
+        
+        if coords_actual_path:
+            coords_df = pd.read_csv(coords_actual_path)
+            coords_df.columns = coords_df.columns.str.strip().str.lower()
 
-        if site_id_col:
-            # Build a lookup dict by Site ID (case-insensitive, whitespace-stripped)
-            coords_dict = {}
-            for _, row in coords_df.iterrows():
-                sid = str(row[site_id_col]).strip().upper()  # Normalize for matching
-                lat = row.get('latitude')
-                lon = row.get('longitude')
-                # Only store if coordinates are valid
-                if lat is not None and lon is not None and str(lat).lower() != 'nan' and str(lon).lower() != 'nan':
-                    coords_dict[sid] = {
-                        'latitude': float(lat),
-                        'longitude': float(lon),
-                    }
+            # Normalize Site ID column name (try multiple variations)
+            site_id_col = None
+            for col in ['site id', 'site_id', 'site']:
+                if col in coords_df.columns:
+                    site_id_col = col
+                    break
 
-            # Merge coordinates into sites by matching Site ID
-            sites_with_coords = 0
-            for site in sites:
-                # Normalize site_id for matching
-                normalized_site_id = site['site_id'].strip().upper()
-                if normalized_site_id in coords_dict:
-                    coords = coords_dict[normalized_site_id]
-                    site['latitude'] = coords['latitude']
-                    site['longitude'] = coords['longitude']
-                    sites_with_coords += 1
+            if site_id_col:
+                # Build a lookup dict by Site ID (case-insensitive, whitespace-stripped)
+                coords_dict = {}
+                for _, row in coords_df.iterrows():
+                    sid = str(row[site_id_col]).strip().upper()  # Normalize for matching
+                    lat = row.get('latitude')
+                    lon = row.get('longitude')
+                    # Only store if coordinates are valid
+                    if lat is not None and lon is not None and str(lat).lower() != 'nan' and str(lon).lower() != 'nan':
+                        coords_dict[sid] = {
+                            'latitude': float(lat),
+                            'longitude': float(lon),
+                        }
 
-            logging.info(f"Loaded coordinates for {sites_with_coords}/{len(sites)} sites from {coords_csv_path}")
+                # Merge coordinates into sites by matching Site ID
+                sites_with_coords = 0
+                for site in sites:
+                    # Normalize site_id for matching
+                    normalized_site_id = site['site_id'].strip().upper()
+                    if normalized_site_id in coords_dict:
+                        coords = coords_dict[normalized_site_id]
+                        site['latitude'] = coords['latitude']
+                        site['longitude'] = coords['longitude']
+                        sites_with_coords += 1
+
+                logging.info(f"Loaded coordinates for {sites_with_coords}/{len(sites)} sites from {coords_actual_path}")
+        else:
+            logging.warning(f"Coordinates CSV not found. Tried: {possible_coords_paths}")
 
     logging.info(f"Loaded {len(sites)} sites from inventory")
     return sites
