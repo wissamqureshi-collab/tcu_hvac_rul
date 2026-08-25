@@ -60,21 +60,24 @@ def load_inventory(csv_path, coords_csv_path=None):
     Sites without coordinates will have lat=None, lon=None.
     """
     # Try multiple path variations (handles Windows/Linux, different run locations)
+    # Priority: current dir → parent dir → script dir
     possible_paths = [
-        csv_path,
-        os.path.join('..', csv_path),
-        os.path.abspath(os.path.join(os.path.dirname(__file__), '..', csv_path))
+        csv_path,  # Current directory
+        os.path.join('..', csv_path),  # Parent directory (if running from hvac_rul_project)
+        os.path.join('hvac_rul_project', csv_path),  # Script location (if running from tcu_hvac_rul)
     ]
     
     actual_path = None
     for p in possible_paths:
         if os.path.exists(p):
             actual_path = p
-            logging.info(f"Found inventory at: {actual_path}")
+            logging.info(f"✓ Found inventory at: {os.path.abspath(p)}")
             break
     
     if not actual_path:
-        logging.error(f"Inventory file not found. Tried: {possible_paths}")
+        logging.error(f"✗ Inventory file not found: {csv_path}")
+        logging.error(f"  Tried: {[os.path.abspath(p) for p in possible_paths]}")
+        logging.error(f"  Current directory: {os.getcwd()}")
         sys.exit(1)
     
     csv_path = actual_path
@@ -102,17 +105,18 @@ def load_inventory(csv_path, coords_csv_path=None):
     # Load coordinates if provided
     if coords_csv_path:
         # Try multiple path variations for coordinates CSV
+        # Priority: current dir → parent dir → script dir
         possible_coords_paths = [
-            coords_csv_path,
-            os.path.join('..', coords_csv_path),
-            os.path.abspath(os.path.join(os.path.dirname(__file__), '..', coords_csv_path))
+            coords_csv_path,  # Current directory
+            os.path.join('..', coords_csv_path),  # Parent directory
+            os.path.join('hvac_rul_project', coords_csv_path),  # Script location
         ]
         
         coords_actual_path = None
         for p in possible_coords_paths:
             if os.path.exists(p):
                 coords_actual_path = p
-                logging.info(f"Found coordinates CSV at: {coords_actual_path}")
+                logging.info(f"✓ Found coordinates at: {os.path.abspath(p)}")
                 break
         
         if coords_actual_path:
@@ -151,9 +155,11 @@ def load_inventory(csv_path, coords_csv_path=None):
                         site['longitude'] = coords['longitude']
                         sites_with_coords += 1
 
-                logging.info(f"Loaded coordinates for {sites_with_coords}/{len(sites)} sites from {coords_actual_path}")
+                logging.info(f"✓ Loaded coordinates for {sites_with_coords}/{len(sites)} sites")
         else:
-            logging.warning(f"Coordinates CSV not found. Tried: {possible_coords_paths}")
+            logging.warning(f"✗ Coordinates CSV not found: {coords_csv_path}")
+            logging.warning(f"  Tried: {[os.path.abspath(p) for p in possible_coords_paths]}")
+            logging.warning(f"  Sites will be queried but without air quality data")
 
     logging.info(f"Loaded {len(sites)} sites from inventory")
     return sites
