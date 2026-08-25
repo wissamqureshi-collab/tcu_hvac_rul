@@ -323,13 +323,28 @@ def extract_episodes(df):
     if df is None or len(df) < 2:
         return []
 
-    # Pivot by display_point to get separate columns for each sensor
-    df_pivot = df.pivot_table(
-        index='time',
-        columns='display_point',
-        values='value',
-        aggfunc='first'
-    ).reset_index()
+    # Find pivot column (sensor identifier) - try multiple tag names
+    pivot_col = None
+    for col_name in ['display_point', 'equipment_id', 'alias']:
+        if col_name in df.columns:
+            pivot_col = col_name
+            break
+
+    if not pivot_col:
+        logging.warning(f"No pivot column found (tried: display_point, equipment_id, alias). Available columns: {df.columns.tolist()}")
+        return []
+
+    # Pivot by sensor identifier to get separate columns for each sensor
+    try:
+        df_pivot = df.pivot_table(
+            index='time',
+            columns=pivot_col,
+            values='value',
+            aggfunc='first'
+        ).reset_index()
+    except Exception as e:
+        logging.warning(f"Failed to pivot on column '{pivot_col}': {e}")
+        return []
 
     df_pivot = df_pivot.sort_values('time').reset_index(drop=True)
 
