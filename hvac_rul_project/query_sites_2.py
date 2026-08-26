@@ -36,7 +36,7 @@ if not SITE_PASSWORD:
 FAN_THRESHOLD = 95.0
 MIN_EPISODE_MINUTES = 30.0
 FAILURE_DT = 10.0
-SSH_TIMEOUT = 30
+SSH_TIMEOUT = 60  # Increased from 30 - paramiko can be slower than native ssh
 QUERY_TIMEOUT = 60
 QUERY_DAYS = 90
 
@@ -92,8 +92,10 @@ def query_site_influxdb(site_id, site_ip, password):
     messages = []
 
     # Step 1: SSH Connection
-    messages.append(f"  [1/5] Connecting to {site_ip} via SSH...")
+    import time
+    messages.append(f"  [1/5] Connecting to {site_ip} via SSH (timeout={SSH_TIMEOUT}s)...")
     try:
+        start = time.time()
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(
@@ -101,20 +103,25 @@ def query_site_influxdb(site_id, site_ip, password):
             port=22,
             username='plc',
             password=password,
-            timeout=SSH_TIMEOUT
+            timeout=SSH_TIMEOUT,
+            auth_timeout=SSH_TIMEOUT,
+            banner_timeout=SSH_TIMEOUT,
         )
-        messages.append(f"        ✓ SSH connection successful")
-    except paramiko.AuthenticationException:
-        messages.append(f"        ✗ SSH authentication failed (check plc user/password)")
+        elapsed = time.time() - start
+        messages.append(f"        ✓ SSH connection successful ({elapsed:.1f}s)")
+    except paramiko.AuthenticationException as ae:
+        messages.append(f"        ✗ SSH authentication failed: {ae}")
         return False, None, messages
-    except (socket.timeout, TimeoutError):
-        messages.append(f"        ✗ SSH timeout ({SSH_TIMEOUT}s) - site unreachable")
+    except (socket.timeout, TimeoutError) as te:
+        elapsed = time.time() - start
+        messages.append(f"        ✗ SSH timeout after {elapsed:.1f}s (connection stalled)")
+        messages.append(f"           Try running: ssh -v plc@{site_ip} to debug")
         return False, None, messages
     except paramiko.SSHException as e:
         messages.append(f"        ✗ SSH error: {e}")
         return False, None, messages
     except Exception as e:
-        messages.append(f"        ✗ Unexpected error: {e}")
+        messages.append(f"        ✗ Unexpected error: {type(e).__name__}: {e}")
         return False, None, messages
 
     # Step 2-3: Try both databases
