@@ -47,6 +47,19 @@ FAILURE_DT = 10.0             # ΔT threshold for filter failure
 SSH_TIMEOUT = 30              # SSH connection timeout
 QUERY_TIMEOUT = 60            # InfluxDB query timeout
 QUERY_DAYS = 90               # Days of historical data to query
+STALE_DATA_CUTOFF_YEAR = 2023 # Data must have entries after this year
+
+# Failure reason codes (for detailed error reporting)
+class FailureReason:
+    SSH_UNREACHABLE = "SSH_UNREACHABLE"
+    SSH_AUTH_FAILED = "SSH_AUTH_FAILED"
+    INFLUXDB_OFFLINE = "INFLUXDB_OFFLINE"
+    STALE_DATA = "STALE_DATA"
+    NO_HVAC_MEASUREMENT = "NO_HVAC_MEASUREMENT"
+    MISSING_SENSORS = "MISSING_SENSORS"
+    INSUFFICIENT_EPISODES = "INSUFFICIENT_EPISODES"
+    INSUFFICIENT_DEGRADATION = "INSUFFICIENT_DEGRADATION"
+    UNKNOWN = "UNKNOWN"
 
 # ============================================================================
 # LOAD INVENTORY
@@ -240,7 +253,8 @@ def query_site_influxdb(site, password, debug_first_failure=False):
     """
     SSH into site and query InfluxDB 1.x for HVAC data.
     Tries both 'aque' (modern tag-based) and 'hvac' (older field-based) databases.
-    Returns parsed DataFrame or None on error.
+    Returns: DataFrame on success, or error dict on failure.
+    Error dict has keys: error_code, error_message, and optionally last_data_timestamp, last_data_year.
     """
     site_ip = site['ip']
     site_id = site['site_id']
@@ -250,7 +264,7 @@ def query_site_influxdb(site, password, debug_first_failure=False):
         logging.info(f"{site_id}: Attempting SSH connection to {site_ip}...")
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        
+
         try:
             ssh.connect(
                 hostname=site_ip,
@@ -263,14 +277,47 @@ def query_site_influxdb(site, password, debug_first_failure=False):
             )
             logging.info(f"{site_id}: ✓ SSH connection successful")
         except paramiko.AuthenticationException as auth_err:
-            logging.error(f"{site_id}: ✗ SSH authentication failed - check plc user/password. Error: {auth_err}")
-            return None
+            logging.error(f"{site_id}: ✗ SSH authentication failed - check plc user/password.")
+            return {'error_code': FailureReason.SSH_AUTH_FAILED, 'error_message': f'SSH authentication failed: {auth_err}'}
         except (socket.timeout, TimeoutError) as timeout_err:
-            logging.error(f"{site_id}: ✗ SSH connection timeout ({SSH_TIMEOUT}s) - site unreachable or very slow. Error: {timeout_err}")
-            return None
+            logging.error(f"{site_id}: ✗ SSH connection timeout ({SSH_TIMEOUT}s) - site unreachable.")
+            return {'error_code': FailureReason.SSH_UNREACHABLE, 'error_message': f'SSH connection timeout after {SSH_TIMEOUT}s'}
         except paramiko.SSHException as ssh_err:
             logging.error(f"{site_id}: ✗ SSH error: {ssh_err}")
-            return None
+            return {'error_code': FailureReason.SSH_UNREACHABLE, 'error_message': f'SSH error: {ssh_err}'}
+
+        # Check data recency in aque database before full query
+        logging.info(f"{site_id}: Checking data recency in aque database...")
+        try:
+            cmd_latest = 'curl -s -m 5 -G "http://localhost:8086/query?db=aque" --data-urlencode "q=SELECT * FROM hvac ORDER BY time DESC LIMIT 1"'
+            stdin, stdout, stderr = ssh.exec_command(cmd_latest, timeout=15)
+            latest_output = stdout.read().decode('utf-8')
+
+            if latest_output:
+                try:
+                    latest_resp = json.loads(latest_output)
+                    if 'results' in latest_resp and latest_resp['results']:
+                        series = latest_resp['results'][0].get('series', [])
+                        if series and series[0].get('values'):
+                            last_timestamp_str = series[0]['values'][0][0]
+                            last_dt = pd.to_datetime(last_timestamp_str, utc=True)
+                            last_year = last_dt.year
+
+                            logging.info(f"{site_id}: Latest data timestamp: {last_timestamp_str} (year {last_year})")
+
+                            if last_year < STALE_DATA_CUTOFF_YEAR:
+                                logging.warning(f"{site_id}: ✗ Stale data - last update {last_year} (cutoff: {STALE_DATA_CUTOFF_YEAR})")
+                                ssh.close()
+                                return {
+                                    'error_code': FailureReason.STALE_DATA,
+                                    'error_message': f'No data since {last_year}. Last record: {last_timestamp_str}',
+                                    'last_data_timestamp': last_timestamp_str,
+                                    'last_data_year': last_year,
+                                }
+                except (json.JSONDecodeError, IndexError, KeyError, TypeError):
+                    logging.debug(f"{site_id}: Could not parse latest data check (continuing with full query)")
+        except Exception as e:
+            logging.debug(f"{site_id}: Data recency check failed: {e} (continuing with full query)")
 
         # Try both databases: aque (modern) then hvac (legacy)
         for database in ['aque', 'hvac']:
@@ -385,22 +432,22 @@ def query_site_influxdb(site, password, debug_first_failure=False):
 
         ssh.close()
         logging.error(f"✗ {site_id}: Failed to retrieve data from both aque and hvac databases")
-        return None
+        return {'error_code': FailureReason.INFLUXDB_OFFLINE, 'error_message': 'InfluxDB query failed for both aque and hvac databases'}
 
     except paramiko.AuthenticationException:
         logging.error(f"{site_id}: Authentication failed (check plc user/password)")
-        return None
+        return {'error_code': FailureReason.SSH_AUTH_FAILED, 'error_message': 'SSH authentication failed'}
     except (socket.timeout, TimeoutError):
         logging.error(f"{site_id}: Connection timeout (unreachable or slow site)")
-        return None
+        return {'error_code': FailureReason.SSH_UNREACHABLE, 'error_message': 'SSH connection timeout'}
     except paramiko.SSHException as e:
         logging.error(f"{site_id}: SSH error: {e}")
-        return None
+        return {'error_code': FailureReason.SSH_UNREACHABLE, 'error_message': f'SSH error: {e}'}
     except Exception as e:
         logging.error(f"{site_id}: Unexpected error: {e}")
         import traceback
         logging.error(traceback.format_exc())
-        return None
+        return {'error_code': FailureReason.UNKNOWN, 'error_message': str(e)}
 
 # ============================================================================
 # EPISODE EXTRACTION
@@ -415,11 +462,13 @@ def extract_episodes(df):
     - hvac_FREE_COOL_MODE == 1
     - Duration >= MIN_EPISODE_MINUTES
 
-    Returns: list of dicts with episode metadata
+    Returns: (episodes, error_code, error_message)
+      - On success: (list of dicts, None, None)
+      - On failure: ([], FailureReason.XXX, error_message)
     """
     if df is None or len(df) < 2:
         logging.warning("extract_episodes: DataFrame is None or too small")
-        return []
+        return [], FailureReason.INSUFFICIENT_EPISODES, "DataFrame too small or empty"
 
     # Find pivot column (sensor identifier) - try multiple tag names
     pivot_col = None
@@ -430,9 +479,8 @@ def extract_episodes(df):
 
     if not pivot_col:
         available_cols = df.columns.tolist()
-        logging.error(f"extract_episodes: No pivot column found (tried: display_point, equipment_id, alias). Available columns: {available_cols}")
-        logging.error(f"extract_episodes: DataFrame shape: {df.shape}, dtypes: {dict(df.dtypes)}")
-        return []
+        logging.error(f"extract_episodes: No pivot column found. Available columns: {available_cols}")
+        return [], FailureReason.MISSING_SENSORS, f"No pivot column found (tried: display_point, equipment_id, alias). Available: {available_cols}"
 
     logging.info(f"extract_episodes: Using pivot column '{pivot_col}'")
 
@@ -447,8 +495,7 @@ def extract_episodes(df):
         logging.info(f"extract_episodes: Pivot successful. Shape: {df_pivot.shape}, columns: {df_pivot.columns.tolist()}")
     except Exception as e:
         logging.error(f"extract_episodes: Failed to pivot on column '{pivot_col}': {e}")
-        logging.error(f"extract_episodes: DataFrame dtypes: {df.dtypes}")
-        return []
+        return [], FailureReason.MISSING_SENSORS, f"Failed to pivot on column '{pivot_col}': {e}"
 
     df_pivot = df_pivot.sort_values('time').reset_index(drop=True)
 
@@ -475,14 +522,13 @@ def extract_episodes(df):
     if not fan_col or not fc_col or not dt_col:
         missing = []
         if not fan_col:
-            missing.append('fan_status (tried: fan_status, fan, supply_fan_speed)')
+            missing.append('fan_status')
         if not fc_col:
-            missing.append('hvac_FREE_COOL_MODE (tried: hvac_FREE_COOL_MODE, free_cool_mode, fc_mode)')
+            missing.append('hvac_FREE_COOL_MODE')
         if not dt_col:
-            missing.append('hvac_DELTA_T (tried: hvac_DELTA_T, delta_t, dt)')
+            missing.append('hvac_DELTA_T')
         logging.error(f"extract_episodes: Missing critical sensors: {missing}")
-        logging.error(f"extract_episodes: Available columns after pivot: {df_pivot.columns.tolist()}")
-        return []
+        return [], FailureReason.MISSING_SENSORS, f"Missing critical sensors: {', '.join(missing)}"
 
     logging.info(f"extract_episodes: Found critical sensors - fan_col='{fan_col}', fc_col='{fc_col}', dt_col='{dt_col}'")
 
@@ -544,7 +590,7 @@ def extract_episodes(df):
         episodes.append(ep_data)
 
     logging.info(f"extract_episodes: Extracted {len(episodes)} valid episodes (≥{MIN_EPISODE_MINUTES}min)")
-    return episodes
+    return episodes, None, None
 
 # ============================================================================
 # RUL CALCULATION
@@ -666,19 +712,27 @@ def query_site_complete(site, password, weatherbit_token=None, debug_first_failu
 
     try:
         # Query InfluxDB
-        df = query_site_influxdb(site, password, debug_first_failure=debug_first_failure)
-        if df is None:
-            logging.error(f"{site_id}: ✗ InfluxDB query returned no data")
+        result = query_site_influxdb(site, password, debug_first_failure=debug_first_failure)
+
+        # Check if result is an error dict
+        if isinstance(result, dict) and 'error_code' in result:
+            logging.error(f"{site_id}: ✗ InfluxDB query failed: {result['error_code']}")
             return {
                 'site_id': site_id,
                 'site_name': site['site_name'],
                 'ip': site_ip,
                 'success': False,
-                'error': 'InfluxDB query failed (see logs for details)'
+                'error_code': result['error_code'],
+                'error_message': result['error_message'],
+                'error': result['error_message'],  # Backwards compatibility
+                'last_data_timestamp': result.get('last_data_timestamp'),
+                'last_data_year': result.get('last_data_year'),
             }
 
+        df = result  # It's a DataFrame if we got here
+
         # Extract episodes
-        episodes = extract_episodes(df)
+        episodes, error_code, error_message = extract_episodes(df)
         if len(episodes) < 3:
             logging.error(f"{site_id}: ✗ Insufficient episodes: extracted {len(episodes)}, need ≥3 for RUL model")
             return {
@@ -686,7 +740,9 @@ def query_site_complete(site, password, weatherbit_token=None, debug_first_failu
                 'site_name': site['site_name'],
                 'ip': site_ip,
                 'success': False,
-                'error': f'Insufficient episodes: {len(episodes)}/3 (need ≥3 for regression model)'
+                'error_code': error_code if error_code else FailureReason.INSUFFICIENT_EPISODES,
+                'error_message': error_message if error_message else f'Only {len(episodes)} episodes extracted (need ≥3)',
+                'error': error_message if error_message else f'Insufficient episodes: {len(episodes)}/3',  # Backwards compatibility
             }
 
         # Compute RUL
@@ -698,7 +754,24 @@ def query_site_complete(site, password, weatherbit_token=None, debug_first_failu
                 'site_name': site['site_name'],
                 'ip': site_ip,
                 'success': False,
-                'error': 'RUL calculation failed (see logs for details)'
+                'error_code': FailureReason.UNKNOWN,
+                'error_message': 'RUL calculation failed',
+                'error': 'RUL calculation failed (see logs for details)',
+            }
+
+        # Check for insufficient degradation (negative slope indicates insufficient data)
+        if rul_result.get('slope') is not None and rul_result['slope'] <= 0:
+            logging.warning(f"{site_id}: ⚠️ Filter not degrading (negative trend - may need more time or recent filter change)")
+            return {
+                'site_id': site_id,
+                'site_name': site['site_name'],
+                'ip': site_ip,
+                'success': False,
+                'error_code': FailureReason.INSUFFICIENT_DEGRADATION,
+                'error_message': 'Filter not degrading (negative trend - may indicate insufficient data or recent filter change)',
+                'error': 'Insufficient degradation trend',
+                'slope': float(rul_result['slope']),
+                'episodes_count': len(episodes),
             }
 
         result = {
@@ -738,7 +811,9 @@ def query_site_complete(site, password, weatherbit_token=None, debug_first_failu
             'site_name': site['site_name'],
             'ip': site_ip,
             'success': False,
-            'error': str(e)
+            'error_code': FailureReason.UNKNOWN,
+            'error_message': str(e),
+            'error': str(e),
         }
 
 def query_all_sites_parallel(sites, password, weatherbit_token=None, max_workers=10, debug_first_failure=False):
@@ -1095,20 +1170,22 @@ def main():
     if failed_sites:
         logging.info("")
         logging.info("=" * 80)
-        logging.info("Failure Analysis")
+        logging.info("Failure Analysis by Category")
         logging.info("=" * 80)
-        
-        failure_reasons = {}
+
+        failure_codes = {}
         for site_id, result in failed_sites.items():
-            reason = result.get('error', 'Unknown error')
-            if reason not in failure_reasons:
-                failure_reasons[reason] = []
-            failure_reasons[reason].append(site_id)
-        
-        for reason, site_ids in sorted(failure_reasons.items(), key=lambda x: -len(x[1])):
+            code = result.get('error_code', 'UNKNOWN')
+            message = result.get('error_message', result.get('error', 'Unknown'))
+            key = f"{code}: {message}"
+            if key not in failure_codes:
+                failure_codes[key] = []
+            failure_codes[key].append(site_id)
+
+        for reason, site_ids in sorted(failure_codes.items(), key=lambda x: -len(x[1])):
             logging.error(f"{len(site_ids):>4} sites: {reason}")
-            if len(site_ids) <= 5:
-                logging.error(f"        Sites: {', '.join(site_ids)}")
+            if len(site_ids) <= 3:
+                logging.error(f"        Examples: {', '.join(site_ids[:3])}")
     
     logging.info("")
     logging.info("=" * 80)
