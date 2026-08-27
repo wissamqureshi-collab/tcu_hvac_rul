@@ -782,7 +782,9 @@ def query_site_complete(site, password, weatherbit_token=None, debug_first_failu
             **rul_result
         }
         
-        logging.info(f"✓ {site_id}: RUL calculated successfully - {rul_result.get('urgency')} (RUL: {rul_result.get('rul_days'):.1f}d)")
+        rul_days = rul_result.get('rul_days')
+        rul_str = f"{rul_days:.1f}d" if rul_days is not None else "N/A"
+        logging.info(f"✓ {site_id}: RUL calculated successfully - {rul_result.get('urgency')} (RUL: {rul_str})")
 
         # Fetch 90-day air quality from Weatherbit if coordinates available
         if site.get('latitude') and site.get('longitude') and weatherbit_token:
