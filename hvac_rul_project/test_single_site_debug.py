@@ -58,11 +58,25 @@ def query_site_influxdb(site_ip, site_id, password):
             logging.error(f"[1] ✗ SSH failed: {type(e).__name__}: {e}")
             return None
 
+        # Test 1.5: Check if InfluxDB is running
+        logging.info(f"\n[1.5] Testing InfluxDB connectivity...")
+        cmd_test = 'curl -s -m 5 http://localhost:8086/ping'
+        logging.debug(f"[1.5] Command: {cmd_test}")
+        try:
+            stdin, stdout, stderr = ssh.exec_command(cmd_test, timeout=15)
+            output = stdout.read().decode('utf-8')
+            error = stderr.read().decode('utf-8')
+            logging.info(f"[1.5] ping response ({len(output)} bytes): {output[:200]}")
+            if error:
+                logging.warning(f"[1.5] stderr: {error[:200]}")
+        except Exception as e:
+            logging.warning(f"[1.5] ping failed: {e}")
+
         # Try both databases
         for database in ['aque', 'hvac']:
             logging.info(f"\n[2] Querying {database} database...")
             query = f"SELECT * FROM hvac WHERE time > now() - {QUERY_DAYS}d"
-            cmd = f'curl -s -G "http://localhost:8086/query?db={database}" --data-urlencode "q={query}"'
+            cmd = f'curl -s -m 10 -G "http://localhost:8086/query?db={database}" --data-urlencode "q={query}"'
 
             logging.debug(f"[2] Command: {cmd}")
 
