@@ -49,7 +49,9 @@ def query_site_influxdb(site_ip, site_id, password):
                 port=22,
                 username='plc',
                 password=password,
-                timeout=SSH_TIMEOUT
+                timeout=SSH_TIMEOUT,
+                auth_timeout=SSH_TIMEOUT,
+                banner_timeout=SSH_TIMEOUT
             )
             logging.info(f"[1] ✓ SSH connection successful")
         except Exception as e:

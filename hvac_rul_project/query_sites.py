@@ -257,7 +257,9 @@ def query_site_influxdb(site, password, debug_first_failure=False):
                 port=22,
                 username='plc',
                 password=password,
-                timeout=SSH_TIMEOUT
+                timeout=SSH_TIMEOUT,
+                auth_timeout=SSH_TIMEOUT,
+                banner_timeout=SSH_TIMEOUT
             )
             logging.info(f"{site_id}: ✓ SSH connection successful")
         except paramiko.AuthenticationException as auth_err:
