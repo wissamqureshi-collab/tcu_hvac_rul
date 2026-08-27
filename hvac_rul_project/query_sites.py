@@ -257,9 +257,7 @@ def query_site_influxdb(site, password, debug_first_failure=False):
                 port=22,
                 username='plc',
                 password=password,
-                timeout=SSH_TIMEOUT,
-                auth_timeout=SSH_TIMEOUT,
-                banner_timeout=SSH_TIMEOUT
+                timeout=SSH_TIMEOUT
             )
             logging.info(f"{site_id}: ✓ SSH connection successful")
         except paramiko.AuthenticationException as auth_err:
@@ -276,7 +274,7 @@ def query_site_influxdb(site, password, debug_first_failure=False):
         for database in ['aque', 'hvac']:
             logging.info(f"{site_id}: Querying {database} database...")
             query = f"SELECT * FROM hvac WHERE time > now() - {QUERY_DAYS}d"
-            cmd = f'curl -s -m 10 -G "http://localhost:8086/query?db={database}" --data-urlencode "q={query}"'
+            cmd = f'curl -s -G "http://localhost:8086/query?db={database}" --data-urlencode "q={query}"'
 
             try:
                 stdin, stdout, stderr = ssh.exec_command(cmd, timeout=QUERY_TIMEOUT)
