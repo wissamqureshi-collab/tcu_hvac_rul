@@ -453,6 +453,107 @@ def query_site_influxdb(site, password, debug_first_failure=False):
 # EPISODE EXTRACTION
 # ============================================================================
 
+def find_sensor_column(df, sensor_type):
+    """
+    Intelligently find the correct column for a sensor type using smart keyword matching.
+
+    Prioritizes exact matches first, then uses keyword patterns with safeguards to avoid false positives.
+
+    Args:
+        df: DataFrame with available columns
+        sensor_type: 'fan', 'free_cool', or 'delta_t'
+
+    Returns:
+        Column name (original case) if found, None otherwise
+    """
+    # Create lowercase map for case-insensitive search
+    cols_lower_to_orig = {col.lower(): col for col in df.columns}
+
+    logging.debug(f"find_sensor_column: Searching for '{sensor_type}' in {len(df.columns)} available columns")
+    
+    if sensor_type == 'fan':
+        # Try exact/common names first
+        exact_matches = ['fan_status', 'fan_speed', 'fan_percent', 'supply_fan_speed', 'fan', 'cooling_fan_speed']
+        logging.debug(f"find_sensor_column: Trying {len(exact_matches)} exact fan patterns: {exact_matches}")
+        for name in exact_matches:
+            name_lower = name.lower()
+            if name_lower in cols_lower_to_orig:
+                result = cols_lower_to_orig[name_lower]
+                logging.info(f"find_sensor_column: ✓ Found fan column (EXACT MATCH): '{result}'")
+                return result
+
+        # Keyword search: 'fan' + at least one of (speed, status, rpm, percent, %)
+        # This avoids false positives like "outdoor_humidity_percent"
+        logging.debug(f"find_sensor_column: No exact fan match. Trying keyword patterns...")
+        meaningful_suffixes = ['speed', 'status', 'rpm', 'percent', '%', 'output']
+        for col_lower, col_orig in cols_lower_to_orig.items():
+            if 'fan' in col_lower:
+                # Check for a meaningful suffix
+                has_meaningful_suffix = any(x in col_lower for x in meaningful_suffixes)
+                if has_meaningful_suffix:
+                    logging.info(f"find_sensor_column: ✓ Found fan column (KEYWORD MATCH): '{col_orig}' (contains 'fan' + {meaningful_suffixes})")
+                    return col_orig
+
+        logging.debug(f"find_sensor_column: ✗ No fan column found (tried exact: {exact_matches}, keyword patterns with: {meaningful_suffixes})")
+        
+    elif sensor_type == 'free_cool':
+        # Try exact/common names first
+        exact_matches = ['hvac_free_cool_mode', 'free_cool_mode', 'fc_mode', 'free_cooling', 'cooling_mode', 'hvac_free_cooling']
+        logging.debug(f"find_sensor_column: Trying {len(exact_matches)} exact free_cool patterns: {exact_matches}")
+        for name in exact_matches:
+            name_lower = name.lower()
+            if name_lower in cols_lower_to_orig:
+                result = cols_lower_to_orig[name_lower]
+                logging.info(f"find_sensor_column: ✓ Found free_cool column (EXACT MATCH): '{result}'")
+                return result
+
+        # Keyword search: both 'free' AND 'cool', or 'fc'
+        logging.debug(f"find_sensor_column: No exact free_cool match. Trying keyword patterns...")
+        for col_lower, col_orig in cols_lower_to_orig.items():
+            # Strong match: contains both 'free' and 'cool'
+            if 'free' in col_lower and 'cool' in col_lower:
+                logging.info(f"find_sensor_column: ✓ Found free_cool column (KEYWORD MATCH): '{col_orig}' (contains 'free' AND 'cool')")
+                return col_orig
+            # Also accept 'fc_' prefix or just 'fc'
+            if col_lower.startswith('fc_') or col_lower == 'fc':
+                logging.info(f"find_sensor_column: ✓ Found free_cool column (FC PREFIX): '{col_orig}'")
+                return col_orig
+            # Accept 'cooling_mode' if it's specifically about free/economizer cooling
+            if 'cooling' in col_lower and 'mode' in col_lower and 'fan' not in col_lower:
+                logging.info(f"find_sensor_column: ✓ Found free_cool column (COOLING_MODE): '{col_orig}' (contains 'cooling' + 'mode', no 'fan')")
+                return col_orig
+
+        logging.debug(f"find_sensor_column: ✗ No free_cool column found (tried exact: {exact_matches}, keyword patterns: free+cool, fc prefix, cooling_mode)")
+    
+    elif sensor_type == 'delta_t':
+        # Try exact/common names first
+        exact_matches = ['hvac_delta_t', 'delta_t', 'dt', 'delta_t_supply', 'temp_diff', 'supply_outdoor_delta', 'supply_return_delta', 'delta_temperature']
+        logging.debug(f"find_sensor_column: Trying {len(exact_matches)} exact delta_t patterns: {exact_matches}")
+        for name in exact_matches:
+            name_lower = name.lower()
+            if name_lower in cols_lower_to_orig:
+                result = cols_lower_to_orig[name_lower]
+                logging.info(f"find_sensor_column: ✓ Found delta_t column (EXACT MATCH): '{result}'")
+                return result
+
+        # Keyword search: 'delta' + 't', OR 'temp' + 'diff'
+        # Explicitly avoids single temperature columns
+        logging.debug(f"find_sensor_column: No exact delta_t match. Trying keyword patterns...")
+        for col_lower, col_orig in cols_lower_to_orig.items():
+            # Contains 'delta' and 't' (case variations of delta_t)
+            if 'delta' in col_lower and 't' in col_lower:
+                logging.info(f"find_sensor_column: ✓ Found delta_t column (DELTA PATTERN): '{col_orig}' (contains 'delta' AND 't')")
+                return col_orig
+            # Contains both 'temp' and 'diff'
+            if 'temp' in col_lower and 'diff' in col_lower:
+                logging.info(f"find_sensor_column: ✓ Found delta_t column (TEMP_DIFF PATTERN): '{col_orig}' (contains 'temp' AND 'diff')")
+                return col_orig
+
+        logging.debug(f"find_sensor_column: ✗ No delta_t column found (tried exact: {exact_matches}, keyword patterns: delta+t, temp+diff)")
+
+    logging.debug(f"find_sensor_column: No column found for sensor_type '{sensor_type}'")
+    return None
+
 def extract_episodes(df):
     """
     Extract freecooling episodes from HVAC data.
@@ -470,84 +571,106 @@ def extract_episodes(df):
         logging.warning("extract_episodes: DataFrame is None or too small")
         return [], FailureReason.INSUFFICIENT_EPISODES, "DataFrame too small or empty"
 
-    # Find pivot column (sensor identifier) - try multiple tag names
-    pivot_col = None
-    for col_name in ['display_point', 'equipment_id', 'alias']:
-        if col_name in df.columns:
-            pivot_col = col_name
-            break
+    # Determine if we need to pivot (only if 'value' column exists and multiple sensors)
+    needs_pivot = 'value' in df.columns and 'display_point' in df.columns
 
-    if not pivot_col:
-        available_cols = df.columns.tolist()
-        logging.error(f"extract_episodes: No pivot column found. Available columns: {available_cols}")
-        return [], FailureReason.MISSING_SENSORS, f"No pivot column found (tried: display_point, equipment_id, alias). Available: {available_cols}"
+    if needs_pivot:
+        # Find pivot column (sensor identifier)
+        pivot_col = None
+        for col_name in ['display_point', 'equipment_id', 'alias']:
+            if col_name in df.columns:
+                pivot_col = col_name
+                break
 
-    logging.info(f"extract_episodes: Using pivot column '{pivot_col}'")
+        if not pivot_col:
+            available_cols = df.columns.tolist()
+            logging.error(f"extract_episodes: No pivot column found. Available columns: {available_cols}")
+            return [], FailureReason.MISSING_SENSORS, f"No pivot column found (tried: display_point, equipment_id, alias). Available: {available_cols}"
 
-    # Pivot by sensor identifier to get separate columns for each sensor
-    try:
-        df_pivot = df.pivot_table(
-            index='time',
-            columns=pivot_col,
-            values='value',
-            aggfunc='first'
-        ).reset_index()
-        logging.info(f"extract_episodes: Pivot successful. Shape: {df_pivot.shape}, columns: {df_pivot.columns.tolist()}")
-    except Exception as e:
-        logging.error(f"extract_episodes: Failed to pivot on column '{pivot_col}': {e}")
-        return [], FailureReason.MISSING_SENSORS, f"Failed to pivot on column '{pivot_col}': {e}"
+        logging.info(f"extract_episodes: Using pivot column '{pivot_col}' (data has 'value' column - multi-sensor format)")
 
-    df_pivot = df_pivot.sort_values('time').reset_index(drop=True)
+        # Pivot by sensor identifier
+        try:
+            df_pivot = df.pivot_table(
+                index='time',
+                columns=pivot_col,
+                values='value',
+                aggfunc='first'
+            ).reset_index()
+            logging.info(f"extract_episodes: Pivot successful. Shape: {df_pivot.shape}, columns: {df_pivot.columns.tolist()}")
+        except Exception as e:
+            logging.error(f"extract_episodes: Failed to pivot on column '{pivot_col}': {e}")
+            return [], FailureReason.MISSING_SENSORS, f"Failed to pivot on column '{pivot_col}': {e}"
 
-    # Check for critical sensors (try different naming conventions)
-    fan_col = None
-    for col_name in ['fan_status', 'fan', 'supply_fan_speed']:
-        if col_name in df_pivot.columns:
-            fan_col = col_name
-            break
+        df_work = df_pivot.sort_values('time').reset_index(drop=True)
+    else:
+        # No pivot needed - data already has separate field columns
+        logging.info(f"extract_episodes: No pivot needed (data has separate field columns)")
+        df_work = df.sort_values('time').reset_index(drop=True)
 
-    fc_col = None
-    for col_name in ['hvac_FREE_COOL_MODE', 'free_cool_mode', 'fc_mode']:
-        if col_name in df_pivot.columns:
-            fc_col = col_name
-            break
+    # Find critical sensor columns with intelligent matching
+    fan_col = find_sensor_column(df_work, 'fan')
+    fc_col = find_sensor_column(df_work, 'free_cool')
+    dt_col = find_sensor_column(df_work, 'delta_t')
 
-    dt_col = None
-    for col_name in ['hvac_DELTA_T', 'delta_t', 'dt']:
-        if col_name in df_pivot.columns:
-            dt_col = col_name
-            break
-
-    # Need at least fan status, FC mode, and delta T
+    # Validate all required sensors are found
     if not fan_col or not fc_col or not dt_col:
+        # Build detailed column structure report
+        available_cols = df_work.columns.tolist()
+
+        # Log data types and sample values for debugging
+        logging.error("=" * 100)
+        logging.error("MISSING_SENSORS DETAILED DIAGNOSTIC")
+        logging.error("=" * 100)
+        logging.error(f"DataFrame shape: {df_work.shape}")
+        logging.error(f"Total columns available: {len(available_cols)}")
+        logging.error("\nCOLUMN STRUCTURE (name | dtype | sample values):")
+        logging.error("-" * 100)
+
+        for col in available_cols:
+            dtype = str(df_work[col].dtype)
+            # Get unique values or sample non-null values
+            non_null_vals = df_work[col].dropna().unique()[:5]
+            sample_str = ', '.join([str(v)[:30] for v in non_null_vals])
+            logging.error(f"  {col:<40} | {dtype:<15} | {sample_str}")
+
+        logging.error("-" * 100)
+        logging.error("\nSENSOR SEARCH RESULTS:")
+        logging.error(f"  Fan column found:       {'YES - ' + fan_col if fan_col else 'NO'}")
+        logging.error(f"  Free-cool column found: {'YES - ' + fc_col if fc_col else 'NO'}")
+        logging.error(f"  Delta-T column found:   {'YES - ' + dt_col if dt_col else 'NO'}")
+        logging.error("=" * 100)
+
         missing = []
         if not fan_col:
-            missing.append('fan_status')
+            missing.append('fan_status (fan speed/percent)')
         if not fc_col:
-            missing.append('hvac_FREE_COOL_MODE')
+            missing.append('hvac_FREE_COOL_MODE (free cooling mode)')
         if not dt_col:
-            missing.append('hvac_DELTA_T')
-        logging.error(f"extract_episodes: Missing critical sensors: {missing}")
-        return [], FailureReason.MISSING_SENSORS, f"Missing critical sensors: {', '.join(missing)}"
+            missing.append('hvac_DELTA_T (temperature differential)')
+
+        error_msg = f"Missing sensors: {', '.join(missing)} | Available cols: {', '.join(available_cols)}"
+        logging.error(f"extract_episodes: {error_msg}")
+        return [], FailureReason.MISSING_SENSORS, error_msg
 
     logging.info(f"extract_episodes: Found critical sensors - fan_col='{fan_col}', fc_col='{fc_col}', dt_col='{dt_col}'")
 
     # Convert to numeric
-    df_pivot[fan_col] = pd.to_numeric(df_pivot[fan_col], errors='coerce')
-    df_pivot[fc_col] = pd.to_numeric(df_pivot[fc_col], errors='coerce')
-    df_pivot[dt_col] = pd.to_numeric(df_pivot[dt_col], errors='coerce')
+    df_work[fan_col] = pd.to_numeric(df_work[fan_col], errors='coerce')
+    df_work[fc_col] = pd.to_numeric(df_work[fc_col], errors='coerce')
+    df_work[dt_col] = pd.to_numeric(df_work[dt_col], errors='coerce')
 
     # Detect episodes: fan >= threshold AND FC mode active
-    df_pivot['in_episode'] = (
-        (df_pivot[fan_col] >= FAN_THRESHOLD) &
-        (df_pivot[fc_col] == 1.0)
+    df_work['in_episode'] = (
+        (df_work[fan_col] >= FAN_THRESHOLD) &
+        (df_work[fc_col] == 1.0)
     )
 
     # Group consecutive True values
-    df_pivot['episode_id'] = (~df_pivot['in_episode']).cumsum()
+    df_work['episode_id'] = (~df_work['in_episode']).cumsum()
 
     episodes = []
-    episode_groups = df_pivot[df_pivot['in_episode']].groupby('episode_id')
+    episode_groups = df_work[df_work['in_episode']].groupby('episode_id')
     logging.info(f"extract_episodes: Found {len(episode_groups)} potential episode groups")
     
     for ep_id, group in episode_groups:
