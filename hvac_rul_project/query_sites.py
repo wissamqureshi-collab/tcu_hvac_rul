@@ -497,14 +497,26 @@ def find_sensor_column(df, sensor_type):
         logging.debug(f"find_sensor_column: ✗ No fan column found (tried exact: {exact_matches}, keyword patterns with: {meaningful_suffixes})")
         
     elif sensor_type == 'free_cool':
-        # Try exact/common names first
-        exact_matches = ['hvac_free_cool_mode', 'free_cool_mode', 'fc_mode', 'free_cooling', 'cooling_mode', 'hvac_free_cooling']
-        logging.debug(f"find_sensor_column: Trying {len(exact_matches)} exact free_cool patterns: {exact_matches}")
+        # Try exact/common names first (including newly discovered patterns)
+        exact_matches = [
+            'hvac_free_cool_mode', 'free_cool_mode', 'fc_mode', 'free_cooling',
+            'cooling_mode', 'hvac_free_cooling',
+            # Newly discovered: damper columns used as free-cool proxy (26+ sites)
+            'damper_1_status',  # Most common (19 sites)
+            'damper_status',  # Common variant (7 sites)
+            'hvac_DAMPER_POSITION',  # HVAC-prefixed variant (3 sites)
+            'hvac_DAMPER_STATUS',  # HVAC-prefixed variant (2 sites)
+        ]
+        logging.debug(f"find_sensor_column: Trying {len(exact_matches)} exact free_cool patterns")
         for name in exact_matches:
             name_lower = name.lower()
             if name_lower in cols_lower_to_orig:
                 result = cols_lower_to_orig[name_lower]
-                logging.info(f"find_sensor_column: ✓ Found free_cool column (EXACT MATCH): '{result}'")
+                # Mark damper columns so we know they need special handling
+                if 'damper' in name_lower:
+                    logging.info(f"find_sensor_column: ✓ Found free_cool proxy (DAMPER): '{result}' (will use damper_status==1 as free-cool indicator)")
+                else:
+                    logging.info(f"find_sensor_column: ✓ Found free_cool column (EXACT MATCH): '{result}'")
                 return result
 
         # Keyword search: both 'free' AND 'cool', or 'fc'
@@ -522,13 +534,27 @@ def find_sensor_column(df, sensor_type):
             if 'cooling' in col_lower and 'mode' in col_lower and 'fan' not in col_lower:
                 logging.info(f"find_sensor_column: ✓ Found free_cool column (COOLING_MODE): '{col_orig}' (contains 'cooling' + 'mode', no 'fan')")
                 return col_orig
+            # Fallback: damper columns as proxy for free-cool mode
+            if 'damper' in col_lower and 'status' in col_lower:
+                logging.info(f"find_sensor_column: ✓ Found free_cool proxy (DAMPER KEYWORD): '{col_orig}' (keyword match for damper status)")
+                return col_orig
 
-        logging.debug(f"find_sensor_column: ✗ No free_cool column found (tried exact: {exact_matches}, keyword patterns: free+cool, fc prefix, cooling_mode)")
+        logging.debug(f"find_sensor_column: ✗ No free_cool column found (tried {len(exact_matches)} exact patterns + keywords)")
     
     elif sensor_type == 'delta_t':
-        # Try exact/common names first
-        exact_matches = ['hvac_delta_t', 'delta_t', 'dt', 'delta_t_supply', 'temp_diff', 'supply_outdoor_delta', 'supply_return_delta', 'delta_temperature']
-        logging.debug(f"find_sensor_column: Trying {len(exact_matches)} exact delta_t patterns: {exact_matches}")
+        # Try exact/common names first (including newly discovered patterns)
+        exact_matches = [
+            'hvac_delta_t', 'delta_t', 'dt', 'delta_t_supply', 'temp_diff',
+            'supply_outdoor_delta', 'supply_return_delta', 'delta_temperature',
+            # Newly discovered from 36 MISSING_SENSORS sites
+            'supply_air_temprature',  # NOTE: typo in actual data (26 sites)
+            'supply_air_temperature',  # Correct spelling variant
+            'hvac_SUPPLY_AIR_TEMPERATURE',
+            'hvac_OUTDOOR_TEMPERATURE',
+            'hvac_INDOOR_TEMPERATURE',
+            'indoor_temp', 'outdoor_temp',  # Use these for calculation
+        ]
+        logging.debug(f"find_sensor_column: Trying {len(exact_matches)} exact delta_t patterns")
         for name in exact_matches:
             name_lower = name.lower()
             if name_lower in cols_lower_to_orig:
@@ -549,10 +575,45 @@ def find_sensor_column(df, sensor_type):
                 logging.info(f"find_sensor_column: ✓ Found delta_t column (TEMP_DIFF PATTERN): '{col_orig}' (contains 'temp' AND 'diff')")
                 return col_orig
 
-        logging.debug(f"find_sensor_column: ✗ No delta_t column found (tried exact: {exact_matches}, keyword patterns: delta+t, temp+diff)")
+        logging.debug(f"find_sensor_column: ✗ No delta_t column found (tried {len(exact_matches)} exact patterns + keyword patterns)")
 
     logging.debug(f"find_sensor_column: No column found for sensor_type '{sensor_type}'")
     return None
+
+def calculate_delta_t(df, supply_col, outdoor_col):
+    """
+    Calculate delta-T from individual temperature columns.
+    Delta-T = Supply Air Temp - Outdoor Temp
+
+    Returns: Series of delta-T values, or None if calculation fails
+    """
+    try:
+        supply_vals = pd.to_numeric(df[supply_col], errors='coerce')
+        outdoor_vals = pd.to_numeric(df[outdoor_col], errors='coerce')
+        delta_t = supply_vals - outdoor_vals
+        logging.info(f"calculate_delta_t: ✓ Calculated delta-T from '{supply_col}' - '{outdoor_col}'")
+        return delta_t
+    except Exception as e:
+        logging.error(f"calculate_delta_t: ✗ Failed to calculate delta-T: {e}")
+        return None
+
+
+def map_damper_to_free_cool(df, damper_col):
+    """
+    Map damper status to free-cool mode.
+    Assumption: damper_status == 1 means free-cooling is active
+
+    Returns: Series of 1s/0s (free-cool mode indicator)
+    """
+    try:
+        damper_vals = pd.to_numeric(df[damper_col], errors='coerce')
+        free_cool_mapped = (damper_vals == 1).astype(float)
+        logging.info(f"map_damper_to_free_cool: ✓ Mapped damper column '{damper_col}' to free-cool mode (damper==1)")
+        return free_cool_mapped
+    except Exception as e:
+        logging.error(f"map_damper_to_free_cool: ✗ Failed to map damper: {e}")
+        return None
+
 
 def extract_episodes(df):
     """
@@ -654,6 +715,51 @@ def extract_episodes(df):
         return [], FailureReason.MISSING_SENSORS, error_msg
 
     logging.info(f"extract_episodes: Found critical sensors - fan_col='{fan_col}', fc_col='{fc_col}', dt_col='{dt_col}'")
+
+    # Handle column transformations (calculations and mappings)
+    transformations_applied = []
+
+    # Check if delta-T needs to be calculated from temperature columns
+    dt_col_lower = dt_col.lower()
+    if dt_col_lower in ['supply_air_temprature', 'supply_air_temperature', 'indoor_temp', 'outdoor_temp',
+                         'hvac_supply_air_temperature', 'hvac_outdoor_temperature', 'hvac_indoor_temperature']:
+        # These are individual temp columns, try to calculate delta-T
+        supply_candidates = ['supply_air_temprature', 'supply_air_temperature', 'hvac_SUPPLY_AIR_TEMPERATURE']
+        outdoor_candidates = ['outdoor_temp', 'outdoor_temperature', 'hvac_OUTDOOR_TEMPERATURE']
+
+        supply_col = None
+        outdoor_col = None
+
+        for candidate in supply_candidates:
+            if candidate.lower() in [c.lower() for c in df_work.columns]:
+                supply_col = next(c for c in df_work.columns if c.lower() == candidate.lower())
+                break
+
+        for candidate in outdoor_candidates:
+            if candidate.lower() in [c.lower() for c in df_work.columns]:
+                outdoor_col = next(c for c in df_work.columns if c.lower() == candidate.lower())
+                break
+
+        if supply_col and outdoor_col:
+            delta_t_calc = calculate_delta_t(df_work, supply_col, outdoor_col)
+            if delta_t_calc is not None:
+                df_work['delta_t_calculated'] = delta_t_calc
+                dt_col = 'delta_t_calculated'
+                transformations_applied.append(f"Calculated delta-T from {supply_col} - {outdoor_col}")
+        elif supply_col or outdoor_col:
+            logging.warning(f"extract_episodes: Can only find one temperature column (supply={supply_col}, outdoor={outdoor_col}), cannot calculate delta-T")
+
+    # Check if free-cool mode needs to be mapped from damper status
+    fc_col_lower = fc_col.lower()
+    if 'damper' in fc_col_lower:
+        free_cool_mapped = map_damper_to_free_cool(df_work, fc_col)
+        if free_cool_mapped is not None:
+            df_work['free_cool_mapped'] = free_cool_mapped
+            fc_col = 'free_cool_mapped'
+            transformations_applied.append(f"Mapped {fc_col} (damper) to free-cool mode")
+
+    if transformations_applied:
+        logging.info(f"extract_episodes: Transformations applied: {'; '.join(transformations_applied)}")
 
     # Convert to numeric
     df_work[fan_col] = pd.to_numeric(df_work[fan_col], errors='coerce')
