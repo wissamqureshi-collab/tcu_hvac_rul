@@ -167,6 +167,75 @@ For architecture, setup, file descriptions, and deep dives, see Serena memories:
 
 ---
 
+## Aug 28: Column Matching Fix for MISSING_SENSORS Sites
+
+### Problem
+36 sites failed with MISSING_SENSORS because InfluxDB column names varied:
+- Expected exact names: `fan_status`, `hvac_FREE_COOL_MODE`, `hvac_DELTA_T`
+- Actual found: `fan_speed_percent`, `damper_1_status`, `supply_air_temprature`, `indoor_temp`, etc.
+
+### Solution Implemented
+Added intelligent 2-stage column discovery system:
+
+1. **Stage 1: Exact/Common Name Matching**
+   - 5-10 known variations per sensor type (fan, free_cool, delta_t)
+   - Fast, safe, case-insensitive lookup
+   - Logs which pattern matched
+
+2. **Stage 2: Keyword Pattern Matching with Safeguards**
+   - Fan: requires `fan` + at least one of (speed, status, rpm, percent)
+   - Free-cool: requires both `free` AND `cool`, or accepts damper columns as proxy
+   - Delta-T: requires `delta` + `t`, or temp + diff (avoids false positives)
+
+3. **Smart Transformations**
+   - **Delta-T calculation**: If only `supply_air_temperature` + `outdoor_temperature` exist, calculate delta-T from them
+   - **Damper mapping**: If only damper columns exist, use `damper_status == 1` as free-cool indicator
+
+### Newly Discovered Column Patterns (36 Sites)
+- **Fan**: `fan_speed_percent`, `fan_percent`, etc.
+- **Free-cool proxy** (26 sites): 
+  - `damper_1_status` (19 sites)
+  - `damper_status` (7 sites)
+  - `hvac_DAMPER_POSITION`, `hvac_DAMPER_STATUS` (variants)
+- **Temperature components** (no direct delta-T):
+  - `supply_air_temprature` (NOTE: typo in actual data, 26 sites!)
+  - `supply_air_temperature`, `hvac_SUPPLY_AIR_TEMPERATURE`
+  - `hvac_OUTDOOR_TEMPERATURE`, `indoor_temp`, `outdoor_temp`
+
+### Expected Results After Fix
+- **Before**: 36 MISSING_SENSORS failures
+- **After (estimated)**:
+  - ~10-15 sites now pass (damper + temperature data available)
+  - ~10-15 sites become INSUFFICIENT_DEGRADATION (valid data, filter not degrading)
+  - ~5-10 sites remain MISSING_SENSORS (data too divergent)
+
+### Code Changes
+**File**: `query_sites.py`
+- **New functions**:
+  - `find_sensor_column(df, sensor_type)` (lines 455-580) — Main 2-stage discovery
+  - `calculate_delta_t(df, supply_col, outdoor_col)` (lines 582-597) — Temperature calculation
+  - `map_damper_to_free_cool(df, damper_col)` (lines 600-614) — Damper status mapping
+- **Updated**: `extract_episodes()` (lines 671-684 discovery, 739-769 transformations)
+
+### Testing & Logging
+- All column discoveries logged with match type (EXACT_MATCH, KEYWORD_MATCH, PROXY, etc.)
+- Detailed diagnostic output on MISSING_SENSORS failure (shows all available columns)
+- Easy to refine patterns based on actual column names found
+
+### Commit
+```
+Handle different InfluxDB column structures across 36 MISSING_SENSORS sites
+- Added find_sensor_column() with 2-stage discovery (exact + keyword patterns)
+- Added calculate_delta_t() for temperature component columns
+- Added map_damper_to_free_cool() for damper-based free-cool detection
+- Updated extract_episodes() to apply transformations transparently
+- Expected: ~10-15 MISSING_SENSORS → pass after fix
+```
+
+**Full implementation details**: See `mem:hvac/column_matching_implementation`
+
+---
+
 ## Token Efficiency
 
 This folder is organized to minimize context pollution:
